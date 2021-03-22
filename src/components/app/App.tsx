@@ -1,7 +1,7 @@
 import React from 'react';
 
 import './App.scss';
-import Tutorial from "./components/tutorial";
+import Tutorial from "../tutorial";
 
 function App() {
   return (
