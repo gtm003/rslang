@@ -6,7 +6,7 @@ interface GroupProps {
     name: string
 }
 
-const Group: React.FC<GroupProps> = ({id, title, name}) => {
+const GroupItem: React.FC<GroupProps> = ({id, title, name}) => {
     const classGroup = `group__${id}`;
     return <div className={classGroup} >
         <h2 className="group__title">{title}</h2 >
@@ -14,4 +14,4 @@ const Group: React.FC<GroupProps> = ({id, title, name}) => {
     </div >
 };
 
-export default Group;
+export default GroupItem;
