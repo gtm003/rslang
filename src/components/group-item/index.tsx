@@ -1,3 +1,3 @@
-import GroupItem from "./groupItem";
+import {GroupItem} from "./groupItem";
 
-export default GroupItem;
+export {GroupItem};

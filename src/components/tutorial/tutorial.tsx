@@ -1,5 +1,5 @@
 import React from 'react';
-import GroupItem from "../group-item";
+import {GroupItem} from "../group-item";
 import {levelsEnglish} from '../../data';
 
 const Tutorial = () => {
@@ -16,4 +16,4 @@ const Tutorial = () => {
   </div>
 };
 
-export default Tutorial;
+export {Tutorial};

@@ -14,4 +14,4 @@ const GroupItem: React.FC<GroupProps> = ({id, title, name}) => {
   </div>
 };
 
-export default GroupItem;
+export {GroupItem};
