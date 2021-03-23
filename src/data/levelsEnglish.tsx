@@ -1,4 +1,4 @@
-const levelsEnglish = [
+const levelsEnglish: object = [
     {
         id: 0,
         title: 'A1',
