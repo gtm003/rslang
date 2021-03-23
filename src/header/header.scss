@@ -1,0 +1,25 @@
+.header {
+  padding: 0 197px;
+  min-height: 130px;
+  display: flex;
+  justify-content: space-between;
+
+  &__nav {
+    display: flex;
+    justify-content: space-between;
+    width: 400px;
+  }
+
+  &__logo {
+    font-size: 44px;
+  }
+
+  &__site-nav {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__user-nav {
+    width: 250px;
+  }
+}
