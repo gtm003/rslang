@@ -4,7 +4,7 @@ import {ReactComponent as RsLogo} from '../../data/images/rs.svg';
 import {ReactComponent as GithubLogo} from '../../data/images//github.svg';
 import {githubMembers} from "../../data";
 
-const Footer = () => {
+const Footer:React.FC = () => {
   return (
     <footer className="footer" >
       <div className="footer__content" >
