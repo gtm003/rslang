@@ -1,5 +1,5 @@
 import React from 'react';
-import {GroupItem} from "../group-item";
+import {GroupItem} from "./groupItem";
 import {levelsEnglish} from '../../data';
 
 const Tutorial: React.FC = () => {
@@ -17,3 +17,4 @@ const Tutorial: React.FC = () => {
 };
 
 export {Tutorial};
+

@@ -1,6 +1,11 @@
-$myColor: red;
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  color: #323232;
+}
 
-div {
-  color: $myColor;
+a {
+  text-decoration: none;
+  color: #323232;
 }
 
