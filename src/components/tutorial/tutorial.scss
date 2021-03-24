@@ -1,0 +1,29 @@
+.tutorial {
+
+  &__groups {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 0 auto;
+    width: 1280px;
+
+    & > * {
+      width: 22%;
+      text-align: center;
+      margin: 20px 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 5px #574b4b;
+      cursor: pointer;
+
+      &:hover {
+        box-shadow: 0 0 7px #574b4b;
+        opacity: 0.95;
+      }
+
+      &:active {
+        box-shadow: none;
+      }
+    }
+  }
+
+}
