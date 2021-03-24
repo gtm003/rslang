@@ -1,0 +1,20 @@
+.group {
+  width: $desktop-width;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin: 0 auto;
+}
+
+.page-item {
+  width: 18%;
+  margin: 10px;
+  cursor: pointer;
+
+  p {
+    font-size: 30px;
+    text-align: center;
+    color: #574b4b;
+    text-shadow: 0 0 2px black;
+  }
+}

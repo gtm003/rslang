@@ -1,4 +1,10 @@
-const levelsEnglish = [
+interface Levels {
+    id: number,
+    title: string,
+    name: string
+}
+
+const levelsEnglish: Array<Levels> = [
     {
         id: 0,
         title: 'A1',

@@ -1,11 +1,12 @@
 import React from 'react';
 
 import './App.scss';
+import {Group} from "../group";
 
 function App() {
   return (
     <>
-      <div>Hello, RS Lang</div>
+      <Group classGroup="group__2"/>
     </>
   );
 }
