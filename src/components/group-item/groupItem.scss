@@ -1,0 +1,38 @@
+.group {
+
+  &__title {
+    color: white;
+    font-size: 35px;
+    text-shadow: 0 0 2px black;
+  }
+
+  &__description {
+    color: #574b4b;
+    font-size: 25px;
+    font-weight: bold;
+  }
+
+  &__0 {
+    background-color: #af92e0;
+  }
+
+  &__1 {
+    background-color: #98bff5;
+  }
+
+  &__2 {
+    background-color: #abf55d;
+  }
+
+  &__3 {
+    background-color: #f2f55f;
+  }
+
+  &__4 {
+    background-color: #f7b03e;
+  }
+
+  &__5 {
+    background-color: #f27a6f;
+  }
+}

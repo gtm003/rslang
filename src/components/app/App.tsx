@@ -4,7 +4,9 @@ import './App.scss';
 
 function App() {
   return (
-    <div>Hello, RS Lang</div>
+    <>
+      <div>Hello, RS Lang</div>
+    </>
   );
 }
 
