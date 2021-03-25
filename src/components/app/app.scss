@@ -3,6 +3,11 @@ body {
   font-family: "Inter", sans-serif;
 }
 
+#root {
+  background-image: url(../../data/images/dashed-line.svg);
+  background-size: cover;
+}
+
 ul {
   margin: 0;
   padding: 0;
@@ -14,19 +19,23 @@ li {
 
 a {
   text-decoration: none;
-
-  &:active,
-  &:link,
-  &:visited {
-    color: #000;
-  }
+  color: #000;
 }
 
-button {
-  border: 0;
-  outline: 0;
+p {
+  margin: 0;
+}
+
+.btn {
+  width: 180px;
+  height: 55px;
   margin: 0;
   padding: 0;
+  border: 0;
+  outline: 0;
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
 }
 
 .visually-hidden {

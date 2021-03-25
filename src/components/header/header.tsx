@@ -29,7 +29,7 @@ const Header: React.FC = () => {
         </ul>
       </nav>
       <div className="header__right-column-wrapper right-column-wrapper">
-        <button className="right-column-wrapper__login-btn">
+        <button className="btn right-column-wrapper__login-btn">
           Войти
         </button>
         <nav className="site-nav">

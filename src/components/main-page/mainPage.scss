@@ -1,0 +1,48 @@
+.main {
+  padding: 0 12.31%;
+  background: url(../../data/images/bg-image-main.png) right 9.18% bottom 12px
+    no-repeat;
+}
+
+.promo {
+  &__title {
+    width: 709px;
+    margin-top: 65px;
+    margin-bottom: 0;
+    font-size: 86px;
+    font-weight: 600;
+    line-height: 86px;
+  }
+
+  &__description {
+    width: 544px;
+    margin-top: 36px;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 29px;
+  }
+
+  &__btn {
+    margin-top: 70px;
+    background-color: #fff;
+    border: 2px solid #323232;
+
+    &:hover {
+      background-color: #f7cc7e;
+    }
+  }
+}
+
+.main-page-nav {
+  margin-top: 100px;
+
+  &__list {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 577px;
+  }
+}
