@@ -1,11 +1,13 @@
 import React from 'react';
 
-import './App.scss';
+import { Footer } from '../footer';
+import { Header } from '../header';
 
 function App() {
   return (
     <>
-      <div>Hello, RS Lang</div>
+      <Header />
+      <Footer isAuth={false}/>
     </>
   );
 }
