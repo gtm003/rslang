@@ -5,8 +5,8 @@ body {
 }
 
 #root {
-  background-image: url(../../data/images/dashed-line.svg);
-  background-size: cover;
+  background: url(../../data/images/dashed-line.svg) no-repeat;
+  background-size: contain;
 }
 
 ul {

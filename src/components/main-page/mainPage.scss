@@ -1,10 +1,11 @@
-.main {
-  padding: 0 12.31%;
-  background: url(../../data/images/bg-image-main.png) right 9.18% bottom 12px
-    no-repeat;
-}
+.main-page {
+  padding: 0 12.31% 238px;
 
-.promo {
+  &__promo {
+    position: relative;
+    z-index: 2;
+  }
+
   &__title {
     width: 709px;
     margin-top: 65px;
@@ -22,7 +23,7 @@
     line-height: 29px;
   }
 
-  &__btn {
+  &__video-btn {
     margin-top: 70px;
     background-color: #fff;
     border: 2px solid #323232;
@@ -31,18 +32,27 @@
       background-color: #f7cc7e;
     }
   }
-}
 
-.main-page-nav {
-  margin-top: 100px;
-
-  &__list {
+  &__bg-wrapper {
+    position: absolute;
+    right: 9.18%;
+    top: 298px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    width: 766px;
+    height: 568px;
+    background: url(../../data/images/bg-image-main.png) no-repeat;  
+  }
+  
+  &__nav-list {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    position: absolute;
-    top: 0;
-    right: 0;
     width: 577px;
   }
 }
+
+
+
+

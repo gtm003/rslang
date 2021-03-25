@@ -4,36 +4,38 @@ const MainPage = () => {
   let mainPageNav: string[];
   const isAuth: boolean = false;
 
-  isAuth === false ?
-    mainPageNav = ["Учебник", "Мини-игры", "Статистика", "Настройка"] :
-    mainPageNav = ["Учебник", "Мини-игры", "Словарь", "Статистика", "Настройка"];
+  isAuth ?
+    mainPageNav = ["Учебник", "Мини-игры", "Словарь", "Статистика", "Настройка"] :
+    mainPageNav = ["Учебник", "Мини-игры", "Статистика", "Настройка"];
 
   return (
-    <main className="main">
+    <main className="main-page">
       <h1 className="visually-hidden">Главная страница</h1>
-      <section className="promo">
-        <h2 className="promo__title">
+      <section className="main-page__promo">
+        <h2 className="main-page__title">
           Увеличь словарный запас с RSLang
         </h2>
-        <p className="promo__description">
+        <p className="main-page__description">
           Традиционные и новые эффективные подходы к изучению слов, мотивация в виде статистики,
           различные уровни сложности - все это ты найдешь в RSLang.
         </p>
-        <button className="btn promo__btn">Смотреть видео</button>
+        <button className="main-page__video-btn btn">Смотреть видео</button>
       </section>
-      <nav className="main-page-nav">
-        <ul className="main-page-nav__list">
-          {mainPageNav.map((item) => {
-            return (
-              <li className="main-page-nav__item">
-                <a href="/">
-                  {item}
-                </a>
-              </li>
-            )
-          })}
-        </ul>
-      </nav>
+      <div className="main-page__bg-wrapper">
+        <nav className="main-page__nav">
+          <ul className="main-page__nav-list">
+            {mainPageNav.map((item) => {
+              return (
+                <li className="main-page__nav-item">
+                  <a href="/">
+                    {item}
+                  </a>
+                </li>
+              )
+            })}
+          </ul>
+        </nav>
+      </div>
     </main>
   );
 }
