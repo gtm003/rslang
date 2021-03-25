@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { Footer } from '../footer';
 import { Header } from '../header';
 import { MainPage } from '../main-page';
 
@@ -8,6 +9,7 @@ const App: React.FC = () => {
     <>
       <Header />
       <MainPage />
+      <Footer isAuth={false}/>
     </>
   );
 }
