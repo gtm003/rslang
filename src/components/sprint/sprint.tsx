@@ -1,14 +1,22 @@
-import React from 'react';
-import { useFetch } from "react-async";
+import React, { useEffect, useState } from 'react';
+//import { useFetch } from "react-async";
 
 import './sprint.scss';
+
+const getRandomInteger = (max : number) : number => {
+  return Math.floor(Math.random() * Math.floor(max));
+};
+
+const getRandomBoolean = () : boolean => {
+  return Math.random() < 0.5;
+};
 
 interface GameSprintProps {
   group: number,
   page: number,
 }
 
-interface IWords   {
+interface SprintBodyProps {
   "id": "string",
   "group": 0,
   "page": 0,
@@ -26,27 +34,56 @@ interface IWords   {
 }
 
 const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
-  const { data, error } = useFetch<IWords[]>(`https://react-learnwords-example.herokuapp.com/words?group=${group}&page=${page}`, {
-  headers: { accept: "application/json" },
-  });
-  
-  //console.log(data);
-  if (error) return (<h1>{error.message}</h1>);
-  if (!data) return(<h1>No data</h1>);
 
-  return <div className='game-sprint'>
-    <div className='game-sprint__timer'>Timer</div>
-    <div className='game-sprint__body'>
-      <h3>Score</h3>
-      <h2>{data[0].word}</h2>
-      <h3>{data[0].wordTranslate}</h3>
-      <div className='sprint-body__answer'>
-        <button className='body-answer__button--error'>Неверно</button>
-        <button className='body-answer__button--true'>Верно</button>
-      </div>
+  const [words, setWords] = useState<SprintBodyProps[]>([]);
+  const [indexWord, setIndexWord] = useState<number>(getRandomInteger(19));
+  const [indexTranslate, setIndexTranslate] = useState<number>(
+    getRandomBoolean() ? indexWord : getRandomInteger(19)
+  );
+  const [score, setScore] = useState<number>(0);
+
+  useEffect(() => {
+    fetch(`https://react-learnwords-example.herokuapp.com/words?group=${group}&page=${page}`)
+      .then(response => response.json())
+      .then(words => {
+        setWords(words)
+      })
+  }, []);
+
+  const onClickHandler = (answer : boolean) => {
+    const correctAnswer : boolean = (indexWord === indexTranslate);
+    const newIndexWord = getRandomInteger(19);
+    setIndexWord(newIndexWord);
+    setIndexTranslate(
+      getRandomBoolean() ? newIndexWord : getRandomInteger(19)
+    );
+    if (answer === correctAnswer) {
+      setScore(score + 10);
+    }
+  }
+
+  return (
+    <div className='game-sprint'>
+      { 
+        words.length ?
+        <React.Fragment>
+        <div className='game-sprint__timer'>Timer</div>
+          <div className='game-sprint__body'>
+            <h3>{score}</h3>
+            <h2>{words[indexWord].word}</h2>
+            <h3>{words[indexTranslate].wordTranslate}</h3>
+            <div className='sprint-body__answer'>
+              <button className='body-answer__button--error' onClick={onClickHandler.bind(null, false)}>Неверно</button>
+              <button className='body-answer__button--true'onClick={onClickHandler.bind(null, true)}>Верно</button>
+            </div>
+        </div>
+        <button className='game-sprint__button-close'>Close</button>)
+      </React.Fragment>:
+      
+      <h1>Loading...</h1>
+      }
     </div>
-    <button className='game-sprint__button-close'>Close</button>
-  </div>
+  )
 };
 
 export {GameSprint};
