@@ -8,7 +8,7 @@ interface PageItemProps {
 
 const PageItem: React.FC<PageItemProps> = ({numberPage, classGroup}) => {
   const titlePage: string = `${startTitlePage} ${numberPage}`;
-  const classPage = `page-item ${classGroup}`;
+  const classPage: string = `page-item ${classGroup}`;
   return (
     <div className={classPage}>
       <p>{titlePage}</p>
