@@ -1,6 +1,7 @@
 body {
   margin: 0;
   font-family: "Inter", sans-serif;
+  color: $default-color;
 }
 
 ul {
@@ -14,12 +15,13 @@ li {
 
 a {
   text-decoration: none;
+  color: $default-color;
 
-  &:active,
-  &:link,
-  &:visited {
-    color: #000;
-  }
+  // &:active,
+  // &:link,
+  // &:visited {
+  //   color: #000;
+  // }
 }
 
 button {
