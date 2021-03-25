@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { CountdownCircleTimer } from 'react-countdown-circle-timer'
 //import { useFetch } from "react-async";
 
 import './sprint.scss';
@@ -62,24 +63,57 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
     }
   }
 
+  const timerProps = {
+    isPlaying: true,
+    size: 100,
+    strokeWidth: 10,
+    //initialRemainingTime: 30
+    trailColor: '#afafaf'
+  };
+
+  const renderTime = (dimension:string, time:number) => {
+    return (
+      <div className="time-wrapper">
+        <div className="time">{time}</div>
+        <div>{dimension}</div>
+      </div>
+    );
+  };
+
+  const getTimeSeconds = (time: number | undefined) => (60 - time!) | 0;
+
   return (
     <div className='game-sprint'>
       { 
         words.length ?
         <React.Fragment>
-        <div className='game-sprint__timer'>Timer</div>
-          <div className='game-sprint__body'>
-            <h3>{score}</h3>
-            <h2>{words[indexWord].word}</h2>
-            <h3>{words[indexTranslate].wordTranslate}</h3>
-            <div className='sprint-body__answer'>
-              <button className='body-answer__button--error' onClick={onClickHandler.bind(null, false)}>Неверно</button>
-              <button className='body-answer__button--true'onClick={onClickHandler.bind(null, true)}>Верно</button>
-            </div>
+        <div className='game-sprint__timer'>
+          <CountdownCircleTimer
+            {...timerProps}
+            duration={60}
+            colors={[
+              ['#00ff00', 0.33],
+              ['#ffff00', 0.33],
+              ['#ff0000', 0.33],
+            ]}
+          >
+            {({ elapsedTime }) =>
+          renderTime("sec", getTimeSeconds(elapsedTime))
+          }
+          </CountdownCircleTimer>
         </div>
-        <button className='game-sprint__button-close'>Close</button>)
+        <div className='game-sprint__body'>
+          <h3>{score}</h3>
+          <h2>{words[indexWord].word}</h2>
+          <h3>{words[indexTranslate].wordTranslate}</h3>
+          <div className='sprint-body__answer'>
+            <button className='body-answer__button--error' onClick={onClickHandler.bind(null, false)}>Неверно</button>
+            <button className='body-answer__button--true'onClick={onClickHandler.bind(null, true)}>Верно</button>
+          </div>
+        </div>
+        <button className='game-sprint__button-close'>Close</button>
       </React.Fragment>:
-      
+
       <h1>Loading...</h1>
       }
     </div>

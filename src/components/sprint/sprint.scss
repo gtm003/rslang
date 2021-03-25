@@ -6,9 +6,17 @@
   padding-top: 1rem;
   &__timer {
     margin-left: 1rem;
+    .time-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 20px;
+      font-weight: 700;
+      color: #151515;
+    }
   }
   &__body {
-    border: black solid 1px;
+    border: #151515 solid 1px;
     border-radius: 5px;
     width: 300px;
     height: 300px;
