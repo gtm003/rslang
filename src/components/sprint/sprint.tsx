@@ -42,6 +42,7 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
     getRandomBoolean() ? indexWord : getRandomInteger(19)
   );
   const [score, setScore] = useState<number>(0);
+  const [gameStatus, setGameStatus] = useState('game');
 
   useEffect(() => {
     fetch(`https://react-learnwords-example.herokuapp.com/words?group=${group}&page=${page}`)
@@ -49,6 +50,16 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
       .then(words => {
         setWords(words)
       })
+  }, []);
+
+  useEffect(() => {
+    const timerId = setInterval(() => {
+      setGameStatus('finish')
+    }, 60000);
+
+    return () => {
+      clearTimeout(timerId);
+    };
   }, []);
 
   const onClickHandler = (answer : boolean) => {
@@ -104,12 +115,15 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
         </div>
         <div className='game-sprint__body'>
           <h3>{score}</h3>
-          <h2>{words[indexWord].word}</h2>
-          <h3>{words[indexTranslate].wordTranslate}</h3>
-          <div className='sprint-body__answer'>
-            <button className='body-answer__button--error' onClick={onClickHandler.bind(null, false)}>Неверно</button>
-            <button className='body-answer__button--true'onClick={onClickHandler.bind(null, true)}>Верно</button>
-          </div>
+          {gameStatus === 'game' && ( 
+          <div>
+            <h2>{words[indexWord].word}</h2>
+            <h3>{words[indexTranslate].wordTranslate}</h3>
+            <div className='sprint-body__answer'>
+              <button className='body-answer__button--error' onClick={onClickHandler.bind(null, false)}>Неверно</button>
+              <button className='body-answer__button--true'onClick={onClickHandler.bind(null, true)}>Верно</button>
+            </div>
+          </div>)}
         </div>
         <button className='game-sprint__button-close'>Close</button>
       </React.Fragment>:
