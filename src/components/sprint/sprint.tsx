@@ -54,7 +54,7 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
 
   useEffect(() => {
     const timerId = setInterval(() => {
-      setGameStatus('finish')
+      setGameStatus('end')
     }, 60000);
 
     return () => {
@@ -116,12 +116,21 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
         <div className='game-sprint__body'>
           <h3>{score}</h3>
           {gameStatus === 'game' && ( 
-          <div>
+          <div className='game-sprint__body--game'>
             <h2>{words[indexWord].word}</h2>
             <h3>{words[indexTranslate].wordTranslate}</h3>
-            <div className='sprint-body__answer'>
-              <button className='body-answer__button--error' onClick={onClickHandler.bind(null, false)}>Неверно</button>
-              <button className='body-answer__button--true'onClick={onClickHandler.bind(null, true)}>Верно</button>
+            <div className='body__answer'>
+              <button className='body-answer__button button--false' onClick={onClickHandler.bind(null, false)}>Неверно</button>
+              <button className='body-answer__button button--true'onClick={onClickHandler.bind(null, true)}>Верно</button>
+            </div>
+          </div>)}
+          {gameStatus === 'end' && ( 
+          <div className='game-sprint__body--end'>
+            <h2>Молодец!</h2>
+            <h3>Ваш результат ...</h3>
+            <div className='body__answer'>
+              <button className='body-answer__button' onClick={onClickHandler.bind(null, false)}>Продолжить игру</button>
+              <button className='body-answer__button'onClick={onClickHandler.bind(null, true)}>К списку игр</button>
             </div>
           </div>)}
         </div>
