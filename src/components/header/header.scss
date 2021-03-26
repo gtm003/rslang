@@ -1,11 +1,11 @@
 @import "../../styles/vars.scss";
 
 .header {
-  padding: 0 10.4%;
-  min-height: 130px;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
+  min-height: 130px;
+  padding: 0 12.31%;
 }
 
 .main-nav {
