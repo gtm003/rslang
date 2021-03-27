@@ -1,5 +1,9 @@
 .main-page {
-  padding: 0 12.31% 238px;
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-bottom: 139px;
+  min-height: calc(100vh - 433px);
 
   &__promo {
     position: relative;
@@ -17,14 +21,14 @@
 
   &__description {
     width: 488px;
-    margin-top: 36px;
+    margin-top: 41px;
     font-size: 20px;
     font-weight: 400;
     line-height: 24px;
   }
 
   &__video-btn {
-    margin-top: 70px;
+    margin-top: 76px;
     background-color: #fff;
     border: 2px solid #323232;
 
@@ -35,13 +39,13 @@
 
   &__bg-wrapper {
     position: absolute;
-    right: 9.18%;
-    top: 298px;
+    right: 0;
+    top: 96px;
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    width: 766px;
-    height: 568px;
+    width: 678px;
+    height: 492px;
     background: url(../../data/images/bg-image-main.png) no-repeat;
   }
 
@@ -50,6 +54,7 @@
     justify-content: space-between;
     flex-wrap: wrap;
     width: 577px;
+    margin-left: 19px;
   }
 
   &__nav-item {
