@@ -58,16 +58,19 @@ const WordSlider: React.FC<WordSliderProps> = ({group, page}) => {
                   <div>
                     <img src={urlBackend + item.image}/>
                     <div className="carousel__content">
-                      <p className="word">{item.word} {item.transcription} {item.wordTranslate}</p>
+                      <div className="word">
+                        <p className="word__value">{item.word} {item.transcription}</p>
+                        <p className="word__translate">({item.wordTranslate})</p>
+                      </div>
                       <div className='meaning'>
                         <p className="meaning__value">{item.textMeaning}</p>
-                        <p className="meaning__translate">{item.textMeaningTranslate}</p>
+                        <p className="meaning__translate">({item.textMeaningTranslate})</p>
                       </div>
                       <div className='example'>
                         <p className="example__value">{item.textExample}</p>
-                        <p className="example__translate">{item.textExampleTranslate}</p>
+                        <p className="example__translate">({item.textExampleTranslate})</p>
                       </div>
-                      <div className="audio"> <img src="/images/audio.png"/></div>
+                      <div className="audio"><img src="/images/audio.png"/></div>
                     </div>
                   </div>
                 )
