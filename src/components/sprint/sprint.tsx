@@ -114,8 +114,7 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
           </div>)}
           {!gameStatus  && ( 
           <div className='game-sprint__body--end'>
-            <h2>Молодец!</h2>
-            <h3>Ваш результат ...</h3>
+            <Progress />
             <div className='body__answer'>
               <button className='body-answer__button' onClick={onClickHandlerNewGame.bind(null, false)}>Продолжить игру</button>
               <button className='body-answer__button'>К списку игр</button>
@@ -176,3 +175,21 @@ const Timer: React.FC<TimerProps> = (gameStatus) => {
     </div>
   )
 };
+
+const Progress = () => {
+  return (
+  <div className="morph-shape" id="morph-shape"  >
+    <svg xmlns="http://www.w3.org/2000/svg" width="200%" height="200%" viewBox="0 0 1000 300"  preserveAspectRatio="none">
+      <path fill="#afafaf" d="M0.00,49.98 C149.99,150.00 271.49,-49.98 500.00,49.98 L500.00,0.00 L0.00,0.00 Z">
+        <animate
+          attributeName="d"
+	        dur="7s"
+	        repeatCount="indefinite" 
+          values=" 
+            M0.00,49.98 C149.99,150.00 271.49,-49.98 500.00,49.98 L500.00,0.00 L0.00,0.00 Z;
+	          M0.00,49.98 C157.16,-41.94 281.88,148.52 500.00,49.98 L500.00,0.00 L0.00,0.00 Z;
+            M0.00,49.98 C149.99,150.00 271.49,-49.98 500.00,49.98 L500.00,0.00 L0.00,0.00 Z" />
+      </path>	
+    </svg> 
+  </div>)
+}

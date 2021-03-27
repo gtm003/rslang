@@ -37,6 +37,18 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      .morph-shape {
+        width: 100px;
+        height: 100px;
+        background: #51BFA6;
+        border-radius: 50%;
+        overflow: hidden;
+        position: relative;
+        svg {
+          top: 20px;
+          position: absolute;
+        }
+      }
     }
     .body-answer {
       &__button {
