@@ -10,7 +10,7 @@ const Select: React.FC<SelectProps> = ({changeSelectItem}) => {
   return (
     <div className="selectPages">
       <select onChange={changeSelectItem}>
-        {pages.map((id) => <option value={id}>Unit {id + 1}</option>)}
+        {pages.map((id) => <option key={id} value={id}>Unit {id + 1}</option>)}
       </select>
     </div>
   )

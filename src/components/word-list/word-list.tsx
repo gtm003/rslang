@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {getDataPage, urlBackend, levelsEnglish} from "../../data";
+import React, {useState} from 'react';
+import {levelsEnglish} from "../../data";
 import {Select} from "./select";
 import {WordSlider} from "./word";
 

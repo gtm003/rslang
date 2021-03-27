@@ -3,7 +3,6 @@ import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a lo
 import {Carousel} from 'react-responsive-carousel';
 import {getDataPage, urlBackend} from "../../data";
 
-
 interface WordsProps {
   "id": "string",
   "group": 0,
@@ -25,10 +24,7 @@ interface WordSliderProps {
   group: number,
   page: number,
 }
-
-interface ItemSliderProps {
-  item: WordsProps,
-}
+const audio = new Audio();
 
 const WordSlider: React.FC<WordSliderProps> = ({group, page}) => {
   const [words, setWords] = useState<WordsProps[]>([]);
@@ -37,25 +33,30 @@ const WordSlider: React.FC<WordSliderProps> = ({group, page}) => {
     getDataPage(group, page).then((res: WordsProps[]) => setWords(res));
   }, [page]);
 
-  const ItemSlider: React.FC<ItemSliderProps> = ({item}) => {
-    return (
-      <div>
-        <img src={urlBackend + item.image}/>
-        <p className="legend">{item.word}</p>
-      </div>
-    )
-  }
+  const playWord = (audioWord: string, audioMeaning: string, audioExample: string) => {
+    const tracks: Array<string> = [urlBackend + audioWord, urlBackend + audioMeaning, urlBackend + audioExample];
+    let current: number = 0;
+    audio.src = tracks[0];
+    audio.play();
+
+    audio.onended = function () {
+      current += 1;
+      if (current < tracks.length) {
+        audio.src = tracks[current];
+        audio.play();
+      }
+    }
+  };
 
   return (
     <div className="word-slider">
-      {console.log(words)}
       {
         words.length ?
           <React.Fragment>
-            <Carousel>
+            <Carousel dynamicHeight={false}>
               {words.map((item: WordsProps) => {
                 return (
-                  <div>
+                  <div  key={item.id}>
                     <img src={urlBackend + item.image}/>
                     <div className="carousel__content">
                       <div className="word">
@@ -70,7 +71,7 @@ const WordSlider: React.FC<WordSliderProps> = ({group, page}) => {
                         <p className="example__value">{item.textExample}</p>
                         <p className="example__translate">({item.textExampleTranslate})</p>
                       </div>
-                      <div className="audio"><img src="/images/audio.png"/></div>
+                      <div className="audio" onClick={() => playWord(item.audio, item.audioMeaning, item.audioExample)}><img src="/images/audio.png"/></div>
                     </div>
                   </div>
                 )
