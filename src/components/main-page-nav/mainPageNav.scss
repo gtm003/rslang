@@ -13,3 +13,13 @@
     }
   }
 }
+
+@media (max-width: $tablet-width) {
+  .main-page-nav {
+    &__list {
+      width: 460px;
+      margin-left: 19px;
+    }
+    
+  }
+}
