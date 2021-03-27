@@ -1,0 +1,15 @@
+.main-page-nav {
+  &__list {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    width: 577px;
+    margin-left: 19px;
+  }
+  
+  &__item {
+    &:hover > a {
+      color: #e0b465;
+    }
+  }
+}

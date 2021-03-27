@@ -48,18 +48,4 @@
     height: 492px;
     background: url(../../data/images/bg-image-main.png) no-repeat;
   }
-
-  &__nav-list {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    width: 577px;
-    margin-left: 19px;
-  }
-
-  &__nav-item {
-    &:hover > a {
-      color: #e0b465;
-    }
-  }
 }
