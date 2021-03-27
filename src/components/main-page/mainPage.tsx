@@ -2,9 +2,7 @@ import React from 'react';
 
 import {MainPageNav} from '../main-page-nav';
 
-const MainPage = () => {
-  
-
+const MainPage: React.FC = () => {
   return (
     <main className="main-page">
       <h1 className="visually-hidden">Главная страница</h1>
