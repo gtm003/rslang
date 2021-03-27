@@ -8,7 +8,7 @@ function App() {
   return (
     <>
       <Header />
-      <WordList group={1} page={1} />
+      <WordList group={1} />
       <Footer isAuth={false}/>
     </>
   );

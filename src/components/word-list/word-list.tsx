@@ -1,51 +1,23 @@
 import React, {useEffect, useState} from 'react';
 import {getDataPage, urlBackend, levelsEnglish} from "../../data";
 import {Select} from "./select";
+import {WordSlider} from "./word";
 
 interface WordListProps {
   group: number,
-  page: number,
 }
 
-interface WordsProps {
-  "id": "string",
-  "group": 0,
-  "page": 0,
-  "word": "string",
-  "image": "string",
-  "audio": "string",
-  "audioMeaning": "string",
-  "audioExample": "string",
-  "textMeaning": "string",
-  "textExample": "string",
-  "transcription": "string",
-  "wordTranslate": "string",
-  "textMeaningTranslate": "string",
-  "textExampleTranslate": "string"
-}
-
-const WordList: React.FC<WordListProps> = ({group, page}) => {
-  const [words, setWords] = useState<WordsProps[]>([]);
-
-  useEffect(() => {
-    getDataPage(group, page).
-    then((res: WordsProps[]) => setWords(res));
-  }, []);
+const WordList: React.FC<WordListProps> = ({group}) => {
+  const [page, setPage] = useState(0);
 
   const name: string = levelsEnglish[group].name;
+  const changeSelectItem = (e: any) => setPage(e.target.value);
 
   return (
     <div className="word-list">
       <p className='word-list__title'>топ 600 слов {name}</p>
-      <Select />
-      {
-        words.length ?
-          <React.Fragment>
-            <h2> data</h2>
-
-          </React.Fragment> :
-          <h1>Loading...</h1>
-      }
+      <Select changeSelectItem={changeSelectItem}/>
+      <WordSlider group={group} page={page} />
     </div>
   )
 };
