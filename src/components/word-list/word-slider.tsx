@@ -24,6 +24,7 @@ interface WordSliderProps {
   group: number,
   page: number,
 }
+
 const audio = new Audio();
 
 const WordSlider: React.FC<WordSliderProps> = ({group, page}) => {
@@ -56,7 +57,7 @@ const WordSlider: React.FC<WordSliderProps> = ({group, page}) => {
             <Carousel dynamicHeight={false}>
               {words.map((item: WordsProps) => {
                 return (
-                  <div  key={item.id}>
+                  <div key={item.id}>
                     <img src={urlBackend + item.image}/>
                     <div className="carousel__content">
                       <div className="word">
@@ -71,7 +72,8 @@ const WordSlider: React.FC<WordSliderProps> = ({group, page}) => {
                         <p className="example__value">{item.textExample}</p>
                         <p className="example__translate">({item.textExampleTranslate})</p>
                       </div>
-                      <div className="audio" onClick={() => playWord(item.audio, item.audioMeaning, item.audioExample)}><img src="/images/audio.png"/></div>
+                      <div className="audio" onClick={() => playWord(item.audio, item.audioMeaning, item.audioExample)}>
+                        <img src="/images/audio.png"/></div>
                     </div>
                   </div>
                 )

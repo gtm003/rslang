@@ -16,7 +16,7 @@
       margin: 35px;
       text-align: center;
       text-align-last: center;
-      padding: 5px 5%;
+      padding: 5px 4%;
       font-size: 24px;
 
       -ms-overflow-style: none;
@@ -42,9 +42,9 @@
 .carousel__content {
   position: absolute;
   top: 5%;
-  bottom: 18%;
   left: 5%;
   right: 5%;
+  height: 400px;
   background-color: rgba(255, 255, 255, 0.6);
   border-radius: 10px;
   color: $default-color;
@@ -60,19 +60,21 @@
     line-height: 10px;
 
     &__value {
+      margin: 0;
       padding-right: 5px;
     }
 
     &__translate {
+      margin: 0;
       color: $secondary-color;
     }
   }
 
   .meaning {
-    font-size: 24px;
+    font-size: 20px;
 
     &__value {
-      margin-bottom: 8px;
+      margin: 8px;
     }
 
     &__translate {
@@ -82,10 +84,10 @@
   }
 
   .example {
-    font-size: 30px;
+    font-size: 25px;
 
     &__value {
-      margin-bottom: 8px;
+      margin: 8px;
     }
 
     &__translate {

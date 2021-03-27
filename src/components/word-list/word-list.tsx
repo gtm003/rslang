@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {levelsEnglish} from "../../data";
 import {Select} from "./select";
-import {WordSlider} from "./word";
+import {WordSlider} from "./word-slider";
 
 interface WordListProps {
   group: number,
@@ -17,7 +17,7 @@ const WordList: React.FC<WordListProps> = ({group}) => {
     <div className="word-list">
       <p className='word-list__title'>топ 600 слов {name}</p>
       <Select changeSelectItem={changeSelectItem}/>
-      <WordSlider group={group} page={page} />
+      <WordSlider group={group} page={page}/>
     </div>
   )
 };
