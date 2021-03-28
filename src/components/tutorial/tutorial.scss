@@ -5,25 +5,69 @@
     flex-wrap: wrap;
     justify-content: space-between;
     margin: 0 auto;
-    width: 1280px;
+    width: $desktop-width;
+
+    @media (max-width: $middle-width) {
+      justify-content: center;
+    }
 
     & > * {
       width: 22%;
-      text-align: center;
       margin: 20px 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 5px #574b4b;
-      cursor: pointer;
-
-      &:hover {
-        box-shadow: 0 0 7px #574b4b;
-        opacity: 0.95;
-      }
+      @include button-unit;
 
       &:active {
         box-shadow: none;
       }
+
+      @media (max-width: $middle-width) {
+        width: 30%;
+        min-height: 170px;
+      }
+      @media (max-width: $tablet-width) {
+        width: 35%;
+        min-height: 200px;
+        margin: 20px;
+      }
     }
   }
 
+}
+
+.group {
+
+  &__title {
+    color: white;
+    font-size: 35px;
+    text-shadow: 0 0 2px $default-color;
+  }
+
+  &__description {
+    font-size: 25px;
+    font-weight: bold;
+  }
+
+  &--0 {
+    background-color: $purple-color;
+  }
+
+  &--1 {
+    background-color: $green-color;
+  }
+
+  &--2 {
+    background-color: $light-green-color;
+  }
+
+  &--3 {
+    background-color: $yellow-color;
+  }
+
+  &--4 {
+    background-color: $orange-color;
+  }
+
+  &--5 {
+    background-color: $pink-color;
+  }
 }
