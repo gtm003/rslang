@@ -9,3 +9,8 @@
     opacity: 0.95;
   }
 }
+
+@mixin body-text-sm {
+  font-size: 18px;
+  font-weight: 500;
+}

@@ -1,5 +1,9 @@
 @import "./styles/vars";
 @import "./styles/mixins";
 
+@import "./components/App/app";
 @import "./components/tutorial/tutorial";
 @import "components/group/group";
+@import "./components/footer/footer";
+@import "./components/header/header";
+
