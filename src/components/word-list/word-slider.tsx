@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import {Carousel} from 'react-responsive-carousel';
 import {getDataPage, urlBackend} from "../../data";
+import {Loader} from "../loader";
 
 interface WordsProps {
   "id": "string",
@@ -53,7 +54,6 @@ const WordSlider: React.FC<WordSliderProps> = ({group, page}) => {
     <div className="word-slider">
       {
         words.length ?
-          <React.Fragment>
             <Carousel dynamicHeight={false}>
               {words.map((item: WordsProps) => {
                 return (
@@ -78,10 +78,8 @@ const WordSlider: React.FC<WordSliderProps> = ({group, page}) => {
                   </div>
                 )
               })}
-            </Carousel>
-
-          </React.Fragment> :
-          <h1>Loading...</h1>
+            </Carousel> :
+<Loader />
       }
     </div>
   )
