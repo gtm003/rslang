@@ -1,3 +1,15 @@
+@mixin button-unit {
+  text-align: center;
+  border-radius: 10px;
+  box-shadow: 0 0 5px $default-color;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: 0 0 7px $default-color;
+    opacity: 0.95;
+  }
+}
+
 @mixin body-text-sm {
   font-size: 18px;
   font-weight: 500;
