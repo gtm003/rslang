@@ -7,7 +7,7 @@ interface GroupProps {
 }
 
 const GroupItem: React.FC<GroupProps> = ({id, title, name}) => {
-  const classGroup = `group__${id}`;
+  const classGroup = `group--${id}`;
   return <div className={classGroup}>
     <h2 className="group__title">{title}</h2>
     <p className="group__description">{name}</p>
@@ -15,3 +15,4 @@ const GroupItem: React.FC<GroupProps> = ({id, title, name}) => {
 };
 
 export {GroupItem};
+
