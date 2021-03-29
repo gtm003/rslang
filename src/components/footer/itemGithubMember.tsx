@@ -1,16 +1,16 @@
 import React from 'react';
 import {githubSrc} from "../../data";
 
-interface ItemGithubMember {
+interface ItemGithubMemberProps {
   name: string,
 }
 
-const ItemGithubMember: React.FC<ItemGithubMember> = ({name}) => {
+const ItemGithubMember: React.FC<ItemGithubMemberProps> = ({name}) => {
   const src = `${githubSrc}${name}`;
 
   return (
       <a target='_blank' rel="noreferrer" href={src} >
-        <span >{name}</span >
+       {name}
       </a >
   )
 };
