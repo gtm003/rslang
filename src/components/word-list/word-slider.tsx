@@ -53,35 +53,38 @@ const WordSlider: React.FC<WordSliderProps> = ({group, page}) => {
   return (
     <div className="word-slider">
       {
+        (page < 0) ?
+        <img src="/images/startPageWords.png" alt='start page of words'/>
+        :
         words.length ?
-            <Carousel dynamicHeight={false}>
-              {words.map((item: WordsProps) => {
-                return (
-                  <div key={item.id}>
-                    <img src={urlBackend + item.image}/>
-                    <div className="carousel__content">
-                      <div className="word">
-                        <p className="word__value">{item.word} {item.transcription}</p>
-                        <p className="word__translate">({item.wordTranslate})</p>
-                      </div>
-                      <div className='meaning'>
-                        <p className="meaning__value">{item.textMeaning}</p>
-                        <p className="meaning__translate">({item.textMeaningTranslate})</p>
-                      </div>
-                      <div className='example'>
-                        <p className="example__value">{item.textExample}</p>
-                        <p className="example__translate">({item.textExampleTranslate})</p>
-                      </div>
-                      <div className="audio" onClick={() => playWord(item.audio, item.audioMeaning, item.audioExample)}>
-                        <img src="/images/audio.png"/></div>
+          <Carousel dynamicHeight={false}>
+            {words.map((item: WordsProps) => {
+              return (
+                <div key={item.id}>
+                  <img src={urlBackend + item.image}/>
+                  <div className="carousel__content">
+                    <div className="word">
+                      <p className="word__value">{item.word} {item.transcription}</p>
+                      <p className="word__translate">({item.wordTranslate})</p>
                     </div>
+                    <div className='meaning'>
+                      <p className="meaning__value">{item.textMeaning}</p>
+                      <p className="meaning__translate">({item.textMeaningTranslate})</p>
+                    </div>
+                    <div className='example'>
+                      <p className="example__value">{item.textExample}</p>
+                      <p className="example__translate">({item.textExampleTranslate})</p>
+                    </div>
+                    <div className="audio" onClick={() => playWord(item.audio, item.audioMeaning, item.audioExample)}>
+                      <img src="/images/audio.png"/></div>
                   </div>
-                )
-              })}
-            </Carousel> :
-<Loader />
+                </div>
+              )
+            })}
+          </Carousel> :
+          <Loader/>
       }
-    </div>
+      </div>
   )
 }
 

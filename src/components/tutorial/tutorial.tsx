@@ -8,7 +8,7 @@ const Tutorial: React.FC = () => {
     {levelsEnglish.map(({id, title, name}) => {
       const key = `group${id}`;
       return (
-        <NavLink to={`/tutorial/group/${id + 1}`} key={`group${id}`}>
+        <NavLink to={`/tutorial/group${id + 1}`} key={`group${id}`}>
           <GroupItem
             key={key}
             id={id}

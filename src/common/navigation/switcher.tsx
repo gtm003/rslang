@@ -7,9 +7,10 @@ import {
 import {MainPage} from "../../components/main-page";
 import {Team} from "../../components/team";
 import {Tutorial} from "../../components/tutorial";
-import {Group} from "../../components/group";
+import {WordList} from "../../components/word-list";
 
 const Switcher:React.FC = () => {
+
   const isGroupExists: React.FC<any> = ({match}) => {
     const idGroup: number = Number(match.params.id);
 
@@ -21,8 +22,8 @@ const Switcher:React.FC = () => {
       return <Redirect to='/tutorial'/>
     }
 
-    return <Group idGroup ={idGroup}/>
-  }
+    return <WordList group ={idGroup}/>
+  };
 
   return (
     <Switch>
@@ -33,7 +34,8 @@ const Switcher:React.FC = () => {
       <Route path='/dictionary' component={Tutorial}/>
       <Route path='/statistics' component={Tutorial}/>
       <Route path='/settings' component={Tutorial}/>
-      <Route path='/tutorial/group/:id' component={(...props: Array<object>) => isGroupExists(props[0]) }/>
+      <Route path='/tutorial/group:id' component={(...props: Array<object>) => isGroupExists(props[0]) }/>
+      <Route path='/tutorial/group:group/page:page' component={(...props: Array<object>) => isGroupExists(props[0]) }/>
       <Redirect path='*' to='/'/>
     </Switch>
   );

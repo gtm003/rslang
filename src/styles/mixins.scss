@@ -14,3 +14,12 @@
   font-size: 18px;
   font-weight: 500;
 }
+
+@mixin button-default {
+  background-color: #fff;
+  border: 2px solid #323232;
+
+  &:hover {
+    background-color: #f7cc7e;
+  }
+}
