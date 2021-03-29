@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import "./header.scss";
 
@@ -29,9 +30,9 @@ const Header: React.FC = () => {
         </ul>
       </nav>
       <div className="header__right-column-wrapper right-column-wrapper">
-        <button className="btn right-column-wrapper__login-btn">
+        <Link className="btn right-column-wrapper__login-btn" to={'/log-in'}>
           Войти
-        </button>
+        </Link>
         <nav className="site-nav">
           <button className="site-nav__btn">
             <span className="visually-hidden">
