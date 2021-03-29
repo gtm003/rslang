@@ -1,0 +1,103 @@
+.word-list {
+  text-align: center;
+
+  &__title {
+    font-size: 30px;
+    line-height: 36px;
+    text-transform: uppercase;
+  }
+
+  .selectPages {
+    text-align: center;
+
+    select {
+      text-transform: uppercase;
+      width: 260px;
+      margin: 35px;
+      text-align: center;
+      text-align-last: center;
+      padding: 5px 4%;
+      font-size: 24px;
+
+      -ms-overflow-style: none;
+      overflow: -moz-scrollbars-none;
+      overflow-x: scroll;
+      overflow-y: hidden;
+
+      &::-webkit-scrollbar {
+        width: 0 !important;
+        height: 0;
+        display: none !important;
+        background: transparent;
+      }
+    }
+  }
+}
+
+.carousel-root {
+  width: 55%;
+  margin: 0 auto;
+}
+
+.carousel__content {
+  position: absolute;
+  top: 5%;
+  left: 5%;
+  right: 5%;
+  height: 400px;
+  background-color: rgba(255, 255, 255, 0.6);
+  border-radius: 10px;
+  color: $default-color;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+
+  .word {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    font-size: 35px;
+    line-height: 10px;
+
+    &__value {
+      margin: 0;
+      padding-right: 5px;
+    }
+
+    &__translate {
+      margin: 0;
+      color: $secondary-color;
+    }
+  }
+
+  .meaning {
+    font-size: 20px;
+
+    &__value {
+      margin: 8px;
+    }
+
+    &__translate {
+      margin: 0;
+      color: $secondary-color;
+    }
+  }
+
+  .example {
+    font-size: 25px;
+
+    &__value {
+      margin: 8px;
+    }
+
+    &__translate {
+      margin: 0;
+      color: $secondary-color;
+    }
+  }
+
+  .audio {
+    width: 7%;
+    margin: 10px 30px;
+  }
+}

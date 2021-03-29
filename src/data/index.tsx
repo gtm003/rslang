@@ -1,4 +1,5 @@
 import levelsEnglish from "./levelsEnglish";
-import {githubMembers, githubSrc} from './CONSTANTS';
+import {getDataPage} from "./WORDS";
+import {githubMembers, githubSrc, urlBackend} from './CONSTANTS';
 
-export {levelsEnglish, githubMembers, githubSrc};
+export {levelsEnglish, githubMembers, githubSrc, urlBackend, getDataPage};
