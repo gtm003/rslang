@@ -13,7 +13,7 @@ const MainPageNav: React.FC = () => {
       <ul className="main-page-nav__list">
         {mainPageNav.map((item) => {
           return (
-            <li className="main-page-nav__item">
+            <li key={item} className="main-page-nav__item">
               <a href="/">
                 {item}
               </a>

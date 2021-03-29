@@ -4,17 +4,14 @@ import { Footer } from '../footer';
 import { Header } from '../header';
 import {WordList} from "../word-list";
 import { MainPage } from '../main-page';
+import {Savannah} from '../savannah';
 
 const App: React.FC = () => {
   return (
     <>
-      <Header />
 
-      <WordList group={1} />
+      <Savannah />
 
-      <MainPage />
-
-      <Footer isAuth={false}/>
     </>
   );
 }
