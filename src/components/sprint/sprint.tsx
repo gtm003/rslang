@@ -179,16 +179,16 @@ const Timer: React.FC<TimerProps> = (gameStatus) => {
 const Progress = () => {
   return (
   <div className="morph-shape" id="morph-shape"  >
-    <svg xmlns="http://www.w3.org/2000/svg" width="200%" height="200%" viewBox="0 0 1000 300"  preserveAspectRatio="none">
-      <path fill="#afafaf" d="M0.00,49.98 C149.99,150.00 271.49,-49.98 500.00,49.98 L500.00,0.00 L0.00,0.00 Z">
+    <svg xmlns="http://www.w3.org/2000/svg" width="200%" height="200%" viewBox="0 0 100 100"  preserveAspectRatio="none">
+      <path fill="#afafaf" d="M 0 0 C 0 0 20 20 33 20 C 45 20 55 0 67 0 C 78 0 100 20 100 20 C 100 20 100 100 100 100 L 0 100 Z">
         <animate
           attributeName="d"
 	        dur="7s"
 	        repeatCount="indefinite" 
           values=" 
-            M0.00,49.98 C149.99,150.00 271.49,-49.98 500.00,49.98 L500.00,0.00 L0.00,0.00 Z;
-	          M0.00,49.98 C157.16,-41.94 281.88,148.52 500.00,49.98 L500.00,0.00 L0.00,0.00 Z;
-            M0.00,49.98 C149.99,150.00 271.49,-49.98 500.00,49.98 L500.00,0.00 L0.00,0.00 Z" />
+            M 0 0 C 0 0 20 20 33 20 C 45 20 55 0 67 0 C 78 0 100 20 100 20 C 100 20 100 100 100 100 L 0 100 Z;
+            M 0 20 C 0 20 20 0 33 0 C 45 0 55 20 67 20 C 77 20 100 0 100 0 C 100 0 100 100 100 100 L 0 100 Z;
+            M 0 0 C 0 0 20 20 33 20 C 45 20 55 0 67 0 C 78 0 100 20 100 20 C 100 20 100 100 100 100 L 0 100 Z" />
       </path>	
     </svg> 
   </div>)
