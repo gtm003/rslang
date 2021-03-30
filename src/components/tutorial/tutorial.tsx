@@ -14,7 +14,9 @@ const Tutorial: React.FC = () => {
   const dataDescription: string = descriptionGroup[idGroup];
 
   return (
-  <div className="tutorial" >
+  <div className="tutorial-wrapper" >
+    <p className="tutorial__title">Уровни сложности</p>
+    <div className="tutorial">
     <div className="tutorial__groups" >
       {levelsEnglish.map(({id, title, name}) => {
         const key = `group${id}`;
@@ -37,6 +39,7 @@ const Tutorial: React.FC = () => {
       <p className="tutorial__description__title">{titleDescription}</p>
       <p className="tutorial__description__data" dangerouslySetInnerHTML={{__html: dataDescription}}></p >
     </div >
+    </div>
   </div >)
 
 };
