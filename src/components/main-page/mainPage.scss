@@ -29,12 +29,7 @@
 
   &__video-btn {
     margin-top: 76px;
-    background-color: #fff;
-    border: 2px solid #323232;
-
-    &:hover {
-      background-color: #f7cc7e;
-    }
+    @include button-default;
   }
 
   &__bg-wrapper {
