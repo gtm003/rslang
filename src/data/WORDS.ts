@@ -16,7 +16,7 @@ interface SprintBodyProps {
 }
 
 const getDataPage = async (group: number, page: number): Promise<SprintBodyProps[]> => {
-  const url = `https://react-learnwords-example.herokuapp.com/words?group=${group}&page=${page}`
+  const url = `https://react-rs-lang-words.herokuapp.com/words?group=${group}&page=${page}`
 
   const res = await fetch(`${url}`);
 
@@ -31,7 +31,7 @@ const urls: Array<string> = [];
 
 for (let i = 0; i < 6; i += 1) {
   for (let j = 0; j < 30; j += 1) {
-    urls.push(`https://react-learnwords-example.herokuapp.com/words?group=${i}&page=${j}`)
+    urls.push(`https://react-rs-lang-words.herokuapp.com/words?group=${i}&page=${j}`)
   }
 }
 
