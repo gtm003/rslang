@@ -22,4 +22,3 @@ const Tutorial: React.FC = () => {
 };
 
 export {Tutorial};
-
