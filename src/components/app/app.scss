@@ -4,6 +4,11 @@ body {
   color: $default-color;
 }
 
+#root {
+  background: url(../../data/images/dashed-line.svg) no-repeat;
+  background-size: contain;
+}
+
 ul {
   margin: 0;
   padding: 0;
@@ -16,19 +21,22 @@ li {
 a {
   text-decoration: none;
   color: $default-color;
-
-  // &:active,
-  // &:link,
-  // &:visited {
-  //   color: #000;
-  // }
 }
 
-button {
-  border: 0;
-  outline: 0;
+p {
+  margin: 0;
+}
+
+.btn {
+  width: 180px;
+  height: 55px;
   margin: 0;
   padding: 0;
+  border: 0;
+  outline: 0;
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
 }
 
 .visually-hidden {

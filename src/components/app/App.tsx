@@ -2,16 +2,24 @@ import React from 'react';
 
 import { Footer } from '../footer';
 import { Header } from '../header';
-//import { GameSprint } from '../sprint';
+import {WordList} from "../word-list";
+import { MainPage } from '../main-page';
+import { GameSprint } from '../sprint';
 
-function App() {
+const App: React.FC = () => {
   return (
     <>
       <Header />
-      {/*<GameSprint page={1} group={1}></GameSprint>*/}
+
+      <WordList group={1} />
+
+      <MainPage />
+
+      <GameSprint group={1} page={1}/>
+
       <Footer isAuth={false}/>
     </>
   );
 }
 
-export default App;
+export { App };

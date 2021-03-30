@@ -1,9 +1,12 @@
 @import "./styles/vars";
 @import "./styles/mixins";
 
-@import "./components/footer/footer";
 @import "./components/App/app";
 @import "./components/tutorial/tutorial";
-@import "./components/group-item/groupItem";
+@import "components/group/group";
+@import "./components/footer/footer";
 @import "./components/header/header";
-
+@import "./components/loader/loader";
+@import "./components/word-list/word-list";
+@import "./components/main-page/mainPage";
+@import "./components/main-page-nav/mainPageNav";
