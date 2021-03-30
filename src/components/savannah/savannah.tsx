@@ -20,39 +20,60 @@ interface WordsProps {
 }
 
 const Savannah: React.FC = () => {
-  const NUMBER_OF_WORDS = 4;
   const [words, setWords] = useState<WordsProps[]>([]);
+  const [translations, setTranslations] = useState<string[]>([]);
+
+  const shuffleArray = (array: string[]) => {
+    for (let i = 0; i <= array.length - 1; i++) {
+      let j = Math.floor(Math.random() * i);
+  
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  
+    return array;
+  };
 
   useEffect(() => {
-    getDataPage(1, 1).then(res => setWords(res));
+    getDataPage(1, 1).then(res => {
+      setWords(res);
+      setTranslations(res.map((word) => word.wordTranslate));
+    });
   }, []);
 
-  if (words.length === 0) {
+  if (words.length === 0 || translations.length === 0) {
     return <div>Loading...</div>
   }
+
+  const randomWordIndex: number = Math.floor(Math.random() * words.length);
+
+  const translationWord: string = words[randomWordIndex].word;
+
+  const wordTranslations: string[] = [
+    words[randomWordIndex].wordTranslate,
+    translations[Math.floor(Math.random() * words.length)],
+    translations[Math.floor(Math.random() * words.length)],
+    translations[Math.floor(Math.random() * words.length)]
+  ]
 
   return (
     <main className="savannah">
       <div className="savannah__word">
         {
-          words[Math.floor(Math.random() * words.length)].word
+          translationWord
         }
       </div>
       <div className="savannah__translation">
         <ul className="svannah__translation-list">
           {
-            words.map((word, i) => {
-              if (i <= NUMBER_OF_WORDS - 1) {
-                return (
-                  <li key={word.word + i} className="savannah__translation-item">
-                    <span>{i + 1}. </span>
-                    {
-                      words[Math.floor(Math.random() * words.length)].wordTranslate
-                    }
-                  </li>
-                )
-              }
-              return null;
+            shuffleArray(wordTranslations).map((translation: string, i: number) => {
+              return (
+                <li key={translation + i} className="savannah__translation-item">
+                  <span>{i + 1}. </span>
+                  {
+                    translation
+                  }
+                </li>
+              )
             })
           }
         </ul>
