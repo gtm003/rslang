@@ -1,29 +1,18 @@
 import React from 'react';
-
-import { Footer } from '../footer';
-import { Header } from '../header';
-import {WordList} from "../word-list";
-import { MainPage } from '../main-page';
-import { Route, Switch } from 'react-router';
-import { LoginFormRedux } from '../loginform/loginform';
-import { SignUpFormRedux } from '../signupform/signupform';
+import {Footer} from '../footer';
+import {Header} from '../header';
+import {Switcher} from "../../common/navigation";
+import {BrowserRouter} from "react-router-dom";
 
 const App: React.FC = () => {
   return (
-    <>
-      <Header />
-
-      {/* <WordList group={1} /> */}
-
-      <Switch>
-        <Route path="/log-in" component={LoginFormRedux} />
-        <Route path="/sign-up" component={SignUpFormRedux} />
-        <Route path="/" component={MainPage} />
-      </Switch>
+    <BrowserRouter>
+      <Header/>
+      <Switcher/>
 
       <Footer isAuth={false}/>
-    </>
+    </BrowserRouter>
   );
 }
 
-export { App };
+export {App};
