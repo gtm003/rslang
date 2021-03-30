@@ -17,7 +17,7 @@
     }
 
     & > * {
-      padding: 15px 0;
+      padding: 10px 0;
     }
   }
 
@@ -64,7 +64,7 @@
 .group-btn {
   width: 420px;
   padding: 0 28px;
-  margin: 6px;
+  margin: 8px;
   @include button-unit;
 
   @media (max-width: $middle-width) {

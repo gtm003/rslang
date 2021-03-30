@@ -13,7 +13,7 @@ const GroupItem: React.FC<GroupProps> = ({id, title, name, hoverHandler}) => {
   return (
     <div className={classGroup} onMouseEnter={() => hoverHandler(id)}>
       <span className="group__title" >{title}</span >
-      <span className="group__description"  dangerouslySetInnerHTML={{__html: name}}></span >
+      <span className="group__description" >{name}</span >
     </div >
   )
 };

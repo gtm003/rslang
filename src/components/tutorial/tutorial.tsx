@@ -35,7 +35,7 @@ const Tutorial: React.FC = () => {
     <div className="tutorial__description" >
       <img src={pathImg} />
       <p className="tutorial__description__title">{titleDescription}</p>
-      <p className="tutorial__description__data">{dataDescription}</p >
+      <p className="tutorial__description__data" dangerouslySetInnerHTML={{__html: dataDescription}}></p >
     </div >
   </div >)
 

@@ -50,11 +50,13 @@ const WordSlider: React.FC<WordSliderProps> = ({group, page}) => {
     }
   };
 
+  const pathImg: string = `/images/group/${group-1}.png`;
+
   return (
     <div className="word-slider">
       {
         (page < 0) ?
-          <img src="/images/startPageWords.png" alt='word'/>
+          <img src={pathImg}  alt='level english'/>
           :
           words.length ?
             <Carousel dynamicHeight={false}>
@@ -68,11 +70,11 @@ const WordSlider: React.FC<WordSliderProps> = ({group, page}) => {
                         <p className="word__translate">({item.wordTranslate})</p>
                       </div>
                       <div className='meaning'>
-                        <p className="meaning__value">{item.textMeaning}</p>
+                        <p className="meaning__value" dangerouslySetInnerHTML={{__html: item.textMeaning}}></p>
                         <p className="meaning__translate">({item.textMeaningTranslate})</p>
                       </div>
                       <div className='example'>
-                        <p className="example__value">{item.textExample}</p>
+                        <p className="example__value" dangerouslySetInnerHTML={{__html: item.textExample}}></p>
                         <p className="example__translate">({item.textExampleTranslate})</p>
                       </div>
                       <div className="audio" onClick={() => playWord(item.audio, item.audioMeaning, item.audioExample)}>
