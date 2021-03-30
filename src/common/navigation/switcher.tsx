@@ -8,6 +8,8 @@ import {MainPage} from "../../components/main-page";
 import {Team} from "../../components/team";
 import {Tutorial} from "../../components/tutorial";
 import {WordList} from "../../components/word-list";
+import {LoginFormRedux} from "../../components/loginform";
+import {SignUpFormRedux} from "../../components/signupform";
 
 const Switcher: React.FC = () => {
 
@@ -53,6 +55,8 @@ const Switcher: React.FC = () => {
     <Switch>
       <Route exact path='/' component={MainPage}/>
       <Route path='/team' component={Team}/>
+      <Route path='/log-in' component={LoginFormRedux} />
+      <Route path='/sign-up' component={SignUpFormRedux} />
       <Route exact path='/tutorial' component={Tutorial}/>
       <Route path='/games' component={Tutorial}/>
       <Route path='/dictionary' component={Tutorial}/>
