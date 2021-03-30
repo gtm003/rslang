@@ -1,11 +1,11 @@
-.login-form-wrapper {
+.signup-form-wrapper {
     min-height: 74vh;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.login-form {
+.signup-form {
     display: flex;
     flex-direction: column;
     width: 310px;
@@ -38,7 +38,7 @@
         &__btn {
             width: 100%;
             height: 100%;
-            background: #51BFA6;
+            background: #F7CC7E;
             cursor: pointer;
             border: none;
             outline: none;
