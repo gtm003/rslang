@@ -23,7 +23,7 @@
     border: #151515 solid 1px;
     border-radius: 5px;
     width: 300px;
-    height: 300px;
+    height: 400px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -44,13 +44,14 @@
         border-radius: 50%;
         overflow: hidden;
         position: relative;
+        margin: 2rem;
         svg {
           top: 20px;
           position: absolute;
         }
       }
     }
-    .body-answer {
+    .sprint-body-answer {
       &__button {
         //width: 70px;
         height: 40px;
@@ -61,12 +62,40 @@
           cursor: pointer;
         }
         &.button--false {
-          background: red;
+          background: $pink-color;
           width: 70px;
         }
         &.button--true {
-          background: green;
+          background: $light-green-color;
           width: 70px;
+        }
+      }
+    }
+    .sprint-body__pagination {
+      display: flex;
+      .sprint-body-pagination__dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin: 10px;
+        background: $default-color;
+        &:hover {
+          cursor: pointer;
+        }
+        &--activ {
+          background: $green-color;
+        }
+      }
+    }
+    .sprint-body__nav {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      .sprint-body-nav__link {
+        margin-top: 1rem;
+        &:hover {
+          cursor: pointer;
+          color: $orange-color;
         }
       }
     }

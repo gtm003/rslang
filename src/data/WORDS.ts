@@ -1,3 +1,5 @@
+import { urlBackend } from "./CONSTANTS";
+
 interface SprintBodyProps {
   "id": "string",
   "group": 0,
@@ -16,9 +18,19 @@ interface SprintBodyProps {
 }
 
 const getDataPage = async (group: number, page: number): Promise<SprintBodyProps[]> => {
-  const url = `https://react-learnwords-example.herokuapp.com/words?group=${group}&page=${page}`
+  const url = `${urlBackend}words?group=${group}&page=${page}`
 
   const res = await fetch(`${url}`);
+
+  if (!res.ok) {
+    throw new Error(`Could not fetch ${url}, received ${res.status}`);
+  }
+
+  return await res.json();
+};
+
+const getData = async (url: string): Promise<SprintBodyProps[]> => {
+    const res = await fetch(url);
 
   if (!res.ok) {
     throw new Error(`Could not fetch ${url}, received ${res.status}`);
@@ -31,10 +43,10 @@ const urls: Array<string> = [];
 
 for (let i = 0; i < 6; i += 1) {
   for (let j = 0; j < 30; j += 1) {
-    urls.push(`https://react-learnwords-example.herokuapp.com/words?group=${i}&page=${j}`)
+    urls.push(`${urlBackend}words?group=${i}&page=${j}`)
   }
 }
-
+/*
 function httpGet(url:string) : Object {
 
   return new Promise(function(resolve, reject) {
@@ -59,14 +71,14 @@ function httpGet(url:string) : Object {
     xhr.send();
   });
 
-}
+}*/
 
 export const DATA_WORDS: Array<Object> = [];
 
 let chain = Promise.resolve();
-urls.forEach(function(url) {
+urls.forEach((url) => {
   chain = chain
-    .then(() => httpGet(url))
+    .then(() => getData(url))
     .then((res: Object) => {
       DATA_WORDS.push(res);
     });

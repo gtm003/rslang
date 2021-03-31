@@ -1,21 +1,56 @@
 import React, { useEffect, useState } from 'react';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer'
-import { DATA_WORDS, getDataPage } from '../../data/WORDS';
-//import { useFetch } from "react-async";
+import { urlBackend } from '../../data';
+import { Loader } from '../loader';
 
 import './sprint.scss';
+
+const getData = async (url: string): Promise<SprintBodyProps[]> => {
+  const res = await fetch(url);
+
+if (!res.ok) {
+  throw new Error(`Could not fetch ${url}, received ${res.status}`);
+}
+
+return await res.json();
+};
+
+const urls: Array<string> = [];
+const WORDS_GROUP: SprintBodyProps[][] = [];
+let WORDS_GAME: SprintBodyProps[] = [];
 
 const getRandomInteger = (max : number) : number => {
   return Math.floor(Math.random() * Math.floor(max));
 };
 
+const getOderArr = (n : number) => {
+  let arr : number[] = [];
+  Array(n).fill(1).forEach((item, index) => arr.push(index));
+  return arr;
+};
+
+const getRandomOderArr = (n : number) => {
+  let array = getOderArr(n);
+  for (let i = n - 1; i > 0; i--) {
+      let j = Math.floor(Math.random() * (i + 1)); 
+      [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
 const getRandomBoolean = () : boolean => {
   return Math.random() < 0.5;
 };
 
+let indexesWord = getRandomOderArr(20);
+let indexWord = indexesWord.pop();
+let indexTranslate = getRandomBoolean() ? indexWord : getRandomInteger(19);
+let round: number = 0;
+const wordList: Object[]= [];
+
 interface GameSprintProps {
   group: number,
-  page: number,
+  page?: number,
 }
 
 interface TimerProps {
@@ -42,24 +77,39 @@ interface SprintBodyProps {
 const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
 
   const [words, setWords] = useState<SprintBodyProps[]>([]);
-  const [indexWord, setIndexWord] = useState<number>(getRandomInteger(19));
-  const [indexTranslate, setIndexTranslate] = useState<number>(
-    getRandomBoolean() ? indexWord : getRandomInteger(19)
-  );
   const [score, setScore] = useState<number>(0);
   const [gameStatus, setGameStatus] = useState(true);
-  /*  
+  const [loading, setLoading] = useState(true);
+  const [word, setWord] = useState<string>('');
+  const [wordTranslate, setWordTranslate] = useState<string>('');
+
+
   useEffect(() => {
-    fetch(`https://react-learnwords-example.herokuapp.com/words?group=${group}&page=${page}`)
-      .then(response => response.json())
-      .then(words => {
-        setWords(words)
-      })
-  }, []);*/
-  
-  useEffect(() => {
-    getDataPage(group, page).
-    then((res: SprintBodyProps[]) => setWords(res))
+    for (let j = 0; j < 30; j += 1) {
+      urls.push(`${urlBackend}words?group=${group}&page=${j}`)
+    }
+    let chain = Promise.resolve();
+    urls.forEach((url) => {
+    chain = chain
+      .then(() => getData(url))
+      .then((res: SprintBodyProps[]) => {
+        WORDS_GROUP.push(res);
+        if(WORDS_GROUP.length === 30) {
+          if(page !== undefined) {
+            setWords(WORDS_GROUP[page]);
+            WORDS_GAME = WORDS_GROUP[page];
+            console.log(WORDS_GAME);
+            setLoading(false)
+          } else {
+            setWords(WORDS_GROUP.flat());
+            WORDS_GAME= WORDS_GROUP.flat();
+            setLoading(false)
+          }
+          setWord(WORDS_GAME[indexWord!].word);
+          setWordTranslate(WORDS_GAME[indexTranslate!].wordTranslate);
+        }
+      });
+    });
   }, []);
 
   useEffect(() => {
@@ -73,22 +123,40 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
 
   const onClickHandlerGame = (answer : boolean) => {
     const correctAnswer : boolean = (indexWord === indexTranslate);
-    const newIndexWord = getRandomInteger(19);
-    setIndexWord(newIndexWord);
-    setIndexTranslate(
-      getRandomBoolean() ? newIndexWord : getRandomInteger(19)
-    );
+    
     if (answer === correctAnswer) {
       setScore(score + 10);
+      wordList.push ({
+        word : words[indexWord!].word,
+        wordTranslate : words[indexWord!].wordTranslate,
+        answer : true,
+      })
+    }
+    if(indexesWord.length) {
+      //console.log('next step');
+      indexWord = indexesWord.pop();
+      indexTranslate = getRandomBoolean() ? indexWord : getRandomInteger(19);
+      setWord(WORDS_GAME[indexWord!].word);
+      setWordTranslate(WORDS_GAME[indexTranslate!].wordTranslate);
+    } else {
+      indexesWord = getRandomOderArr(20);
+      if (page! > round) {
+        round += 1;
+        WORDS_GAME = WORDS_GROUP[page! - round];
+        indexWord = indexesWord.pop();
+        indexTranslate = getRandomBoolean() ? indexWord : getRandomInteger(19);
+        setWord(WORDS_GAME[indexWord!].word);
+        setWordTranslate(WORDS_GAME[indexTranslate!].wordTranslate);
+      } else {
+        setGameStatus(false);
+      }
     }
   }
 
   const onClickHandlerNewGame = () => {
-    const newIndexWord = getRandomInteger(19);
-    setIndexWord(newIndexWord);
-    setIndexTranslate(
-      getRandomBoolean() ? newIndexWord : getRandomInteger(19)
-    );
+    indexesWord = getRandomOderArr(20);
+    indexWord = indexesWord.pop();
+    indexTranslate = getRandomBoolean() ? indexWord : getRandomInteger(19);
     setGameStatus(true);
     setScore(0);
   }
@@ -96,35 +164,42 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
   return (
     <div className='game-sprint'>
       { 
-        words.length ?
+        !loading ?
         <React.Fragment>
 
           <Timer gameStatus={gameStatus}/>
 
         <div className='game-sprint__body'>
-          <h3>{score}</h3>
           {gameStatus  && ( 
           <div className='game-sprint__body--game'>
-            <h2>{words[indexWord].word}</h2>
-            <h3>{words[indexTranslate].wordTranslate}</h3>
+            <h3>{score}</h3>
+            <h2>{word}</h2>
+            <h3>{wordTranslate}</h3>
             <div className='body__answer'>
-              <button className='body-answer__button button--false' onClick={onClickHandlerGame.bind(null, false)}>Неверно</button>
-              <button className='body-answer__button button--true'onClick={onClickHandlerGame.bind(null, true)}>Верно</button>
+              <button className='sprint-body-answer__button button--false'
+                onClick={onClickHandlerGame.bind(null, false)}>Неверно</button>
+              <button className='sprint-body-answer__button button--true'
+                onClick={onClickHandlerGame.bind(null, true)}>Верно</button>
             </div>
           </div>)}
           {!gameStatus  && ( 
           <div className='game-sprint__body--end'>
+            <h3>Твой результат {score} очков</h3>
             <Progress />
-            <div className='body__answer'>
-              <button className='body-answer__button' onClick={onClickHandlerNewGame.bind(null, false)}>Продолжить игру</button>
-              <button className='body-answer__button'>К списку игр</button>
+            <div className='sprint-body__pagination'>
+              <div className='sprint-body-pagination__dot sprint-body-pagination__dot--activ'></div>
+              <div className='sprint-body-pagination__dot'></div>
             </div>
+            <nav className='sprint-body__nav'>
+              <a className='sprint-body-nav__link' onClick={onClickHandlerNewGame.bind(null, false)}>Продолжить игру</a>
+              <a className='sprint-body-nav__link'>К списку игр</a>
+            </nav>
           </div>)}
         </div>
         <button className='game-sprint__button-close'>Close</button>
       </React.Fragment>:
 
-      <h1>Loading...</h1>
+      <Loader />
       }
     </div>
   )
@@ -133,11 +208,9 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
 export {GameSprint};
 
 
-const Timer: React.FC<TimerProps> = (gameStatus) => {
-  //console.log(gameStatus.gameStatus)
-  //console.log(new Date().toLocaleTimeString())
+const Timer: React.FC<TimerProps> = ({gameStatus}) => {
   const timerProps = {
-    isPlaying: gameStatus.gameStatus,                                          // Тут надо написать правильно, только я пока не знаю как
+    isPlaying: gameStatus,
     size: 100,
     strokeWidth: 10,
     trailColor: '#afafaf'
@@ -156,7 +229,7 @@ const Timer: React.FC<TimerProps> = (gameStatus) => {
 
   return (
     <div className='game-sprint__timer'>
-      {gameStatus.gameStatus &&(<CountdownCircleTimer
+      {gameStatus &&(<CountdownCircleTimer
         {...timerProps}
         duration={60}
         colors={[
