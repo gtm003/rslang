@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {Link} from "react-router-dom";
+
+import { SideMenu } from '../side-menu';
 import "./header.scss";
 
 const Header: React.FC = () => {
+  const [menu, setMenu] = useState(false);
+
   return (
     <header className="header">
       <nav className="header__site-nav main-nav">
@@ -29,11 +33,14 @@ const Header: React.FC = () => {
           Войти
         </Link>
         <nav className="site-nav">
-          <button className="site-nav__btn">
+          <button className="site-nav__btn"
+                  onClick={() => setMenu(() => !menu)}>
             <span className="visually-hidden">
               Открыть меню
             </span>
           </button>
+          <SideMenu isAuth
+                    isMenuOpen={menu}/>
         </nav>
       </div>
     </header>
