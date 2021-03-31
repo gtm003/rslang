@@ -4,7 +4,7 @@
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  max-width: 1200px;
+  max-width: $desktop-width;
   min-height: 130px;
   margin: 0 auto;
   }
@@ -40,9 +40,12 @@
 
   &__login-btn {
     background-color: #f7cc7e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     &:hover {
-      border: 2px solid #f7cc7e;
+      box-shadow: 2px 2px 0px 0px #f7cc7e inset, -2px -2px 0px 0px #f7cc7e inset;
       background-color: #fff;
     }
   }
