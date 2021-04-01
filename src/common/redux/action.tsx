@@ -1,18 +1,16 @@
-const toggleTranslate = (isTranslate: any)  => {
+const toggleTranslate = (e: any)  => {
   return {
     type: 'TOGGLE_TRANSLATE',
-    target: isTranslate.target.name,
-    value: isTranslate.target.checked,
-    payload: isTranslate,
+    value: e.target.checked,
+    payload: e.target.checked,
   };
 }
 
-const toggleButtons = (areButtons: any)  => {
+const toggleButtons = (e: any)  => {
   return {
     type: 'TOGGLE_BUTTONS',
-    target: areButtons.target.name,
-    value: areButtons.target.checked,
-    payload: areButtons,
+    value: e.target.checked,
+    payload: e.target.checked,
   };
 }
 

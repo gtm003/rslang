@@ -1,3 +1,3 @@
-import settingsReducer from "./settingReducer";
+import {store} from "./store";
 
-export default settingsReducer;
+export {store};

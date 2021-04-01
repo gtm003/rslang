@@ -1,14 +1,21 @@
-import initialState from './initialState';
+import {initialState} from './initialState';
 
-const settingsReducer = (state = initialState, action: any) => {
+interface Action {
+  type: string,
+  value: boolean,
+  payload: boolean,
+}
+
+const settingsReducer = (state = initialState, action: Action) => {
+
   switch (action.type) {
-
     case 'TOGGLE_TRANSLATE':
-      return { ...state, isTranslate: [action.value] }
+      return {...state, isTranslate: action.value}
     case 'TOGGLE_BUTTONS':
-      return { ...state, areButtons: [action.value] }
-    default: return state;
+      return {...state, areButtons: action.value}
+    default:
+      return state;
   }
 };
 
-export default settingsReducer;
+export {settingsReducer};

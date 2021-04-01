@@ -1,52 +1,39 @@
-import React, {useState} from "react";
-import { connect } from 'react-redux';
+import React from "react";
+import {connect} from 'react-redux';
 import {toggleButtons, toggleTranslate} from "../../common/redux/action";
 
 interface SettingsProps {
-  isTranslate: any,
-  areButtons: any,
-  toggleSetting: any
+  isTranslate: boolean,
+  areButtons: boolean,
+  toggleTranslate: any,
+  toggleButtons: any
 }
 
-const Sett: React.FC<SettingsProps> = ({ areButtons, isTranslate, toggleSetting }) => {
-  const [name, setName] = useState(true);
-
-  console.log(areButtons);
-  console.log(toggleSetting)
-
- const handleInputChange = (e: any) => {
-    const target = e.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    //const name = target.name;
-
-    setName(value);
-  }
-
-
-    return (
-      <form >
-        {/*{settings.map((item: any) => {*/}
-        {/*  return (*/}
-        {/*    <label >*/}
-        {/*      <input*/}
-        {/*        name="isGoing"*/}
-        {/*        type="checkbox"*/}
-        {/*        checked={name}*/}
-        {/*        onChange={handleInputChange} />*/}
-        {/*      Пойдут*/}
-        {/*    </label >)*/}
-
-        {/*})}*/}
-      </form >
-
+const SettingsRedux: React.FC<SettingsProps> = ({areButtons, isTranslate, toggleTranslate, toggleButtons}) => {
+  return (
+    <form>
+      <label>
+        <input
+          type="checkbox"
+          checked={isTranslate}
+          onChange={toggleTranslate}/>
+        Показывать перевод
+      </label>
+      <br />
+      <label>
+        <input
+          type="checkbox"
+          checked={areButtons}
+          onChange={toggleButtons}/>
+        Возможность добавить в Сложные или Удаленные слова
+      </label>
+    </form>
   )
-
-
 };
 
-const mapStateToProps = (state:any) => ({
-  isTranslate: state.isTranslate,
-  areButtons: state.areButtons,
+const mapStateToProps = (state: any) => ({
+  isTranslate: state.setting.isTranslate,
+  areButtons: state.setting.areButtons,
 });
 
 const mapDispatchToProps = {
@@ -54,6 +41,6 @@ const mapDispatchToProps = {
   toggleTranslate
 };
 
-const Settings = connect(mapStateToProps, mapDispatchToProps)(Sett);
+const Settings = connect(mapStateToProps, mapDispatchToProps)(SettingsRedux);
 
 export {Settings};

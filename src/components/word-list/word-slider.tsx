@@ -3,6 +3,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a lo
 import {Carousel} from 'react-responsive-carousel';
 import {getDataPage, urlBackend} from "../../data";
 import {Loader} from "../loader";
+import {connect} from "react-redux";
 
 interface WordsProps {
   "id": "string",
@@ -24,11 +25,12 @@ interface WordsProps {
 interface WordSliderProps {
   group: number,
   page: number,
+  isTranslate: boolean
 }
 
 const audio = new Audio();
 
-const WordSlider: React.FC<WordSliderProps> = ({group, page}) => {
+const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isTranslate}) => {
   const [words, setWords] = useState<WordsProps[]>([]);
 
   useEffect(() => {
@@ -64,19 +66,19 @@ const WordSlider: React.FC<WordSliderProps> = ({group, page}) => {
               {words.map((item: WordsProps) => {
                 return (
                   <div key={item.id}>
-                    <img src={urlBackend + item.image} alt='image of word'/>
+                    <img src={urlBackend + item.image} alt='figure of word'/>
                     <div className="carousel__content">
                       <div className="word">
                         <p className="word__value">{item.word} {item.transcription}</p>
-                        <p className="word__translate">({item.wordTranslate})</p>
+                        {(isTranslate) ? <p className="word__translate">({item.wordTranslate})</p> : ''}
                       </div>
                       <div className='meaning'>
                         <p className="meaning__value" dangerouslySetInnerHTML={{__html: item.textMeaning}}></p>
-                        <p className="meaning__translate">({item.textMeaningTranslate})</p>
+                        {(isTranslate) ? <p className="meaning__translate">({item.textMeaningTranslate})</p> : ''}
                       </div>
                       <div className='example'>
                         <p className="example__value" dangerouslySetInnerHTML={{__html: item.textExample}}></p>
-                        <p className="example__translate">({item.textExampleTranslate})</p>
+                        {(isTranslate) ? <p className="example__translate">({item.textExampleTranslate})</p> : ''}
                       </div>
                       <div className="audio" onClick={() => playWord(item.audio, item.audioMeaning, item.audioExample)}>
                         <img src="/images/audio.png" alt='audio'/></div>
@@ -90,5 +92,13 @@ const WordSlider: React.FC<WordSliderProps> = ({group, page}) => {
     </div>
   )
 }
+
+const mapStateToProps = (state: any) => ({
+  isTranslate: state.setting.isTranslate,
+  areButtons: state.setting.areButtons,
+});
+
+
+const WordSlider = connect(mapStateToProps)(WordSliderRedux);
 
 export {WordSlider};

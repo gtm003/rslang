@@ -51,12 +51,6 @@ const Switcher: React.FC = () => {
 
     return <WordList group={idGroup} pageInitial={idPage}/>
   };
-  const options = [
-    {label: 'English', value: 'en'},
-    {label: '繁體中文', value: 'zh-TW'},
-    {label: 'Tibetan', value: 'bo'}
-  ];
-  const name = 'langs';
 
   return (
     <Switch>
