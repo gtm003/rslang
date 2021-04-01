@@ -46,7 +46,9 @@ let indexesWord = getRandomOderArr(20);
 let indexWord = indexesWord.pop();
 let indexTranslate = getRandomBoolean() ? indexWord : getRandomInteger(19);
 let round: number = 0;
-const wordList: Object[]= [];
+const correctList: Object[]= [];
+const errorList: Object[]= [];
+const audio = new Audio();
 
 interface GameSprintProps {
   group: number,
@@ -82,6 +84,7 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
   const [loading, setLoading] = useState(true);
   const [word, setWord] = useState<string>('');
   const [wordTranslate, setWordTranslate] = useState<string>('');
+  const [mute, setMute] = useState<boolean>(false);
 
 
   useEffect(() => {
@@ -123,17 +126,12 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
 
   const onClickHandlerGame = (answer : boolean) => {
     const correctAnswer : boolean = (indexWord === indexTranslate);
-    
+    playAnswer(answer === correctAnswer);
     if (answer === correctAnswer) {
       setScore(score + 10);
-      wordList.push ({
-        word : words[indexWord!].word,
-        wordTranslate : words[indexWord!].wordTranslate,
-        answer : true,
-      })
+      correctList.push (WORDS_GAME[indexWord!])
     }
     if(indexesWord.length) {
-      //console.log('next step');
       indexWord = indexesWord.pop();
       indexTranslate = getRandomBoolean() ? indexWord : getRandomInteger(19);
       setWord(WORDS_GAME[indexWord!].word);
@@ -159,7 +157,24 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
     indexTranslate = getRandomBoolean() ? indexWord : getRandomInteger(19);
     setGameStatus(true);
     setScore(0);
+    console.log(correctList);
   }
+
+  const onToggleHandlerMute = () => {
+    setMute(!mute);
+  }
+
+  const playWord = (audioWord: string) => {
+    audio.src = urlBackend + audioWord;
+    audio.play();
+  };
+
+  const playAnswer = (answer: boolean) => {
+    if (!mute) {
+      audio.src = answer ? '/audio/correct.mp3' : '/audio/error.mp3';
+      audio.play();
+    }
+  };
 
   return (
     <div className='game-sprint'>
@@ -171,19 +186,35 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
 
         <div className='game-sprint__body'>
           {gameStatus  && ( 
-          <div className='game-sprint__body--game'>
-            <h3>{score}</h3>
-            <h2>{word}</h2>
-            <h3>{wordTranslate}</h3>
-            <div className='body__answer'>
-              <button className='sprint-body-answer__button button--false'
-                onClick={onClickHandlerGame.bind(null, false)}>Неверно</button>
+          <div className='game-sprint__body game-sprint__body--game'>
+            <div className='sprint-body-game__header'>
+              <span className = 'icon-container' onClick={() => playWord(WORDS_GAME[indexWord!].audio)}>
+                <i className="material-icons sprint-body-game__icon">volume_up</i>
+              </span>
+              <h3>{score}</h3>
+              <span className = 'icon-container' onClick={() => onToggleHandlerMute()}>
+                {mute ? <i className="material-icons">notifications_off</i> : <i className="material-icons">notifications</i>}
+              </span>
+            </div>
+            <div>
+              <h2>{word}</h2>
+              <h3>{wordTranslate}</h3>
+            </div>
+            <div className='sprint-body__answer'>
+              <div className = 'sprint-body-answer__item'>
+                <button className='sprint-body-answer__button button--false'
+                  onClick={onClickHandlerGame.bind(null, false)}>Неверно</button>
+                <span><i className="material-icons">arrow_back</i></span>
+              </div>
+              <div className = 'sprint-body-answer__item'>
               <button className='sprint-body-answer__button button--true'
                 onClick={onClickHandlerGame.bind(null, true)}>Верно</button>
+                <span><i className="material-icons">arrow_forward</i></span>
+              </div>
             </div>
           </div>)}
           {!gameStatus  && ( 
-          <div className='game-sprint__body--end'>
+          <div className='game-sprint__body game-sprint__body--end'>
             <h3>Твой результат {score} очков</h3>
             <Progress />
             <div className='sprint-body__pagination'>
