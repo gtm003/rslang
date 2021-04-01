@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer'
 import { urlBackend } from '../../data';
+import { getRandomOderArr, getRandomBoolean, getRandomInteger } from '../../data/utils';
 import { Loader } from '../loader';
-
-import './sprint.scss';
 
 const getData = async (url: string): Promise<SprintBodyProps[]> => {
   const res = await fetch(url);
@@ -17,35 +16,13 @@ return await res.json();
 
 const urls: Array<string> = [];
 const WORDS_GROUP: SprintBodyProps[][] = [];
+
 let WORDS_GAME: SprintBodyProps[] = [];
-
-const getRandomInteger = (max : number) : number => {
-  return Math.floor(Math.random() * Math.floor(max));
-};
-
-const getOderArr = (n : number) => {
-  let arr : number[] = [];
-  Array(n).fill(1).forEach((item, index) => arr.push(index));
-  return arr;
-};
-
-const getRandomOderArr = (n : number) => {
-  let array = getOderArr(n);
-  for (let i = n - 1; i > 0; i--) {
-      let j = Math.floor(Math.random() * (i + 1)); 
-      [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
-}
-
-const getRandomBoolean = () : boolean => {
-  return Math.random() < 0.5;
-};
-
 let indexesWord = getRandomOderArr(20);
 let indexWord = indexesWord.pop();
 let indexTranslate = getRandomBoolean() ? indexWord : getRandomInteger(19);
 let round: number = 0;
+
 const correctList: Object[]= [];
 const errorList: Object[]= [];
 const audio = new Audio();
@@ -80,8 +57,8 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
 
   const [words, setWords] = useState<SprintBodyProps[]>([]);
   const [score, setScore] = useState<number>(0);
-  const [gameStatus, setGameStatus] = useState(true);
-  const [loading, setLoading] = useState(true);
+  const [gameStatus, setGameStatus] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true);
   const [word, setWord] = useState<string>('');
   const [wordTranslate, setWordTranslate] = useState<string>('');
   const [mute, setMute] = useState<boolean>(false);
