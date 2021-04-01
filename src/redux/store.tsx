@@ -2,7 +2,7 @@ import { createStore, combineReducers } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
 const reducers = {
-    form: formReducer
+    form: formReducer,
 }
 
 const reducer = combineReducers(reducers);
