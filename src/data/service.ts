@@ -1,8 +1,8 @@
-export const getData = async (
-  group: number,
-  page: number
-): Promise<Array<Object>> => {
-  const url: string = `https://react-rs-lang-words.herokuapp.com/words?group=${group}&page=${page}`;
+import { WordsProps } from "../common/ts/interfaces";
+
+const url: string = `https://react-rs-lang-words.herokuapp.com/words?all=true`;
+
+export const getData = async (): Promise<Array<WordsProps>> => {
 
   const res = await fetch(`${url}`);
 

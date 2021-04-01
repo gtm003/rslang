@@ -6,8 +6,8 @@ import { Provider } from 'react-redux';
 import { App } from './components/app';
 import { applyMiddleware, compose } from 'redux';
 import { createStore } from "redux";
-import { reducer } from './components/common/redux/store';
-import { ActionCreator } from './components/common/redux/action-creator';
+import { reducer } from './common/redux/store';
+import { ActionCreator } from './common/redux/action-creator';
 import thunk from 'redux-thunk';
 
 const store = createStore(

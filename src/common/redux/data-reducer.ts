@@ -19,7 +19,7 @@ const reducer = (state: InitialState = initialState, action: any) => {
     case `SET_WORDS`:
       return {
         ...state,
-        words: [...state.words, action.payload],
+        words: action.payload,
       };
     default:
       return state;

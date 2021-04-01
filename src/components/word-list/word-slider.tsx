@@ -3,23 +3,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a lo
 import {Carousel} from 'react-responsive-carousel';
 import {getDataPage, urlBackend} from "../../data";
 import {Loader} from "../loader";
-
-interface WordsProps {
-  "id": "string",
-  "group": 0,
-  "page": 0,
-  "word": "string",
-  "image": "string",
-  "audio": "string",
-  "audioMeaning": "string",
-  "audioExample": "string",
-  "textMeaning": "string",
-  "textExample": "string",
-  "transcription": "string",
-  "wordTranslate": "string",
-  "textMeaningTranslate": "string",
-  "textExampleTranslate": "string"
-}
+import {WordsProps} from "../../common/ts/interfaces";
 
 interface WordSliderProps {
   group: number,
