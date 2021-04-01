@@ -10,7 +10,6 @@ import {Tutorial} from "../../components/tutorial";
 import {WordList} from "../../components/word-list";
 import {LoginFormRedux} from "../../components/loginform";
 import {SignUpFormRedux} from "../../components/signupform";
-import {Settings} from "../../components/settings";
 
 const Switcher: React.FC = () => {
 
@@ -56,13 +55,13 @@ const Switcher: React.FC = () => {
     <Switch>
       <Route exact path='/' component={MainPage}/>
       <Route path='/team' component={Team}/>
-      <Route path='/log-in' component={LoginFormRedux} />
-      <Route path='/sign-up' component={SignUpFormRedux} />
+      <Route path='/log-in' component={LoginFormRedux}/>
+      <Route path='/sign-up' component={SignUpFormRedux}/>
       <Route exact path='/tutorial' component={Tutorial}/>
       <Route path='/games' component={Tutorial}/>
       <Route path='/dictionary' component={Tutorial}/>
       <Route path='/statistics' component={Tutorial}/>
-      <Route path='/settings' component={Settings}/>
+      {/*<Route path='/settings' component={Settings}/>*/}
       <Route path='/tutorial/group:group/page:page'
              component={(...props: Array<object>) => isGroupPageExists(props[0])}/>
       <Route path='/tutorial/group:id' component={(...props: Array<object>) => isGroupExists(props[0])}/>

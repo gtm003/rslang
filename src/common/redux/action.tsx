@@ -4,7 +4,7 @@ const toggleTranslate = (e: any)  => {
     value: e.target.checked,
     payload: e.target.checked,
   };
-}
+};
 
 const toggleButtons = (e: any)  => {
   return {
@@ -12,6 +12,14 @@ const toggleButtons = (e: any)  => {
     value: e.target.checked,
     payload: e.target.checked,
   };
-}
+};
 
-export {toggleTranslate, toggleButtons}
+const toggleOpen = (e: boolean)  => {
+  return {
+    type: 'TOGGLE_OPEN',
+    value: e,
+    payload: e,
+  };
+};
+
+export {toggleTranslate, toggleButtons, toggleOpen};

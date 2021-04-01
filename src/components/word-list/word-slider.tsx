@@ -25,12 +25,13 @@ interface WordsProps {
 interface WordSliderProps {
   group: number,
   page: number,
-  isTranslate: boolean
+  isTranslate: boolean,
+  areButtons: boolean
 }
 
 const audio = new Audio();
 
-const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isTranslate}) => {
+const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isTranslate, areButtons}) => {
   const [words, setWords] = useState<WordsProps[]>([]);
 
   useEffect(() => {
@@ -53,13 +54,13 @@ const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isTranslate}) 
     }
   };
 
-  const pathImg: string = `/images/group/${group-1}.png`;
+  const pathImg: string = `/images/group/${group - 1}.png`;
 
   return (
     <div className="word-slider">
       {
         (page < 0) ?
-          <img src={pathImg}  alt='level english'/>
+          <img src={pathImg} alt='level english'/>
           :
           words.length ?
             <Carousel dynamicHeight={false}>
@@ -70,18 +71,30 @@ const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isTranslate}) 
                     <div className="carousel__content">
                       <div className="word">
                         <p className="word__value">{item.word} {item.transcription}</p>
-                        {(isTranslate) ? <p className="word__translate">({item.wordTranslate})</p> : ''}
+                        {isTranslate && <p className="word__translate">({item.wordTranslate})</p>}
                       </div>
                       <div className='meaning'>
                         <p className="meaning__value" dangerouslySetInnerHTML={{__html: item.textMeaning}}></p>
-                        {(isTranslate) ? <p className="meaning__translate">({item.textMeaningTranslate})</p> : ''}
+                        {isTranslate && <p className="meaning__translate">({item.textMeaningTranslate})</p>}
                       </div>
                       <div className='example'>
                         <p className="example__value" dangerouslySetInnerHTML={{__html: item.textExample}}></p>
-                        {(isTranslate) ? <p className="example__translate">({item.textExampleTranslate})</p> : ''}
+                        {isTranslate && <p className="example__translate">({item.textExampleTranslate})</p>}
                       </div>
-                      <div className="audio" onClick={() => playWord(item.audio, item.audioMeaning, item.audioExample)}>
-                        <img src="/images/audio.png" alt='audio'/></div>
+                      <div className="carousel__content__btns">
+                        <div className="audio"
+                             onClick={() => playWord(item.audio, item.audioMeaning, item.audioExample)}>
+                          <img src="/images/audio.png" alt='audio'/>
+                        </div>
+                        {areButtons &&
+                        <div className='btn-difficult'>
+                          Добавить в Сложные
+                        </div>}
+                        {areButtons &&
+                        <div className='btn-delete'>
+                          Удалить
+                        </div>}
+                      </div>
                     </div>
                   </div>
                 )

@@ -3,20 +3,23 @@ import {useHistory} from "react-router-dom";
 import {levelsEnglish} from "../../data";
 import {Select} from "./select";
 import {WordSlider} from "./word-slider";
-import {NavLink} from "react-router-dom";
 import {Pagination} from "../pagination";
+import {toggleOpen, toggleButtons} from "../../common/redux/action";
+import {connect} from "react-redux";
 
 interface WordListProps {
+  toggleOpen: any,
+  toggleButtons: any,
   group: number,
   pageInitial?: number
 }
 
-const WordList: React.FC<WordListProps> = ({group, pageInitial = 0}) => {
+const WordListRedux: React.FC<WordListProps> = ({group, pageInitial = 0, toggleOpen, toggleButtons}) => {
   const [page, setPage] = useState(pageInitial - 1);
   const history = useHistory();
   const name: string = levelsEnglish[group - 1].name;
   const changeSelectItem = (e: any) => {
-    const newPage: number = (typeof e === "number") ? e  : ((e.target.value === '') ? -1 : Number(e.target.value));
+    const newPage: number = (typeof e === "number") ? e : ((e.target.value === '') ? -1 : Number(e.target.value));
     history.push(`/tutorial/group${group}/page${newPage + 1}`);
     setPage(newPage);
   };
@@ -26,9 +29,7 @@ const WordList: React.FC<WordListProps> = ({group, pageInitial = 0}) => {
       <p className='word-list__title'>топ 600 слов {name}</p>
       <div className="word-list__select">
         <Select changeSelectItem={changeSelectItem} page={page}/>
-        <NavLink to={`/settings`}>
-          <img src='/images/settingsIcon.png' alt='settings'/>
-        </NavLink>
+        <img src='/images/settingsIcon.png' alt='settings' onClick={() => toggleOpen('true')}/>
       </div>
       <WordSlider group={group} page={page}/>
       <Pagination group={group} page={page + 1} changeSelectItem={changeSelectItem}/>
@@ -36,4 +37,10 @@ const WordList: React.FC<WordListProps> = ({group, pageInitial = 0}) => {
   )
 };
 
+const mapDispatchToProps = {
+  toggleOpen,
+  toggleButtons
+};
+
+const WordList = connect(null, mapDispatchToProps)(WordListRedux);
 export {WordList};
