@@ -16,7 +16,7 @@ const WordList: React.FC<WordListProps> = ({group, pageInitial = 0}) => {
   const history = useHistory();
   const name: string = levelsEnglish[group - 1].name;
   const changeSelectItem = (e: any) => {
-    const newPage: number = (typeof e === "number") ? e : Number(e.target.value);
+    const newPage: number = (typeof e === "number") ? e  : ((e.target.value === '') ? -1 : Number(e.target.value));
     history.push(`/tutorial/group${group}/page${newPage + 1}`);
     setPage(newPage);
   };

@@ -23,9 +23,9 @@
   .selectPages {
     text-align: center;
 
-    select {
+    select, option {
       text-transform: uppercase;
-      width: 260px;
+      width: 270px;
       text-align: center;
       text-align-last: center;
       padding: 5px 4%;
@@ -43,9 +43,20 @@
         display: none !important;
         background: transparent;
       }
+
+      &:required:invalid {
+        text-transform: none;
+        color: $secondary-color;
+      }
+
     }
   }
 }
+
+option {
+  color: black;
+}
+
 
 .carousel-root {
   width: 70%;
@@ -74,7 +85,6 @@
     justify-content: center;
     flex-wrap: wrap;
     font-size: 35px;
-    line-height: 10px;
 
     &__value {
       margin: 0;

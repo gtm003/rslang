@@ -32,6 +32,7 @@ const WordSlider: React.FC<WordSliderProps> = ({group, page}) => {
   const [words, setWords] = useState<WordsProps[]>([]);
 
   useEffect(() => {
+    setWords([]);
     getDataPage(group - 1, page).then((res: WordsProps[]) => setWords(res));
   }, [page, group]);
 

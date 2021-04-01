@@ -14,6 +14,7 @@
 
     &--0 {
       border-color: $light-green-color;
+
       &:hover {
         background-color: $light-green-color;
       }
@@ -21,13 +22,15 @@
 
     &--1 {
       border-color: $green-color;
+
       &:hover {
-      background-color: $green-color;
-    }
+        background-color: $green-color;
+      }
     }
 
     &--2 {
       border-color: $pink-color;
+
       &:hover {
         background-color: $pink-color;
       }
@@ -35,6 +38,7 @@
 
     &--3 {
       border-color: $orange-color;
+
       &:hover {
         background-color: $orange-color;
       }
@@ -42,6 +46,7 @@
 
     &--4 {
       border-color: $light-blue-color;
+
       &:hover {
         background-color: $light-blue-color;
       }
