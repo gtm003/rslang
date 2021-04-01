@@ -23,22 +23,24 @@ const Savannah: React.FC = () => {
   const [words, setWords] = useState<WordsProps[]>([]);
   const [translations, setTranslations] = useState<string[]>([]);
 
-  const shuffleArray = (array: string[]) => {
-    for (let i = 0; i <= array.length - 1; i++) {
-      let j = Math.floor(Math.random() * i);
-  
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-  
-    return array;
-  };
-
   useEffect(() => {
     getDataPage(1, 1).then(res => {
       setWords(res);
       setTranslations(res.map((word) => word.wordTranslate));
     });
   }, []);
+
+  const shuffleArray = (array: string[]) => {
+    for (let i = 0; i <= array.length - 1; i++) {
+      let j = Math.floor(Math.random() * i);
+
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+
+    return array;
+  };
+
+
 
   if (words.length === 0 || translations.length === 0) {
     return <div>Loading...</div>
@@ -47,9 +49,18 @@ const Savannah: React.FC = () => {
   const randomWordIndex: number = Math.floor(Math.random() * words.length);
 
   const translationWord: string = words[randomWordIndex].word;
+  const wordTranslation: string = words[randomWordIndex].wordTranslate;
+
+  const changeWordList = (evt: any, wordTranslation: string): void => {
+    if (evt.target.lastChild.data === wordTranslation) {
+      const updatedWords = words.filter((word) => word.word !== translationWord);
+      setWords(updatedWords);
+    }
+
+  }
 
   const wordTranslations: string[] = [
-    words[randomWordIndex].wordTranslate,
+    wordTranslation,
     translations[Math.floor(Math.random() * words.length)],
     translations[Math.floor(Math.random() * words.length)],
     translations[Math.floor(Math.random() * words.length)]
@@ -67,11 +78,11 @@ const Savannah: React.FC = () => {
           {
             shuffleArray(wordTranslations).map((translation: string, i: number) => {
               return (
-                <li key={translation + i} className="savannah__translation-item">
+                <li key={translation + i} className="savannah__translation-item" onClick={evt => changeWordList(evt, wordTranslation)}>
                   <span>{i + 1}. </span>
-                  {
-                    translation
-                  }
+                  <span>
+                    {translation}
+                  </span>
                 </li>
               )
             })

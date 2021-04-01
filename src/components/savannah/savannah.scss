@@ -3,7 +3,7 @@
   height: 100vh;
   background-color: #00695c;
 
-  &__word{
+  &__word {
     width: 100%;
     padding: 100px 0;
     text-align: center;
@@ -11,7 +11,7 @@
     font-size: 30px;
   }
 
-  &__translation{
+  &__translation {
     width: 100%;
     text-align: center;
   }
@@ -25,5 +25,9 @@
     display: inline-block;
     padding: 0 20px;
     color: #fff;
+
+    & > * {
+      cursor: pointer;
+    }
   }
 }
