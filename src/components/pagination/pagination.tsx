@@ -10,7 +10,7 @@ interface PaginationProps {
 const maxPages: number = 30;
 
 const Pagination: React.FC<PaginationProps> = ({group, page, changeSelectItem}) => {
-  const classBtn: string = "pagination__btn btn";
+  const classBtn: string = `pagination__btn btn pagination__btn--${group-1}`;
   const classRightBtn: string = (page === maxPages) ? classBtn + ' hidden' : classBtn;
   const classLeftBtn: string = (page <= 1) ? classBtn + ' hidden' : classBtn;
 
