@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {Link} from "react-router-dom";
+import { Overlay } from '../overlay';
 
 import { SideMenu } from '../side-menu';
 import "./header.scss";
@@ -43,6 +44,7 @@ const Header: React.FC = () => {
                     isMenuOpen={menu}/>
         </nav>
       </div>
+      <Overlay isMenuOpen={menu}/>
     </header>
   )
 }

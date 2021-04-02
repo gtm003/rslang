@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 
 import { navLink, menuLinks } from '../../data';
 
-import './side-menu.scss';
-
 interface SideMenuProps {
   isAuth: boolean
   isMenuOpen: boolean
@@ -17,12 +15,15 @@ const SideMenu: React.FC<SideMenuProps> = ({isAuth, isMenuOpen}) => {
   return (
     <div className={`side-menu ${clazz} ${isVisible}`}>
       <ul className="side-menu__list">
-        {menuLinks.map((item) => {
+        {menuLinks.map((item: string) => {
           if (isAuth === false && item === 'Словарь') {
             return null;
           }
+
+          const clazz: string = item === 'Войти' ? 'side-menu__item--login' : ''; 
+          
           return (
-            <li key={item}>
+            <li className={`side-menu__item ${clazz}`} key={item}>
               <Link to={`/${navLink[item]}`}>
                 {item}
               </Link>
