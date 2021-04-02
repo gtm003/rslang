@@ -1,16 +1,25 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {Link} from "react-router-dom";
-import { toggleLoginOpen } from '../../common/redux/login-action-creator';
+import { loginUser, toggleLoginOpen } from '../../common/redux/login-action-creator';
+import { signUpUser } from '../../common/redux/signup-action-creator';
 import "./header.scss";
+
+interface user {
+  name: null | string,
+  userId: null | string,
+}
 
 interface HeaderProps {
   isLoginOpen: boolean,
   isSignUpOpen: boolean,
-  toggleLoginOpen: (isLoginOpen: boolean) => void
+  user: user,
+  toggleLoginOpen: (isLoginOpen: boolean) => void,
+  signUpUser: (name: string | null, id: string | null, email: string | null) => void,
+  loginUser: (name: string | null, userId: string | null) => void,
 }
 
-const Header: React.FC<HeaderProps> = ({ toggleLoginOpen, isLoginOpen, isSignUpOpen }) => {
+const Header: React.FC<HeaderProps> = ({ isLoginOpen, isSignUpOpen, user, toggleLoginOpen, signUpUser, loginUser }) => {
   return (
     <header className="header">
       <nav className="header__site-nav main-nav">
@@ -33,9 +42,19 @@ const Header: React.FC<HeaderProps> = ({ toggleLoginOpen, isLoginOpen, isSignUpO
         </ul>
       </nav>
       <div className="header__right-column-wrapper right-column-wrapper">
-        <button disabled={isLoginOpen || isSignUpOpen} className="btn right-column-wrapper__login-btn" onClick={ () => toggleLoginOpen(true) }>
-          Войти
-        </button>
+        {
+          user.userId ?
+            <button disabled={isLoginOpen || isSignUpOpen} className="btn right-column-wrapper__login-btn" onClick={ () => {
+              signUpUser(null, null, null);
+              loginUser(null, null);
+            }}>
+              Выйти
+            </button>
+          :
+            <button disabled={isLoginOpen || isSignUpOpen} className="btn right-column-wrapper__login-btn" onClick={ () => toggleLoginOpen(true) }>
+              Войти
+            </button>
+        }
         <nav className="site-nav">
           <button className="site-nav__btn">
             <span className="visually-hidden">
@@ -51,11 +70,18 @@ const Header: React.FC<HeaderProps> = ({ toggleLoginOpen, isLoginOpen, isSignUpO
 const mapStateToProps = (state: any) => ({
   isLoginOpen: state.login.isLoginOpen,
   isSignUpOpen: state.signup.isSignUpOpen,
+  user: state.login.user,
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
   toggleLoginOpen: (isLoginOpen: boolean) => {
     dispatch(toggleLoginOpen(isLoginOpen));
+  },
+  signUpUser: (name: string | null, id: string | null, email: string | null) => {
+    dispatch(signUpUser(name, id, email));
+  },
+  loginUser: (name: string | null, userId: string | null) => {
+    dispatch(loginUser(name, userId));
   },
 });
 

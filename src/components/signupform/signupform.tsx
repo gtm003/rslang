@@ -1,13 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
-import { toggleSignUpOpen } from '../../common/redux/signup-action-creator';
+import { loginUser } from '../../common/redux/login-action-creator';
+import { signUpUser, toggleSignUpOpen } from '../../common/redux/signup-action-creator';
 import { urlBackend } from '../../data';
 
 interface SignUpProps {
     isSignUpOpen: boolean,
     handleSubmit: any,
-    toggleSignUpOpen: (isSignUpOpen: boolean) => void
+    toggleSignUpOpen: (isSignUpOpen: boolean) => void,
+    signUpUser: (name: string | null, id: string | null, email: string | null) => void,
+    loginUser: (name: string | null, userId: string | null) => void,
 }
 
 interface submitValues {
@@ -16,7 +19,7 @@ interface submitValues {
     password: string,
 }
 
-const SignUpForm: React.FC<SignUpProps> = ({ isSignUpOpen, handleSubmit, toggleSignUpOpen }) => {
+const SignUpForm: React.FC<SignUpProps> = ({ isSignUpOpen, handleSubmit, toggleSignUpOpen, signUpUser, loginUser }) => {
     const submit = async (values: submitValues) => {
         const response = await fetch(`${urlBackend}users`, {
             method: 'POST',
@@ -27,7 +30,9 @@ const SignUpForm: React.FC<SignUpProps> = ({ isSignUpOpen, handleSubmit, toggleS
             body: JSON.stringify(values)
         });
         const content = await response.json();
-        console.log(content);
+        signUpUser(content.name, content.id, content.email);
+        loginUser(content.name, content.id);
+        toggleSignUpOpen(false);
     }
     return (
         isSignUpOpen ?
@@ -58,11 +63,18 @@ const SignUpForm: React.FC<SignUpProps> = ({ isSignUpOpen, handleSubmit, toggleS
 
 const mapStateToProps = (state: any) => ({
     isSignUpOpen: state.signup.isSignUpOpen,
+    user: state.signup.user,
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
     toggleSignUpOpen: (isSignUpOpen: boolean) => {
         dispatch(toggleSignUpOpen(isSignUpOpen));
+    },
+    signUpUser: (name: string | null, id: string | null, email: string | null) => {
+        dispatch(signUpUser(name, id, email));
+    },
+    loginUser: (name: string | null, userId: string | null) => {
+        dispatch(loginUser(name, userId));
     },
 });
 
