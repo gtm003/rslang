@@ -1,14 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { Field, reduxForm } from 'redux-form';
 import { toggleLoginOpen } from '../../common/redux/login-action-creator';
+import { toggleSignUpOpen } from '../../common/redux/signup-action-creator';
 import { urlBackend } from '../../data';
 
 interface LoginProps {
     isLoginOpen: boolean,
     handleSubmit: any,
-    toggleLoginOpen: (isLoginOpen: boolean) => void
+    toggleLoginOpen: (isLoginOpen: boolean) => void,
+    toggleSignUpOpen: (isLoginOpen: boolean) => void
 }
 
 interface submitValues {
@@ -16,7 +17,7 @@ interface submitValues {
     password: string,
 }
 
-const LoginForm: React.FC<LoginProps> = ({ isLoginOpen, handleSubmit, toggleLoginOpen }) => {
+const LoginForm: React.FC<LoginProps> = ({ isLoginOpen, handleSubmit, toggleLoginOpen, toggleSignUpOpen }) => {
     const submit = async (values: submitValues) => {
         const response = await fetch(`${urlBackend}signin`, {
             method: 'POST',
@@ -52,7 +53,13 @@ const LoginForm: React.FC<LoginProps> = ({ isLoginOpen, handleSubmit, toggleLogi
                 </div>
                 <div>
                     <div>
-                        Забыли пароль? | <Link to="/sign-up">Регистрация</Link>
+                        <span>Забыли пароль?</span>| 
+                        <span onClick={ () => {
+                                toggleLoginOpen(false);
+                                toggleSignUpOpen(true);
+                            }}>
+                        Регистрация
+                        </span>
                     </div>
                 </div>
             </form>
@@ -68,7 +75,10 @@ const mapDispatchToProps = (dispatch: any) => ({
     toggleLoginOpen: (isLoginOpen: boolean) => {
         dispatch(toggleLoginOpen(isLoginOpen));
     },
-})
+    toggleSignUpOpen: (isSignUpOpen: boolean) => {
+        dispatch(toggleSignUpOpen(isSignUpOpen));
+    },
+});
 
 const LoginFormConnect = connect(mapStateToProps, mapDispatchToProps)(LoginForm);
 

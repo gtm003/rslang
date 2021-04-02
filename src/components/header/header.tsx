@@ -5,10 +5,12 @@ import { toggleLoginOpen } from '../../common/redux/login-action-creator';
 import "./header.scss";
 
 interface HeaderProps {
+  isLoginOpen: boolean,
+  isSignUpOpen: boolean,
   toggleLoginOpen: (isLoginOpen: boolean) => void
 }
 
-const Header: React.FC<HeaderProps> = ({ toggleLoginOpen }) => {
+const Header: React.FC<HeaderProps> = ({ toggleLoginOpen, isLoginOpen, isSignUpOpen }) => {
   return (
     <header className="header">
       <nav className="header__site-nav main-nav">
@@ -31,7 +33,7 @@ const Header: React.FC<HeaderProps> = ({ toggleLoginOpen }) => {
         </ul>
       </nav>
       <div className="header__right-column-wrapper right-column-wrapper">
-        <button className="btn right-column-wrapper__login-btn" onClick={ () => toggleLoginOpen(true) }>
+        <button disabled={isLoginOpen || isSignUpOpen} className="btn right-column-wrapper__login-btn" onClick={ () => toggleLoginOpen(true) }>
           Войти
         </button>
         <nav className="site-nav">
@@ -46,12 +48,17 @@ const Header: React.FC<HeaderProps> = ({ toggleLoginOpen }) => {
   )
 }
 
+const mapStateToProps = (state: any) => ({
+  isLoginOpen: state.login.isLoginOpen,
+  isSignUpOpen: state.signup.isSignUpOpen,
+});
+
 const mapDispatchToProps = (dispatch: any) => ({
   toggleLoginOpen: (isLoginOpen: boolean) => {
     dispatch(toggleLoginOpen(isLoginOpen));
   },
 });
 
-const HeaderRedux = connect(null, mapDispatchToProps)(Header);
+const HeaderRedux = connect(mapStateToProps, mapDispatchToProps)(Header);
 
 export { HeaderRedux };
