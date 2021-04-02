@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
-import { toggleLoginOpen } from '../../common/redux/login-action-creator';
+import { loginUser, toggleLoginOpen } from '../../common/redux/login-action-creator';
 import { toggleSignUpOpen } from '../../common/redux/signup-action-creator';
 import { urlBackend } from '../../data';
 
@@ -9,7 +9,8 @@ interface LoginProps {
     isLoginOpen: boolean,
     handleSubmit: any,
     toggleLoginOpen: (isLoginOpen: boolean) => void,
-    toggleSignUpOpen: (isLoginOpen: boolean) => void
+    toggleSignUpOpen: (isLoginOpen: boolean) => void,
+    loginUser: (name: string, userId: string) => void,
 }
 
 interface submitValues {
@@ -17,7 +18,7 @@ interface submitValues {
     password: string,
 }
 
-const LoginForm: React.FC<LoginProps> = ({ isLoginOpen, handleSubmit, toggleLoginOpen, toggleSignUpOpen }) => {
+const LoginForm: React.FC<LoginProps> = ({ isLoginOpen, handleSubmit, toggleLoginOpen, toggleSignUpOpen, loginUser }) => {
     const submit = async (values: submitValues) => {
         const response = await fetch(`${urlBackend}signin`, {
             method: 'POST',
@@ -28,7 +29,8 @@ const LoginForm: React.FC<LoginProps> = ({ isLoginOpen, handleSubmit, toggleLogi
             body: JSON.stringify(values)
         });
         const content = await response.json();
-        console.log(content);
+        loginUser(content.name, content.userId);
+        toggleLoginOpen(false);
     };
     
     return (
@@ -69,6 +71,7 @@ const LoginForm: React.FC<LoginProps> = ({ isLoginOpen, handleSubmit, toggleLogi
 
 const mapStateToProps = (state: any) => ({
     isLoginOpen: state.login.isLoginOpen,
+    user: state.login.user,
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
@@ -77,6 +80,9 @@ const mapDispatchToProps = (dispatch: any) => ({
     },
     toggleSignUpOpen: (isSignUpOpen: boolean) => {
         dispatch(toggleSignUpOpen(isSignUpOpen));
+    },
+    loginUser: (name: string, userId: string) => {
+        dispatch(loginUser(name, userId));
     },
 });
 
