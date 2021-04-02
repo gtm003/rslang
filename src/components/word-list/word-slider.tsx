@@ -4,6 +4,7 @@ import {Carousel} from 'react-responsive-carousel';
 import {getDataPage, urlBackend} from "../../data";
 import {Loader} from "../loader";
 import {connect} from "react-redux";
+import {WordsProps} from "../../common/ts/interfaces";
 
 interface WordsProps {
   "id": "string",
