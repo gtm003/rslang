@@ -2,10 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.scss';
 
-import {App} from './components/app';
-import {BrowserRouter as Router} from 'react-router-dom';
-import {Provider} from 'react-redux';
-import {store} from './common/redux';
+import { App } from './components/app';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { Provider } from 'react-redux';
 import { applyMiddleware, compose } from 'redux';
 import { createStore } from "redux";
 import { reducer } from './common/redux/store';

@@ -1,5 +1,5 @@
 import { getData } from "../../data/service";
-import { WordsProps } from "../ts/interfaces"
+import { WordsProps } from "../ts/interfaces";
 
 const ActionCreator = {
   getWords: () => (dispatch: any): void => {

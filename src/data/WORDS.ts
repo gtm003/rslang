@@ -1,28 +1,9 @@
-interface SprintBodyProps {
-  id: string;
-  group: 0;
-  page: 0;
-  word: string;
-  image: string;
-  audio: string;
-  audioMeaning: string;
-  audioExample: string;
-  textMeaning: string;
-  textExample: string;
-  transcription: string;
-  wordTranslate: string;
-  textMeaningTranslate: string;
-  textExampleTranslate: string;
-  deletedWord: boolean;
-  hardWord: boolean;
-  corrects: number;
-  errorsCount: number;
-}
+import { WordsProps } from "../common/ts/interfaces";
 
 const getDataPage = async (
   group: number,
   page: number
-): Promise<SprintBodyProps[]> => {
+): Promise<WordsProps[]> => {
   const url = `https://react-rs-lang-words.herokuapp.com/words?group=${group}&page=${page}`;
 
   const res = await fetch(`${url}`);

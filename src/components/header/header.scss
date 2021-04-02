@@ -1,3 +1,5 @@
+@import "../../styles/vars.scss";
+
 .header {
   display: flex;
   justify-content: space-between;
@@ -5,7 +7,7 @@
   max-width: $desktop-width;
   min-height: 130px;
   margin: 0 auto;
-  }
+}
 
 .main-nav {
   display: flex;

@@ -1,27 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
-import {Carousel} from 'react-responsive-carousel';
-import {getDataPage, urlBackend} from "../../data";
-import {Loader} from "../loader";
-import {connect} from "react-redux";
-import {WordsProps} from "../../common/ts/interfaces";
-
-interface WordsProps {
-  "id": "string",
-  "group": 0,
-  "page": 0,
-  "word": "string",
-  "image": "string",
-  "audio": "string",
-  "audioMeaning": "string",
-  "audioExample": "string",
-  "textMeaning": "string",
-  "textExample": "string",
-  "transcription": "string",
-  "wordTranslate": "string",
-  "textMeaningTranslate": "string",
-  "textExampleTranslate": "string"
-}
+import { Carousel } from 'react-responsive-carousel';
+import { getDataPage, urlBackend } from "../../data";
+import { Loader } from "../loader";
+import { connect } from "react-redux";
+import { WordsProps } from "../../common/ts/interfaces";
 
 interface WordSliderProps {
   group: number,
@@ -32,7 +15,7 @@ interface WordSliderProps {
 
 const audio = new Audio();
 
-const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isTranslate, areButtons}) => {
+const WordSliderRedux: React.FC<WordSliderProps> = ({ group, page, isTranslate, areButtons }) => {
   const [words, setWords] = useState<WordsProps[]>([]);
 
   useEffect(() => {
@@ -61,39 +44,39 @@ const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isTranslate, a
     <div className="word-slider">
       {
         (page < 0) ?
-          <img src={pathImg} alt='level english'/>
+          <img src={pathImg} alt='level english' />
           :
           words.length ?
             <Carousel dynamicHeight={false}>
               {words.map((item: WordsProps) => {
                 return (
                   <div key={item.id}>
-                    <img src={urlBackend + item.image} alt='figure of word'/>
+                    <img src={urlBackend + item.image} alt='figure of word' />
                     <div className="carousel__content">
                       <div className="word">
                         <p className="word__value">{item.word} {item.transcription}</p>
                         {isTranslate && <p className="word__translate">({item.wordTranslate})</p>}
                       </div>
                       <div className='meaning'>
-                        <p className="meaning__value" dangerouslySetInnerHTML={{__html: item.textMeaning}}></p>
+                        <p className="meaning__value" dangerouslySetInnerHTML={{ __html: item.textMeaning }}></p>
                         {isTranslate && <p className="meaning__translate">({item.textMeaningTranslate})</p>}
                       </div>
                       <div className='example'>
-                        <p className="example__value" dangerouslySetInnerHTML={{__html: item.textExample}}></p>
+                        <p className="example__value" dangerouslySetInnerHTML={{ __html: item.textExample }}></p>
                         {isTranslate && <p className="example__translate">({item.textExampleTranslate})</p>}
                       </div>
                       <div className="carousel__content__btns">
                         <div className="audio"
-                             onClick={() => playWord(item.audio, item.audioMeaning, item.audioExample)}>
-                          <img src="/images/audio.png" alt='audio'/>
+                          onClick={() => playWord(item.audio, item.audioMeaning, item.audioExample)}>
+                          <img src="/images/audio.png" alt='audio' />
                         </div>
                         {areButtons &&
-                        <div className='btn-difficult'>
-                          Добавить в Сложные
+                          <div className='btn-difficult'>
+                            Добавить в Сложные
                         </div>}
                         {areButtons &&
-                        <div className='btn-delete'>
-                          Удалить
+                          <div className='btn-delete'>
+                            Удалить
                         </div>}
                       </div>
                     </div>
@@ -101,7 +84,7 @@ const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isTranslate, a
                 )
               })}
             </Carousel> :
-            <Loader/>
+            <Loader />
       }
     </div>
   )
@@ -115,4 +98,4 @@ const mapStateToProps = (state: any) => ({
 
 const WordSlider = connect(mapStateToProps)(WordSliderRedux);
 
-export {WordSlider};
+export { WordSlider };

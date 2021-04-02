@@ -1,4 +1,4 @@
-const toggleTranslate = (e: any)  => {
+const toggleTranslate = (e: any) => {
   return {
     type: 'TOGGLE_TRANSLATE',
     value: e.target.checked,
@@ -6,7 +6,7 @@ const toggleTranslate = (e: any)  => {
   };
 };
 
-const toggleButtons = (e: any)  => {
+const toggleButtons = (e: any) => {
   return {
     type: 'TOGGLE_BUTTONS',
     value: e.target.checked,
@@ -14,7 +14,7 @@ const toggleButtons = (e: any)  => {
   };
 };
 
-const toggleOpen = (e: boolean)  => {
+const toggleOpen = (e: boolean) => {
   return {
     type: 'TOGGLE_OPEN',
     value: e,
@@ -22,4 +22,4 @@ const toggleOpen = (e: boolean)  => {
   };
 };
 
-export {toggleTranslate, toggleButtons, toggleOpen};
+export { toggleTranslate, toggleButtons, toggleOpen };

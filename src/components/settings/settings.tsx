@@ -1,6 +1,6 @@
 import React from "react";
-import {connect} from 'react-redux';
-import {toggleButtons, toggleTranslate, toggleOpen} from "../../common/redux/action";
+import { connect } from 'react-redux';
+import { toggleButtons, toggleTranslate, toggleOpen } from "../../common/redux/action";
 
 interface SettingsProps {
   isOpen: any,
@@ -11,27 +11,27 @@ interface SettingsProps {
   toggleOpen: any,
 }
 
-const SettingsRedux: React.FC<SettingsProps> = ({isOpen, areButtons, isTranslate, toggleOpen, toggleTranslate, toggleButtons}) => {
+const SettingsRedux: React.FC<SettingsProps> = ({ isOpen, areButtons, isTranslate, toggleOpen, toggleTranslate, toggleButtons }) => {
   return (isOpen &&
     <div className="over-settings" onClick={() => {
       toggleOpen(false)
     }}>
       <div className="settings" onClick={(e) => e.stopPropagation()}>
-        <img src='/images/close.svg' alt="close" onClick={() => toggleOpen(false)}/>
+        <img src='/images/close.svg' alt="close" onClick={() => toggleOpen(false)} />
         <p>Настройки:</p>
         <form>
           <label>
             <input
               type="checkbox"
               checked={isTranslate}
-              onChange={toggleTranslate}/>
+              onChange={toggleTranslate} />
             Показывать перевод
           </label>
           <label>
             <input
               type="checkbox"
               checked={areButtons}
-              onChange={toggleButtons}/>
+              onChange={toggleButtons} />
             Возможность добавить в Сложные или Удаленные слова
           </label>
         </form>
@@ -54,4 +54,4 @@ const mapDispatchToProps = {
 
 const Settings = connect(mapStateToProps, mapDispatchToProps)(SettingsRedux);
 
-export {Settings};
+export { Settings };
