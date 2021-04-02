@@ -52,12 +52,13 @@ function httpGet(url: string): Object {
     xhr.onload = function () {
       if (this.status === 200) {
         resolve(this.response);
-      } else {
-        var error = new Error(this.statusText);
-        //error.code = this.status;
-        reject(error);
       }
     };
+
+    //
+    // xhr.onerror = function() {
+    //   reject(new Error("Network Error"));
+    // };
 
     xhr.onerror = function () {
       reject(new Error("Network Error"));
