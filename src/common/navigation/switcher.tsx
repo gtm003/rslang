@@ -10,8 +10,6 @@ import { SignUpFormRedux } from '../../components/signupform/signupform';
 import {Team} from "../../components/team";
 import {Tutorial} from "../../components/tutorial";
 import {WordList} from "../../components/word-list";
-import {LoginFormRedux} from "../../components/loginform";
-import {SignUpFormRedux} from "../../components/signupform";
 
 const Switcher: React.FC = () => {
 
