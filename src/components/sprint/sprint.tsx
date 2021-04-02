@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { BaseSyntheticEvent, SyntheticEvent, useEffect, useState } from 'react';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer'
 import { urlBackend } from '../../data';
 import { getRandomOderArr, getRandomBoolean, getRandomInteger } from '../../data/utils';
 import { Loader } from '../loader';
 
-const getData = async (url: string): Promise<SprintBodyProps[]> => {
+const getData = async (url: string): Promise<WordsProps[]> => {
   const res = await fetch(url);
 
 if (!res.ok) {
@@ -15,16 +15,16 @@ return await res.json();
 };
 
 const urls: Array<string> = [];
-const WORDS_GROUP: SprintBodyProps[][] = [];
+const WORDS_GROUP: WordsProps[][] = [];
 
-let WORDS_GAME: SprintBodyProps[] = [];
+let WORDS_GAME: WordsProps[] = [];
 let indexesWord = getRandomOderArr(20);
 let indexWord = indexesWord.pop();
 let indexTranslate = getRandomBoolean() ? indexWord : getRandomInteger(19);
 let round: number = 0;
 
-const correctList: Object[]= [];
-const errorList: Object[]= [];
+let correctList: WordsProps[]= [];
+let errorList: WordsProps[]= [];
 const audio = new Audio();
 
 interface GameSprintProps {
@@ -32,11 +32,7 @@ interface GameSprintProps {
   page?: number,
 }
 
-interface TimerProps {
-  gameStatus: boolean,
-}
-
-interface SprintBodyProps {
+interface WordsProps {
   "id": "string",
   "group": 0,
   "page": 0,
@@ -55,14 +51,16 @@ interface SprintBodyProps {
 
 const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
 
-  const [words, setWords] = useState<SprintBodyProps[]>([]);
-  const [score, setScore] = useState<number>(0);
+  //const [score, setScore] = useState<number>(0);
   const [gameStatus, setGameStatus] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(true);
   const [word, setWord] = useState<string>('');
   const [wordTranslate, setWordTranslate] = useState<string>('');
   const [mute, setMute] = useState<boolean>(false);
-
+  const [listResultsNumber, setListResultsNumber] = useState<number>(0);
+  const result = (correct : number, error : number) => {
+    return (correct + error) ? Math.round(correct *100 / (correct + error)) : 0
+  }
 
   useEffect(() => {
     for (let j = 0; j < 30; j += 1) {
@@ -72,16 +70,14 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
     urls.forEach((url) => {
     chain = chain
       .then(() => getData(url))
-      .then((res: SprintBodyProps[]) => {
+      .then((res: WordsProps[]) => {
         WORDS_GROUP.push(res);
         if(WORDS_GROUP.length === 30) {
           if(page !== undefined) {
-            setWords(WORDS_GROUP[page]);
             WORDS_GAME = WORDS_GROUP[page];
             console.log(WORDS_GAME);
             setLoading(false)
           } else {
-            setWords(WORDS_GROUP.flat());
             WORDS_GAME= WORDS_GROUP.flat();
             setLoading(false)
           }
@@ -101,12 +97,26 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
     };
   }, [gameStatus]);
 
+  useEffect(() => {
+    window.addEventListener("keyup", onKeyPressHandler);
+
+    return () => (window as any).removeEventListener("keyup", onKeyPressHandler);
+
+  }, [])
+  const onKeyPressHandler = (event: KeyboardEvent) => {
+    event.preventDefault();
+    if (event.key === 'ArrowRight') onClickHandlerGame(true)
+    else if (event.key === 'ArrowLeft') onClickHandlerGame(false)
+  }
+
   const onClickHandlerGame = (answer : boolean) => {
     const correctAnswer : boolean = (indexWord === indexTranslate);
     playAnswer(answer === correctAnswer);
     if (answer === correctAnswer) {
-      setScore(score + 10);
-      correctList.push (WORDS_GAME[indexWord!])
+      //setScore(score + 10);
+      correctList.push (WORDS_GAME[indexWord!]);
+    } else {
+      errorList.push (WORDS_GAME[indexWord!]);
     }
     if(indexesWord.length) {
       indexWord = indexesWord.pop();
@@ -133,16 +143,19 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
     indexWord = indexesWord.pop();
     indexTranslate = getRandomBoolean() ? indexWord : getRandomInteger(19);
     setGameStatus(true);
-    setScore(0);
-    console.log(correctList);
+    setWord(WORDS_GAME[indexWord!].word);
+    setWordTranslate(WORDS_GAME[indexTranslate!].wordTranslate);
+    //setScore(0);
+    correctList = [];
+    errorList = [];
   }
 
   const onToggleHandlerMute = () => {
     setMute(!mute);
   }
 
-  const playWord = (audioWord: string) => {
-    audio.src = urlBackend + audioWord;
+  const playTimer = () => {
+    audio.src = '/audio/timer.mp3';
     audio.play();
   };
 
@@ -165,15 +178,13 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
           {gameStatus  && ( 
           <div className='game-sprint__body game-sprint__body--game'>
             <div className='sprint-body-game__header'>
-              <span className = 'icon-container' onClick={() => playWord(WORDS_GAME[indexWord!].audio)}>
-                <i className="material-icons sprint-body-game__icon">volume_up</i>
-              </span>
-              <h3>{score}</h3>
+              <AudioWord src = {WORDS_GAME[indexWord!].audio} />
+              <h3>{correctList.length * 10}</h3>
               <span className = 'icon-container' onClick={() => onToggleHandlerMute()}>
                 {mute ? <i className="material-icons">notifications_off</i> : <i className="material-icons">notifications</i>}
               </span>
             </div>
-            <div>
+            <div className='sprint-body-game__words'>
               <h2>{word}</h2>
               <h3>{wordTranslate}</h3>
             </div>
@@ -190,21 +201,29 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
               </div>
             </div>
           </div>)}
-          {!gameStatus  && ( 
-          <div className='game-sprint__body game-sprint__body--end'>
-            <h3>Твой результат {score} очков</h3>
-            <Progress />
-            <div className='sprint-body__pagination'>
-              <div className='sprint-body-pagination__dot sprint-body-pagination__dot--activ'></div>
-              <div className='sprint-body-pagination__dot'></div>
+          {!gameStatus  && (
+            <div className='game-sprint__body game-sprint__body--end'>
+              <h3>Твой результат {correctList.length * 10} очков</h3>
+              { listResultsNumber === 0 ?
+                <Progress result = {result(correctList.length, errorList.length)}/> :
+                <WordListResultGame errorList = {errorList} correctList ={correctList} />
+              }
+              <nav className='sprint-body__nav'>
+                <div className='sprint-body__pagination'>
+                  <div className='sprint-body-pagination__dot sprint-body-pagination__dot--activ' 
+                    onClick = {() => setListResultsNumber(0)}/>
+                  <div className='sprint-body-pagination__dot' 
+                    onClick = {() => setListResultsNumber(1)}/>
+                </div>
+                <a className='sprint-body-nav__link' onClick={onClickHandlerNewGame.bind(null, false)}>Продолжить игру</a>
+                <a className='sprint-body-nav__link'>К списку игр</a>
+              </nav>              
             </div>
-            <nav className='sprint-body__nav'>
-              <a className='sprint-body-nav__link' onClick={onClickHandlerNewGame.bind(null, false)}>Продолжить игру</a>
-              <a className='sprint-body-nav__link'>К списку игр</a>
-            </nav>
-          </div>)}
+          )}
         </div>
-        <button className='game-sprint__button-close'>Close</button>
+        <button className='game-sprint__button-close'>
+          <i className="material-icons sprint-body-game__icon">close</i>
+        </button>
       </React.Fragment>:
 
       <Loader />
@@ -215,6 +234,9 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
 
 export {GameSprint};
 
+interface TimerProps {
+  gameStatus: boolean,
+}
 
 const Timer: React.FC<TimerProps> = ({gameStatus}) => {
   const timerProps = {
@@ -257,10 +279,13 @@ const Timer: React.FC<TimerProps> = ({gameStatus}) => {
   )
 };
 
-const Progress = () => {
+interface ProgressProps {
+  result: number
+}
+const Progress: React.FC<ProgressProps> = ({result}) => {
   return (
   <div className="morph-shape" id="morph-shape"  >
-    <svg xmlns="http://www.w3.org/2000/svg" width="200%" height="200%" viewBox="0 0 100 100"  preserveAspectRatio="none">
+    <svg xmlns="http://www.w3.org/2000/svg" transform = {`translate(0, ${110 - 1.5 * result})`}  width="100%" height="120%" viewBox="0 0 100 100"  preserveAspectRatio="none">
       <path fill="#afafaf" d="M 0 0 C 0 0 20 20 33 20 C 45 20 55 0 67 0 C 78 0 100 20 100 20 C 100 20 100 100 100 100 L 0 100 Z">
         <animate
           attributeName="d"
@@ -271,6 +296,54 @@ const Progress = () => {
             M 0 20 C 0 20 20 0 33 0 C 45 0 55 20 67 20 C 77 20 100 0 100 0 C 100 0 100 100 100 100 L 0 100 Z;
             M 0 0 C 0 0 20 20 33 20 C 45 20 55 0 67 0 C 78 0 100 20 100 20 C 100 20 100 100 100 100 L 0 100 Z" />
       </path>	
-    </svg> 
+    </svg>
+    <div className = 'result'>{`${result}%`}</div> 
   </div>)
+}
+
+interface WordListResultGameProps{
+  errorList: WordsProps[];
+  correctList: WordsProps[];
+}
+const WordListResultGame: React.FC<WordListResultGameProps> = ({errorList, correctList}) => {
+  return (
+  <div className="game-sprint__results game-sprint__results--list" >
+    <h4 className = 'result-list__header result-list__header--error'>{`Ошибок : ${errorList.length}`}</h4>
+    {
+      errorList.map((word : WordsProps, index : number) => {
+        return (
+          <div key = {index} className = 'result-list__item'>
+            <AudioWord src = {word.audio} />
+            <span className = 'result-list__item--bold'>{word.word}</span><span> &#8212; </span><span>{word.wordTranslate}</span>
+          </div>
+        )
+      })
+    }
+    <h4 className = 'result-list__header result-list__header--correct'>{`Знаю : ${correctList.length}`}</h4>
+    {
+      correctList.map((word : WordsProps, index : number) => {
+        return (
+          <div key = {index} className = 'result-list__item'>
+            <AudioWord src = {word.audio} />
+            <span className = 'result-list__item--bold'>{word.word}</span><span> &#8212; </span><span>{word.wordTranslate}</span>
+          </div>
+        )
+      })
+    }      
+  </div>)
+}
+
+interface AudioWordProps {
+  src: string,
+}
+const AudioWord: React.FC<AudioWordProps> = ({src}) => {
+  const playWord = (src: string) => {
+    audio.src = urlBackend + src;
+    audio.play();
+  };
+  return (
+    <span className = 'icon-container' onClick={() => playWord(src)}>
+      <i className="material-icons sprint-body-game__icon">volume_up</i>
+    </span>
+  )
 }
