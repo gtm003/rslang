@@ -2,12 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Field, reduxForm } from 'redux-form';
-import { toggleOpen } from '../../common/redux/login-action-creator';
+import { toggleLoginOpen } from '../../common/redux/login-action-creator';
 import { urlBackend } from '../../data';
 
 interface LoginProps {
-    isOpen: boolean,
+    isLoginOpen: boolean,
     handleSubmit: any,
+    toggleLoginOpen: (isLoginOpen: boolean) => void
 }
 
 interface submitValues {
@@ -15,8 +16,7 @@ interface submitValues {
     password: string,
 }
 
-const LoginForm: React.FC<LoginProps> = (props) => {
-    const handleSubmit = props.handleSubmit;
+const LoginForm: React.FC<LoginProps> = ({ isLoginOpen, handleSubmit, toggleLoginOpen }) => {
     const submit = async (values: submitValues) => {
         const response = await fetch(`${urlBackend}signin`, {
             method: 'POST',
@@ -29,42 +29,45 @@ const LoginForm: React.FC<LoginProps> = (props) => {
         const content = await response.json();
         console.log(content);
     };
+    
     return (
-        <div>
-            <div className="login-form-wrapper">
-                <form className="login-form" onSubmit={handleSubmit(submit)}>
-                    <div className="login-form-title">
-                        <h2>Изучать слова удобнее, если у вас есть профиль</h2>
-                    </div>
-                    <div className="login-form-subtitle">
-                        <span>Вы получите доступ к долгосрочному хранению статистики, а также сможете формировать собственный словарь.</span>
-                    </div>
-                    <div className="login-form-fields">
-                        <Field className="login-form-fields__item" name="email" component="input" type="email" placeholder="E-mail" required={true} />
-                        <Field className="login-form-fields__item" name="password" component="input" type="password" placeholder="Пароль" required={true} />
-                    </div>
-                    <div className="login-form-submit">
-                        <button className="login-form-submit__btn" type="submit">Войти</button>
-                    </div>
+        isLoginOpen ?
+        <div className="login-form-wrapper" >
+            <form className="login-form" onSubmit={handleSubmit(submit)}>
+                <div className="login-form__close-btn" onClick={ () => toggleLoginOpen(false) } >
+                    <img src="/images/close.svg" alt="close"></img>
+                </div>
+                <div className="login-form-title">
+                    <h2>Изучать слова удобнее, если у вас есть профиль</h2>
+                </div>
+                <div className="login-form-subtitle">
+                    <span>Вы получите доступ к долгосрочному хранению статистики, а также сможете формировать собственный словарь.</span>
+                </div>
+                <div className="login-form-fields">
+                    <Field className="login-form-fields__item" name="email" component="input" type="email" placeholder="E-mail" required={true} />
+                    <Field className="login-form-fields__item" name="password" component="input" type="password" placeholder="Пароль" required={true} />
+                </div>
+                <div className="login-form-submit">
+                    <button className="login-form-submit__btn" type="submit">Войти</button>
+                </div>
+                <div>
                     <div>
-                        <div>
-                            Забыли пароль? | <Link to="/sign-up">Регистрация</Link>
-                        </div>
+                        Забыли пароль? | <Link to="/sign-up">Регистрация</Link>
                     </div>
-                </form>
-            </div>
-        </div>
+                </div>
+            </form>
+        </div> : null
     );
 }
 
 const mapStateToProps = (state: any) => ({
-    isOpen: state.login.isOpen,
+    isLoginOpen: state.login.isLoginOpen,
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
-    toggleOpen: (isOpen: boolean) => {
-        dispatch(toggleOpen(isOpen));
-    }
+    toggleLoginOpen: (isLoginOpen: boolean) => {
+        dispatch(toggleLoginOpen(isLoginOpen));
+    },
 })
 
 const LoginFormConnect = connect(mapStateToProps, mapDispatchToProps)(LoginForm);

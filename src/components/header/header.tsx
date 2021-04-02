@@ -1,8 +1,14 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import {Link} from "react-router-dom";
+import { toggleLoginOpen } from '../../common/redux/login-action-creator';
 import "./header.scss";
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  toggleLoginOpen: (isLoginOpen: boolean) => void
+}
+
+const Header: React.FC<HeaderProps> = ({ toggleLoginOpen }) => {
   return (
     <header className="header">
       <nav className="header__site-nav main-nav">
@@ -25,9 +31,9 @@ const Header: React.FC = () => {
         </ul>
       </nav>
       <div className="header__right-column-wrapper right-column-wrapper">
-        <Link className="btn right-column-wrapper__login-btn" to={'/log-in'}>
+        <button className="btn right-column-wrapper__login-btn" onClick={ () => toggleLoginOpen(true) }>
           Войти
-        </Link>
+        </button>
         <nav className="site-nav">
           <button className="site-nav__btn">
             <span className="visually-hidden">
@@ -40,4 +46,12 @@ const Header: React.FC = () => {
   )
 }
 
-export { Header };
+const mapDispatchToProps = (dispatch: any) => ({
+  toggleLoginOpen: (isLoginOpen: boolean) => {
+    dispatch(toggleLoginOpen(isLoginOpen));
+  },
+});
+
+const HeaderRedux = connect(null, mapDispatchToProps)(Header);
+
+export { HeaderRedux };

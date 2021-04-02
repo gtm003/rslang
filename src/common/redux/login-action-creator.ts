@@ -1,3 +1,3 @@
-const toggleOpen = (isOpen: boolean) => ({ type: 'TOGGLE_OPEN', payload: isOpen });
+const toggleLoginOpen = (isLoginOpen: boolean) => ({ type: 'TOGGLE_LOGIN_OPEN', payload: isLoginOpen });
 
-export { toggleOpen }
+export { toggleLoginOpen }

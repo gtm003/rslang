@@ -1,5 +1,5 @@
 interface InitialState {
-    isOpen: boolean,
+    isLoginOpen: boolean,
 }
 
 interface Action {
@@ -8,15 +8,15 @@ interface Action {
 }
 
 const initialState: InitialState = {
-    isOpen: false,
+    isLoginOpen: false,
 }
 
 const loginReducer = (state = initialState, action: Action) => {
     switch (action.type) {
-        case 'TOGGLE_OPEN':
+        case 'TOGGLE_LOGIN_OPEN':
             return { 
                 ...state, 
-                isOpen: action.payload
+                isLoginOpen: action.payload
             }
         default:
             return state;
