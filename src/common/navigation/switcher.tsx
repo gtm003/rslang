@@ -4,7 +4,9 @@ import {
   Route,
   Redirect,
 } from 'react-router-dom';
+import { LoginFormRedux } from '../../components/loginform/loginform';
 import {MainPage} from "../../components/main-page";
+import { SignUpFormRedux } from '../../components/signupform/signupform';
 import {Team} from "../../components/team";
 import {Tutorial} from "../../components/tutorial";
 import {WordList} from "../../components/word-list";
@@ -61,6 +63,9 @@ const Switcher: React.FC = () => {
       <Route path='/tutorial/group:group/page:page'
              component={(...props: Array<object>) => isGroupPageExists(props[0])}/>
       <Route path='/tutorial/group:id' component={(...props: Array<object>) => isGroupExists(props[0])}/>
+      <Route path='/sign-up' component={SignUpFormRedux} />
+      <Route path='/log-in' component={LoginFormRedux} />
+      <Route />
       <Redirect path='*' to='/'/>
     </Switch>
   );

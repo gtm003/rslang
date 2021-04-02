@@ -25,9 +25,9 @@ const Header: React.FC = () => {
         </ul>
       </nav>
       <div className="header__right-column-wrapper right-column-wrapper">
-        <Link className="btn right-column-wrapper__login-btn" to={'/log-in'}>
+        <NavLink className="btn right-column-wrapper__login-btn" to={'/log-in'}>
           Войти
-        </Link>
+        </NavLink>
         <nav className="site-nav">
           <button className="site-nav__btn">
             <span className="visually-hidden">

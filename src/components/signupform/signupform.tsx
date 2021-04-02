@@ -1,10 +1,28 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Field, reduxForm } from 'redux-form';
+import { urlBackend } from '../../data';
+
+interface submitValues {
+    name: string,
+    email: string,
+    password: string,
+}
 
 const SignUpForm: React.FC = (props: any) => {
     const handleSubmit = props.handleSubmit;
-    const submit = (values: any) => console.log(values);
+    const submit = async (values: submitValues) => {
+        const response = await fetch(`${urlBackend}users`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(values)
+        });
+        const content = await response.json();
+        console.log(content);
+    }
     return (
         <div className="signup-form-wrapper">
             <form className="signup-form" onSubmit={handleSubmit(submit)}>
