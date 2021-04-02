@@ -53,16 +53,12 @@ const LoginForm: React.FC<LoginProps> = ({ isLoginOpen, handleSubmit, toggleLogi
                 <div className="login-form-submit">
                     <button className="login-form-submit__btn" type="submit">Войти</button>
                 </div>
-                <div>
-                    <div>
-                        <span>Забыли пароль?</span>| 
-                        <span onClick={ () => {
-                                toggleLoginOpen(false);
-                                toggleSignUpOpen(true);
-                            }}>
-                        Регистрация
-                        </span>
-                    </div>
+                <div className="login-form-registration" onClick={ () => {
+                    toggleLoginOpen(false);
+                    toggleSignUpOpen(true);
+                }}>
+                    <span>Забыли пароль?</span> | <span>Регистрация
+                    </span>
                 </div>
             </form>
         </div> : null

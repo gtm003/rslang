@@ -61,6 +61,12 @@
             cursor: pointer;
             border: none;
             outline: none;
+            padding: 0;
+
+            &:hover {
+                box-shadow: 2px 2px 0px 0px #f7cc7e inset, -2px -2px 0px 0px #f7cc7e inset;
+                background-color: #fff;
+            }
         }
     }
 }
