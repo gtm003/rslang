@@ -1,6 +1,6 @@
 import React from 'react';
-import {NavLink} from "react-router-dom";
-import {navLink} from "../../data";
+import { NavLink } from "react-router-dom";
+import { navLink } from "../../data";
 
 const MainPageNav: React.FC = () => {
   let mainPageNav: string[];
@@ -15,9 +15,9 @@ const MainPageNav: React.FC = () => {
       <ul className="main-page-nav__list">
         {mainPageNav.map((item: string) => {
           return (
-              <NavLink to={`/${navLink[item]}`} key={item} className="main-page-nav__item">
-                {item}
-              </NavLink>
+            <NavLink to={`/${navLink[item]}`} key={item} className="main-page-nav__item">
+              {item}
+            </NavLink>
           )
         })}
       </ul>
@@ -25,4 +25,4 @@ const MainPageNav: React.FC = () => {
   )
 }
 
-export {MainPageNav};
+export { MainPageNav };

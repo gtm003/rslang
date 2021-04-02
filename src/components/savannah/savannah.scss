@@ -1,0 +1,33 @@
+.savannah {
+  width: 100vw;
+  height: 100vh;
+  background-color: #00695c;
+
+  &__word {
+    width: 100%;
+    padding: 20vh 0;
+    text-align: center;
+    color: #fff;
+    font-size: 30px;
+  }
+
+  &__translation {
+    width: 100%;
+    text-align: center;
+  }
+
+  &__translation-list {
+    display: flex;
+    justify-content: center;
+  }
+
+  &__translation-item {
+    display: inline-block;
+    padding: 0 20px;
+    color: #fff;
+
+    & > * {
+      cursor: pointer;
+    }
+  }
+}
