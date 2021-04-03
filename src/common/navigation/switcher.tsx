@@ -58,14 +58,14 @@ const Switcher: React.FC = () => {
     <Switch>
       <Route exact path='/' component={MainPage}/>
       <Route path='/team' component={Team}/>
-      <Route path='/log-in' component={LoginFormRedux} />
-      <Route path='/sign-up' component={SignUpFormRedux} />
+      <Route path='/log-in' component={LoginFormRedux}/>
+      <Route path='/sign-up' component={SignUpFormRedux}/>
       <Route exact path='/tutorial' component={Tutorial}/>
       <Route exact path='/games' component={Games}/>
       <Route path='/games/sprint' render={props => <GameSprint group={1} page={1}/> }/>
       <Route path='/dictionary' component={Tutorial}/>
       <Route path='/statistics' component={Tutorial}/>
-      <Route path='/settings' component={Tutorial}/>
+      {/*<Route path='/settings' component={Settings}/>*/}
       <Route path='/tutorial/group:group/page:page'
              component={(...props: Array<object>) => isGroupPageExists(props[0])}/>
       <Route path='/tutorial/group:id' component={(...props: Array<object>) => isGroupExists(props[0])}/>

@@ -1,10 +1,8 @@
 import { WordsProps } from "../common/ts/interfaces";
 
-const getDataPage = async (
-  group: number,
-  page: number
-): Promise<WordsProps[]> => {
-  const url = `https://react-rs-lang-words.herokuapp.com/words?group=${group}&page=${page}`;
+const url: string = `https://react-rs-lang-words.herokuapp.com/words?all=true`;
+
+export const getData = async (): Promise<Array<WordsProps>> => {
 
   const res = await fetch(`${url}`);
 
@@ -14,5 +12,3 @@ const getDataPage = async (
 
   return await res.json();
 };
-
-export {getDataPage};
