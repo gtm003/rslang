@@ -1,11 +1,25 @@
+@keyframes flow {
+  0% {
+    transform: translateY(-40vh);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.flow-animation {
+  animation: flow 5s linear;
+}
+
 .savannah {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 80vh;
   background-color: #00695c;
 
   &__word {
     width: 100%;
-    padding: 20vh 0;
+    padding-top: 35vh;
     text-align: center;
     color: #fff;
     font-size: 30px;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {WordsProps} from "../../common/ts/interfaces";
 
 import { getDataPage } from "../../data";
@@ -6,7 +6,9 @@ import { getDataPage } from "../../data";
 const Savannah: React.FC = () => {
   const [words, setWords] = useState<WordsProps[]>([]);
   const [translations, setTranslations] = useState<string[]>([]);
-
+  const word = useRef<HTMLDivElement>(null);
+  console.log(1);
+  
   useEffect(() => {
     getDataPage(1, 1).then(res => {
       setWords(res);
@@ -27,6 +29,9 @@ const Savannah: React.FC = () => {
     if (evt.target.lastChild.data === wordTranslation) {
       const updatedWords = words.filter((word) => word.word !== translationWord);
       setWords(updatedWords);
+
+      word.current?.classList.remove("flow-animation");
+      setTimeout(() => word.current?.classList.add("flow-animation"), 1)
     }
   };
 
@@ -59,7 +64,7 @@ const Savannah: React.FC = () => {
 
   return (
     <main className="savannah">
-      <div className="savannah__word">
+      <div className="savannah__word flow-animation" ref={word}>
         {
           translationWord
         }
