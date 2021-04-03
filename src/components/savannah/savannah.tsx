@@ -17,21 +17,29 @@ const Savannah: React.FC = () => {
   const shuffleArray = (array: string[]) => {
     for (let i = 0; i <= array.length - 1; i++) {
       let j = Math.floor(Math.random() * i);
-
       [array[i], array[j]] = [array[j], array[i]];
     }
 
     return array;
   };
 
+  const getRandomWords = () => {
+    const randomWordIndex: number = Math.floor(Math.random() * words.length);
+    // const translations = words.map((word) => word.wordTranslate);
+    const randomWord = translations[randomWordIndex];
+    console.log(translations);
+    translations.splice(randomWordIndex, 1);
 
 
-  if (words.length === 0 || translations.length === 0) {
+
+    return randomWord;
+  }
+
+  if (words.length === 0) {
     return <div>Loading...</div>
   }
 
   const randomWordIndex: number = Math.floor(Math.random() * words.length);
-
   const translationWord: string = words[randomWordIndex].word;
   const wordTranslation: string = words[randomWordIndex].wordTranslate;
 
@@ -40,14 +48,13 @@ const Savannah: React.FC = () => {
       const updatedWords = words.filter((word) => word.word !== translationWord);
       setWords(updatedWords);
     }
-
   }
 
   const wordTranslations: string[] = [
     wordTranslation,
-    translations[Math.floor(Math.random() * words.length)],
-    translations[Math.floor(Math.random() * words.length)],
-    translations[Math.floor(Math.random() * words.length)]
+    getRandomWords(),
+    getRandomWords(),
+    getRandomWords()
   ]
 
   return (
