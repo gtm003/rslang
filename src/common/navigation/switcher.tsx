@@ -10,6 +10,8 @@ import {Tutorial} from "../../components/tutorial";
 import {WordList} from "../../components/word-list";
 import { Games } from '../../components/games';
 import { GameSprint } from '../../components/sprint';
+import { Savannah } from '../../components/savannah';
+
 
 
 const Switcher: React.FC = () => {
@@ -59,6 +61,7 @@ const Switcher: React.FC = () => {
       <Route exact path='/tutorial' component={Tutorial}/>
       <Route exact path='/games' component={Games}/>
       <Route path='/games/sprint' render={props => <GameSprint group={1} page={1}/> }/>
+      <Route path='/games/savannah' render={props => <Savannah /> }/>
       <Route path='/dictionary' component={Tutorial}/>
       <Route path='/statistics' component={Tutorial}/>
       {/*<Route path='/settings' component={Settings}/>*/}
