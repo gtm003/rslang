@@ -3,16 +3,15 @@
   background-color: $yellow-color;
 
   width: 0;
-  position: absolute;
+  position: fixed;
   right: 0;
   top: 0;
   z-index: 1000;
   overflow: hidden;
 
-  transition: width .5s;
+  transition: width .5s ease;
 
   &__list {
-    margin-left: 60px;
     margin-top: 150px;
     display: flex;
     flex-direction: column;
@@ -20,29 +19,40 @@
   }
 
   &__item {
-    padding: 20px 0;
-
     &--login {
       margin-top: auto;
       margin-bottom: 20px;
     }
-
+    
     a {
+      padding: 20px 0;
+      padding-left: 60px;
       display: block;
       min-width: 200px;
       width: 100%;
 
       font-size: 24px;
       line-height: 28px;
+      transition: background-color .2s ease-in-out;
+
+      &:hover {
+        background-color: rgba(white, .3);
+      }
+
+      &.active {
+        background-color: rgba(white, .5);
+
+        &:hover {
+          cursor: default;
+          background-color: none;
+        }
+      }
     }
   }
 
-
-
-
-
-
-
+  &--auth {
+    background-color: $green-color;
+  }
 
   &--show {
     width: 25%;

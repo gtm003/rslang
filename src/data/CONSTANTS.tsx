@@ -10,7 +10,7 @@ const navLink: any = {
   "Статистика": "statistics",
   "Настройка": "settings",
   "О команде": "team",
-  "Вход": "log-in"
+  "Войти": "log-in"
 };
 
 const titleGroup: any = {
@@ -46,7 +46,7 @@ const descriptionGroup: any = {
         Давно мечтали поговорить о медицине, астрологии или юриспруденции? Теперь это не будет проблемой.`,
 };
 
-const menuLinks: string[] = ['Главная', 'Учебник', 'Мини-игры', 'Словарь', 'Статистика', 'Настройки', 'О команде', 'Войти'];
+const menuLinks: string[] = ['Главная', 'Учебник', 'Мини-игры', 'Словарь', 'Статистика', 'Настройка', 'О команде', 'Войти'];
 
 
 export {githubMembers, githubSrc, urlBackend, navLink, titleGroup, descriptionGroup, menuLinks};

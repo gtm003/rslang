@@ -7,7 +7,7 @@ import {BrowserRouter} from "react-router-dom";
 const App: React.FC = () => {
   return (
     <BrowserRouter>
-      <Header/>
+      <Header isAuth={false}/>
       <Switcher/>
 
       <Footer isAuth={false}/>

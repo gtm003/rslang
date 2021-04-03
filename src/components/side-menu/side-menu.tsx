@@ -1,14 +1,15 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 import { navLink, menuLinks } from '../../data';
 
 interface SideMenuProps {
   isAuth: boolean
   isMenuOpen: boolean
+  onMenuLinkClick: () => void
 }
 
-const SideMenu: React.FC<SideMenuProps> = ({isAuth, isMenuOpen}) => {
+const SideMenu: React.FC<SideMenuProps> = ({isAuth, isMenuOpen, onMenuLinkClick }) => {
   const clazz = isAuth ? 'side-menu--auth' : '';
   const isVisible = isMenuOpen ? 'side-menu--show' : '';
 
@@ -24,9 +25,11 @@ const SideMenu: React.FC<SideMenuProps> = ({isAuth, isMenuOpen}) => {
           
           return (
             <li className={`side-menu__item ${clazz}`} key={item}>
-              <Link to={`/${navLink[item]}`}>
+              <NavLink exact to={`/${navLink[item]}`}
+                    onClick={onMenuLinkClick}
+                    activeClassName='active'>
                 {item}
-              </Link>
+              </NavLink>
             </li>
           )
         })}
