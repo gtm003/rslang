@@ -8,8 +8,6 @@ import {MainPage} from "../../components/main-page";
 import {Team} from "../../components/team";
 import {Tutorial} from "../../components/tutorial";
 import {WordList} from "../../components/word-list";
-import {LoginFormRedux} from "../../components/loginform";
-import {SignUpFormRedux} from "../../components/signupform";
 import { Games } from '../../components/games';
 import { GameSprint } from '../../components/sprint';
 
@@ -58,8 +56,6 @@ const Switcher: React.FC = () => {
     <Switch>
       <Route exact path='/' component={MainPage}/>
       <Route path='/team' component={Team}/>
-      <Route path='/log-in' component={LoginFormRedux}/>
-      <Route path='/sign-up' component={SignUpFormRedux}/>
       <Route exact path='/tutorial' component={Tutorial}/>
       <Route exact path='/games' component={Games}/>
       <Route path='/games/sprint' render={props => <GameSprint group={1} page={1}/> }/>
@@ -69,6 +65,7 @@ const Switcher: React.FC = () => {
       <Route path='/tutorial/group:group/page:page'
              component={(...props: Array<object>) => isGroupPageExists(props[0])}/>
       <Route path='/tutorial/group:id' component={(...props: Array<object>) => isGroupExists(props[0])}/>
+      <Route />
       <Redirect path='*' to='/'/>
     </Switch>
   );
