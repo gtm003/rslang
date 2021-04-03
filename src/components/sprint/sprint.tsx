@@ -1,4 +1,4 @@
-import React, { BaseSyntheticEvent, SyntheticEvent, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer'
 import { urlBackend } from '../../data';
 import { getRandomOderArr, getRandomBoolean, getRandomInteger } from '../../data/utils';
