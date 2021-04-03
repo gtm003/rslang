@@ -5,6 +5,7 @@ import { getDataPage, urlBackend } from "../../data";
 import { Loader } from "../loader";
 import { connect } from "react-redux";
 import { WordsProps } from "../../common/ts/interfaces";
+import { ActionCreator} from "../../common/redux/action-creator";
 
 interface WordSliderProps {
   group: number,
@@ -12,17 +13,43 @@ interface WordSliderProps {
   isTranslate: boolean,
   areButtons: boolean,
   hardWords: [],
+  deletedWords: [],
+  getWords: [],
+  onHardWordClick: (word: WordsProps) => void,
+  onDeleteHardWordClick: (word: WordsProps) => void,
+  onDeleteWordClick: (word: WordsProps) => void,
 }
 
 const audio = new Audio();
 
-const WordSliderRedux: React.FC<WordSliderProps> = ({ group, page, isTranslate, areButtons, hardWords }) => {
+const WordSliderRedux: React.FC<WordSliderProps> = ({ group, page, isTranslate, areButtons, hardWords, deletedWords, getWords, onHardWordClick, onDeleteHardWordClick, onDeleteWordClick }) => {
   const [words, setWords] = useState<WordsProps[]>([]);
-console.log(hardWords)
+  const [wordsRedux, setWordsRedux] = useState<WordsProps[]>([]);
+  const [isDelete, setIsDelete] = useState<number>(0);
+  const [isMessage, setMessage] = useState<boolean>(false);
+
   useEffect(() => {
+    setWordsRedux(getWords);
+  },[getWords]);
+
+  useEffect(() => {
+    console.log(page)
     setWords([]);
-    getDataPage(group - 1, page).then((res: WordsProps[]) => setWords(res));
-  }, [page, group]);
+    getDataPage(group - 1, page).then((res: WordsProps[]) => getWordsWithoutDeleted(res));
+  }, [page, group, isDelete]);
+
+  const getWordsWithoutDeleted: (words: any) => any = (words: any) => {
+    const wordsWithoutDeleted = words.filter((word: WordsProps) => deletedWords.findIndex((deletedWord: WordsProps) => deletedWord.id === word.id) === -1);
+    console.log(wordsWithoutDeleted)
+    if (!wordsWithoutDeleted.length) {
+      const option = document.getElementsByTagName('option')[page+1];
+      option.hidden = true;
+      setMessage(true);
+    } else {
+      setWords(wordsWithoutDeleted);
+      setMessage(false);
+    }
+  }
 
   const playWord = (audioWord: string, audioMeaning: string, audioExample: string) => {
     const tracks: Array<string> = [urlBackend + audioWord, urlBackend + audioMeaning, urlBackend + audioExample];
@@ -44,10 +71,11 @@ console.log(hardWords)
   return (
     <div className="word-slider">
       {
-        (page < 0) ?
+        isMessage && <p className="message">The page is deleted</p> ||
+        ((page < 0) ?
           <img src={pathImg} alt='level english' />
           :
-          words.length ?
+          (words.length && wordsRedux.length)?
             <Carousel dynamicHeight={false}>
               {words.map((item: WordsProps) => {
                 return (
@@ -55,7 +83,7 @@ console.log(hardWords)
                     <img src={urlBackend + item.image} alt='figure of word' />
                     <div className="carousel__content">
                       <div className="word">
-                        {hardWords.some((word:any) => word.id === item.id) && <img className="hard-icon" src='/images/lamp.png' alt='hard word'/>}
+                        {hardWords.length && hardWords.some((word:any) => word.id === item.id) && <img className="hard-icon" src='/images/lamp.png' alt='hard word'/>}
                         <p className="word__value">{item.word} {item.transcription}</p>
                         {isTranslate && <p className="word__translate">({item.wordTranslate})</p>}
                       </div>
@@ -73,11 +101,14 @@ console.log(hardWords)
                           <img src="/images/audio.png" alt='audio' />
                         </div>
                         {areButtons &&
-                          <div className='btn-difficult'>
+                          <div className='btn-difficult' onClick={() => onHardWordClick(item)}>
                             Добавить в Сложные
                         </div>}
                         {areButtons &&
-                          <div className='btn-delete'>
+                          <div className='btn-delete'  onClick={() => {
+                            onDeleteWordClick(item);
+                            setIsDelete((isDelete) => isDelete + 1);
+                          }} >
                             Удалить
                         </div>}
                       </div>
@@ -86,7 +117,7 @@ console.log(hardWords)
                 )
               })}
             </Carousel> :
-            <Loader />
+            <Loader />)
       }
     </div>
   )
@@ -96,9 +127,23 @@ const mapStateToProps = (state: any) => ({
   isTranslate: state.setting.isTranslate,
   areButtons: state.setting.areButtons,
   hardWords: state.data.hardWords,
+  deletedWords: state.data.deletedWords,
+  getWords: state.data.words,
+});
+
+const mapDispatchToProps = (dispatch: any) => ({
+  onHardWordClick: (word: WordsProps) => {
+    dispatch(ActionCreator.addHardWord(word));
+  },
+  onDeleteHardWordClick: (word: WordsProps) => {
+    dispatch(ActionCreator.deleteHardWord(word));
+  },
+  onDeleteWordClick: (word: WordsProps) => {
+    dispatch(ActionCreator.addDeletedWord(word));
+  },
 });
 
 
-const WordSlider = connect(mapStateToProps)(WordSliderRedux);
+const WordSlider = connect(mapStateToProps, mapDispatchToProps)(WordSliderRedux);
 
 export { WordSlider };

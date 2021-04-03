@@ -36,6 +36,32 @@ const reducer = (state: InitialState = initialState, action: any) => {
         deletedWords: deletedWords,
         // learningWords: learningWords,
       };
+    case `ADD_HADR_WORD`:
+      console.log(action.payload);
+
+      return {
+        ...state,
+        hardWords: [...state.hardWords, action.payload],
+      };
+    case `DELETE_HADR_WORD`:
+      console.log(action.payload);
+
+      return {
+        ...state,
+        hardWords: [...state.hardWords, action.payload],
+      };
+    case `ADD_DELETED_WORD`:
+      console.log(action.payload);
+      return {
+        ...state,
+        deletedWords: [...state.deletedWords, action.payload],
+      };
+    case `ADD_LEARNING_WORD`:
+      console.log(action.payload);
+      return {
+        ...state,
+        learningWords: [...state.learningWords, action.payload],
+      };
     default:
       return state;
   }
