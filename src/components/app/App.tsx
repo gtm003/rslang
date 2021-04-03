@@ -11,7 +11,6 @@ const App: React.FC = () => {
       <Header/>
       <main className='main'>
         <Switcher/>
-
         <Settings/>
       </main>
       <Footer isAuth={false}/>
