@@ -6,7 +6,7 @@ interface SelectProps {
 }
 
 const Select: React.FC<SelectProps> = ({page, changeSelectItem}) => {
-  const pages: Array<number> = Array.from(Array(30).keys());
+  const pages: number[] = Array.from(Array(30).keys());
 
   return (
     <div className="selectPages">
