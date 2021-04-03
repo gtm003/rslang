@@ -9,10 +9,8 @@ const App: React.FC = () => {
   return (
     <BrowserRouter>
       <Header/>
-      <main className='main'>
         <Switcher/>
         <Settings/>
-      </main>
       <Footer isAuth={false}/>
     </BrowserRouter>
   );
