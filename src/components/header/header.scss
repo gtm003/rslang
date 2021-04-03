@@ -36,7 +36,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 280px;
+  max-width: 600px;
 
   &__login-btn {
     background-color: #f7cc7e;

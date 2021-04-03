@@ -12,7 +12,7 @@ interface SignUpProps {
     error: string | null,
     toggleSignUpOpen: (isSignUpOpen: boolean) => void,
     signUpUser: (name: string | null, id: string | null, email: string | null, photo: string | null) => void,
-    loginUser: (name: string | null, userId: string | null) => void,
+    loginUser: (name: string | null, userId: string | null, photo: string | null) => void,
     setSignUpError: (error: string | null) => void,
 }
 
@@ -38,13 +38,12 @@ const SignUpForm: React.FC<SignUpProps> = ({ isSignUpOpen, handleSubmit, error, 
                 body: JSON.stringify(values)
             });
             const content = await response.json();
-            console.log(content);
             if (content.error) {
                 setSignUpError(content.error.errors[0].message);
             } else {
                 setSignUpError(null);
                 signUpUser(content.name, content.id, content.email, content.photo);
-                loginUser(content.name, content.id);
+                loginUser(content.name, content.id, content.photo);
                 toggleSignUpOpen(false);
             }
         }
@@ -92,8 +91,8 @@ const mapDispatchToProps = (dispatch: any) => ({
     signUpUser: (name: string | null, id: string | null, email: string | null, photo: string | null) => {
         dispatch(signUpUser(name, id, email, photo));
     },
-    loginUser: (name: string | null, userId: string | null) => {
-        dispatch(loginUser(name, userId));
+    loginUser: (name: string | null, userId: string | null, photo: string | null) => {
+        dispatch(loginUser(name, userId, photo));
     },
     setSignUpError: (error: string | null) => {
         dispatch(setSignUpError(error));

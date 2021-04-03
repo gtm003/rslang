@@ -6,13 +6,8 @@ import { signUpUser } from '../../common/redux/signup-action-creator';
 import { SideMenu } from '../side-menu';
 import { Overlay } from '../overlay';
 
-interface userLogin {
-  name: null | string,
+interface user {
   userId: null | string,
-}
-
-interface userSignUp {
-  id: null | string,
   name: null | string,
   photo: null | string,
 }
@@ -21,14 +16,13 @@ interface HeaderProps {
   isLoginOpen: boolean,
   isSignUpOpen: boolean,
   isAuth: boolean,
-  userLogin: userLogin,
-  userSignUp: userSignUp,
+  user: user,
   toggleLoginOpen: (isLoginOpen: boolean) => void,
   signUpUser: (name: string | null, id: string | null, email: string | null, photo: string | null) => void,
-  loginUser: (name: string | null, userId: string | null) => void
+  loginUser: (name: string | null, userId: string | null, photo: string | null) => void
 }
 
-const Header: React.FC<HeaderProps> = ({ isLoginOpen, isSignUpOpen, isAuth, userLogin, userSignUp, toggleLoginOpen, signUpUser, loginUser }) => {
+const Header: React.FC<HeaderProps> = ({ isLoginOpen, isSignUpOpen, isAuth, user, toggleLoginOpen, signUpUser, loginUser }) => {
 
   const [isMenuActive, setMenuActive] = useState(false);
 
@@ -59,20 +53,20 @@ const Header: React.FC<HeaderProps> = ({ isLoginOpen, isSignUpOpen, isAuth, user
       </nav>
       <div className="header__right-column-wrapper right-column-wrapper">
         {
-          userSignUp.photo ?
-          <img src={userSignUp.photo} alt="avatar" width="25px" height="25px" />
+          user.photo ?
+          <img src={user.photo} alt="avatar" width="55px" height="55px" />
           : null
         }
         {
-          userLogin.name ?
-          <div>{userLogin.name}</div>
+          user.name ?
+          <div>{user.name}</div>
           : null
         }
         {
-          userLogin.userId ?
+          user.userId ?
             <button disabled={isLoginOpen || isSignUpOpen} className="btn right-column-wrapper__login-btn" onClick={ () => {
               signUpUser(null, null, null, null);
-              loginUser(null, null);
+              loginUser(null, null, null);
             }}>
               Выйти
             </button>
@@ -102,8 +96,7 @@ const Header: React.FC<HeaderProps> = ({ isLoginOpen, isSignUpOpen, isAuth, user
 const mapStateToProps = (state: any) => ({
   isLoginOpen: state.login.isLoginOpen,
   isSignUpOpen: state.signup.isSignUpOpen,
-  userLogin: state.login.user,
-  userSignUp: state.signup.user,
+  user: state.login.user,
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
@@ -113,8 +106,8 @@ const mapDispatchToProps = (dispatch: any) => ({
   signUpUser: (name: string | null, id: string | null, email: string | null, photo: string | null) => {
     dispatch(signUpUser(name, id, email, photo));
   },
-  loginUser: (name: string | null, userId: string | null) => {
-    dispatch(loginUser(name, userId));
+  loginUser: (name: string | null, userId: string | null, photo: string | null) => {
+    dispatch(loginUser(name, userId, photo));
   },
 });
 
