@@ -16,9 +16,9 @@ const ActionCreator = {
     payload: word,
   }),
 
-  deleteHardWord: (word: WordsProps) => ({
-    type: `DELETE_HADR_WORD`,
-    payload: word,
+  removeHardWord: (id: string) => ({
+    type: `REMOVE_HARD_WORD`,
+    payload: id,
   }),
 
   addDeletedWord: (word: WordsProps) => ({

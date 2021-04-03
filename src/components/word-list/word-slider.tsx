@@ -16,7 +16,7 @@ interface WordSliderProps {
   deletedWords: [],
   getWords: [],
   onHardWordClick: (word: WordsProps) => void,
-  onDeleteHardWordClick: (word: WordsProps) => void,
+  onDeleteHardWordClick: (id: string) => void,
   onDeleteWordClick: (word: WordsProps) => void,
 }
 
@@ -33,14 +33,12 @@ const WordSliderRedux: React.FC<WordSliderProps> = ({ group, page, isTranslate, 
   },[getWords]);
 
   useEffect(() => {
-    console.log(page)
     setWords([]);
     getDataPage(group - 1, page).then((res: WordsProps[]) => getWordsWithoutDeleted(res));
   }, [page, group, isDelete]);
 
   const getWordsWithoutDeleted: (words: any) => any = (words: any) => {
     const wordsWithoutDeleted = words.filter((word: WordsProps) => deletedWords.findIndex((deletedWord: WordsProps) => deletedWord.id === word.id) === -1);
-    console.log(wordsWithoutDeleted)
     if (!wordsWithoutDeleted.length) {
       const option = document.getElementsByTagName('option')[page+1];
       option.hidden = true;
@@ -78,12 +76,13 @@ const WordSliderRedux: React.FC<WordSliderProps> = ({ group, page, isTranslate, 
           (words.length && wordsRedux.length)?
             <Carousel dynamicHeight={false}>
               {words.map((item: WordsProps) => {
+                const isHard = hardWords.length && hardWords.some((word:any) => word.id === item.id);
                 return (
                   <div key={item.id}>
                     <img src={urlBackend + item.image} alt='figure of word' />
                     <div className="carousel__content">
                       <div className="word">
-                        {hardWords.length && hardWords.some((word:any) => word.id === item.id) && <img className="hard-icon" src='/images/lamp.png' alt='hard word'/>}
+                        {isHard && <img className="hard-icon" src='/images/lamp.png' alt='hard word'/>}
                         <p className="word__value">{item.word} {item.transcription}</p>
                         {isTranslate && <p className="word__translate">({item.wordTranslate})</p>}
                       </div>
@@ -101,8 +100,10 @@ const WordSliderRedux: React.FC<WordSliderProps> = ({ group, page, isTranslate, 
                           <img src="/images/audio.png" alt='audio' />
                         </div>
                         {areButtons &&
-                          <div className='btn-difficult' onClick={() => onHardWordClick(item)}>
-                            Добавить в Сложные
+                          <div className='btn-difficult' onClick={() => {
+                            isHard ? onDeleteHardWordClick(item.id) : onHardWordClick(item);
+                          }}>
+                            {isHard ? 'Удалить из Сложных' : 'Добавить в Сложные'}
                         </div>}
                         {areButtons &&
                           <div className='btn-delete'  onClick={() => {
@@ -135,8 +136,8 @@ const mapDispatchToProps = (dispatch: any) => ({
   onHardWordClick: (word: WordsProps) => {
     dispatch(ActionCreator.addHardWord(word));
   },
-  onDeleteHardWordClick: (word: WordsProps) => {
-    dispatch(ActionCreator.deleteHardWord(word));
+  onDeleteHardWordClick: (id: string) => {
+    dispatch(ActionCreator.removeHardWord(id));
   },
   onDeleteWordClick: (word: WordsProps) => {
     dispatch(ActionCreator.addDeletedWord(word));
