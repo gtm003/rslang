@@ -17,15 +17,16 @@
     img {
       width: 30px;
       height: 30px;
+      cursor: pointer;
     }
   }
 
   .selectPages {
     text-align: center;
 
-    select {
+    select, option {
       text-transform: uppercase;
-      width: 260px;
+      width: 270px;
       text-align: center;
       text-align-last: center;
       padding: 5px 4%;
@@ -43,9 +44,20 @@
         display: none !important;
         background: transparent;
       }
+
+      &:required:invalid {
+        text-transform: none;
+        color: $secondary-color;
+      }
+
     }
   }
 }
+
+option {
+  color: black;
+}
+
 
 .carousel-root {
   width: 70%;
@@ -74,7 +86,6 @@
     justify-content: center;
     flex-wrap: wrap;
     font-size: 35px;
-    line-height: 10px;
 
     &__value {
       margin: 0;
@@ -115,7 +126,33 @@
 
   .audio {
     width: 7%;
-    margin: 10px 30px;
+
+  }
+}
+
+.carousel__content__btns {
+  display: flex;
+  align-items: center;
+
+  .btn-difficult, .btn-delete, .audio {
+    margin: 10px 20px;
     cursor: pointer;
   }
+
+  .btn-difficult, .btn-delete {
+    padding: 10px;
+
+    &:hover {
+      box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    }
+  }
+
+  .btn-difficult {
+    background-color: $pink-color;
+  }
+
+  .btn-delete {
+    background-color: $light-blue-color;
+  }
+
 }
