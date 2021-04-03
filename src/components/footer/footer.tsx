@@ -5,17 +5,18 @@ import {ReactComponent as GithubLogo} from '../../data/images//github.svg';
 import {githubMembers} from "../../data";
 
 interface FooterProps {
-  isAuth: boolean
+  isAuth: boolean,
 }
 
 const Footer: React.FC<FooterProps> = ({isAuth}) => {
   const classFooter = (isAuth) ? 'footer auth' : 'footer no-auth';
+
   return (
     <footer className={classFooter}>
       <div className="footer__content">
 
         <div className="footer__copyright">
-          <img src="/images/cr.png" alt="copyright"/>
+          &#169;
           <span>2021 RSLang</span>
         </div>
 

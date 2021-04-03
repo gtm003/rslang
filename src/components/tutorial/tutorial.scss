@@ -1,34 +1,35 @@
+.tutorial-wrapper {
+}
+
 .tutorial {
+  display: flex;
+  width: $desktop-width;
+  margin: 0 auto 73px auto;
+
+  &__title {
+    font-size: 30px;
+    line-height: 36px;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 50px 0;
+    text-align: center;
+  }
 
   &__groups {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    flex-direction: column;
     margin: 0 auto;
-    width: $desktop-width;
+  }
 
-    @media (max-width: $middle-width) {
-      justify-content: center;
+  &__description {
+    width: 600px;
+
+    &__title {
+      font-weight: 500;
     }
 
     & > * {
-      width: 22%;
-      margin: 20px 30px;
-      @include button-unit;
-
-      &:active {
-        box-shadow: none;
-      }
-
-      @media (max-width: $middle-width) {
-        width: 30%;
-        min-height: 170px;
-      }
-      @media (max-width: $tablet-width) {
-        width: 35%;
-        min-height: 200px;
-        margin: 20px;
-      }
+      padding: 10px 0;
     }
   }
 
@@ -37,9 +38,9 @@
 .group {
 
   &__title {
-    color: white;
-    font-size: 35px;
-    text-shadow: 0 0 2px $default-color;
+    font-size: 70px;
+    line-height: 85px;
+    padding-right: 20px;
   }
 
   &__description {
@@ -48,7 +49,7 @@
   }
 
   &--0 {
-    background-color: $purple-color;
+    background-color: $light-green-color;
   }
 
   &--1 {
@@ -56,18 +57,32 @@
   }
 
   &--2 {
-    background-color: $light-green-color;
+    background-color: $pink-color;
   }
 
   &--3 {
-    background-color: $yellow-color;
-  }
-
-  &--4 {
     background-color: $orange-color;
   }
 
+  &--4 {
+    background-color: $light-blue-color;
+  }
+
   &--5 {
-    background-color: $pink-color;
+    background-color: $blue-color;
+  }
+}
+
+.group-btn {
+  width: 420px;
+  padding: 0 28px;
+  margin: 10px;
+  @include button-unit;
+
+  @media (max-width: $middle-width) {
+
+  }
+  @media (max-width: $tablet-width) {
+
   }
 }

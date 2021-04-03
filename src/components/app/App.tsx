@@ -1,18 +1,19 @@
 import React from 'react';
-
 import { Footer } from '../footer';
 import { Header } from '../header';
-import {WordList} from "../word-list";
-import { MainPage } from '../main-page';
-import {Savannah} from '../savannah';
+import { Switcher } from "../../common/navigation";
+import { BrowserRouter } from "react-router-dom";
+import { Settings } from "../settings";
+
 
 const App: React.FC = () => {
   return (
-    <>
-
-      <Savannah />
-
-    </>
+    <BrowserRouter>
+      <Header isAuth={false}/>
+      <Switcher />
+      <Settings />
+      <Footer isAuth={false} />
+    </BrowserRouter>
   );
 }
 

@@ -1,22 +1,36 @@
 .word-list {
   text-align: center;
+  max-width: $desktop-width;
+  margin: 0 auto;
 
   &__title {
     font-size: 30px;
-    line-height: 36px;
     text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  &__select {
+    display: flex;
+    justify-content: center;
+    margin: 35px 0;
+
+    img {
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+    }
   }
 
   .selectPages {
     text-align: center;
 
-    select {
+    select, option {
       text-transform: uppercase;
-      width: 260px;
-      margin: 35px;
+      width: 270px;
       text-align: center;
       text-align-last: center;
       padding: 5px 4%;
+      margin-right: 20px;
       font-size: 24px;
 
       -ms-overflow-style: none;
@@ -30,13 +44,28 @@
         display: none !important;
         background: transparent;
       }
+
+      &:required:invalid {
+        text-transform: none;
+        color: $secondary-color;
+      }
+
     }
   }
 }
 
+option {
+  color: black;
+}
+
+
 .carousel-root {
-  width: 55%;
+  width: 70%;
   margin: 0 auto;
+
+  .carousel.carousel-slider {
+    height: 500px;
+  }
 }
 
 .carousel__content {
@@ -57,7 +86,6 @@
     justify-content: center;
     flex-wrap: wrap;
     font-size: 35px;
-    line-height: 10px;
 
     &__value {
       margin: 0;
@@ -98,6 +126,33 @@
 
   .audio {
     width: 7%;
-    margin: 10px 30px;
+
   }
+}
+
+.carousel__content__btns {
+  display: flex;
+  align-items: center;
+
+  .btn-difficult, .btn-delete, .audio {
+    margin: 10px 20px;
+    cursor: pointer;
+  }
+
+  .btn-difficult, .btn-delete {
+    padding: 10px;
+
+    &:hover {
+      box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    }
+  }
+
+  .btn-difficult {
+    background-color: $pink-color;
+  }
+
+  .btn-delete {
+    background-color: $light-blue-color;
+  }
+
 }
