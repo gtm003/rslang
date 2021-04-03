@@ -1,13 +1,46 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
+import { loginUser } from '../../common/redux/login-action-creator';
+import { signUpUser, toggleSignUpOpen } from '../../common/redux/signup-action-creator';
+import { urlBackend } from '../../data';
 
-const SignUpForm: React.FC = (props: any) => {
-    const handleSubmit = props.handleSubmit;
-    const submit = (values: any) => console.log(values);
+interface SignUpProps {
+    isSignUpOpen: boolean,
+    handleSubmit: any,
+    toggleSignUpOpen: (isSignUpOpen: boolean) => void,
+    signUpUser: (name: string | null, id: string | null, email: string | null) => void,
+    loginUser: (name: string | null, userId: string | null) => void,
+}
+
+interface submitValues {
+    name: string,
+    email: string,
+    password: string,
+}
+
+const SignUpForm: React.FC<SignUpProps> = ({ isSignUpOpen, handleSubmit, toggleSignUpOpen, signUpUser, loginUser }) => {
+    const submit = async (values: submitValues) => {
+        const response = await fetch(`${urlBackend}users`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(values)
+        });
+        const content = await response.json();
+        signUpUser(content.name, content.id, content.email);
+        loginUser(content.name, content.id);
+        toggleSignUpOpen(false);
+    }
     return (
+        isSignUpOpen ?
         <div className="signup-form-wrapper">
             <form className="signup-form" onSubmit={handleSubmit(submit)}>
+                <div className="signup-form__close-btn" onClick={ () => toggleSignUpOpen(false) } >
+                    <img src="/images/close.svg" alt="close"></img>
+                </div>
                 <div className="signup-form-title">
                     <h2>Изучать слова удобнее, если у вас есть профиль</h2>
                 </div>
@@ -24,12 +57,31 @@ const SignUpForm: React.FC = (props: any) => {
                     <button className="signup-form-submit__btn" type="submit">Создать аккаунт</button>
                 </div>
             </form>
-        </div>
+        </div> : null
     );
 }
 
+const mapStateToProps = (state: any) => ({
+    isSignUpOpen: state.signup.isSignUpOpen,
+    user: state.signup.user,
+});
+
+const mapDispatchToProps = (dispatch: any) => ({
+    toggleSignUpOpen: (isSignUpOpen: boolean) => {
+        dispatch(toggleSignUpOpen(isSignUpOpen));
+    },
+    signUpUser: (name: string | null, id: string | null, email: string | null) => {
+        dispatch(signUpUser(name, id, email));
+    },
+    loginUser: (name: string | null, userId: string | null) => {
+        dispatch(loginUser(name, userId));
+    },
+});
+
+const SignUpFormConnect = connect(mapStateToProps, mapDispatchToProps)(SignUpForm);
+
 const SignUpFormRedux = reduxForm({
     form: 'signup'
-})(SignUpForm);
+})(SignUpFormConnect);
 
 export {SignUpFormRedux};
