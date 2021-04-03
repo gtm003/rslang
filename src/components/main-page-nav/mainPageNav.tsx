@@ -1,14 +1,14 @@
 import React from 'react';
-import { NavLink } from "react-router-dom";
-import { navLink } from "../../data";
-import { toggleOpen } from "../../common/redux/action";
-import { connect } from "react-redux";
+import {NavLink} from "react-router-dom";
+import {navLink} from "../../data";
+import {toggleOpen} from "../../common/redux/action";
+import {connect} from "react-redux";
 
 interface MainPageNavProps {
   toggleOpen: any,
 }
 
-const MainPageNavRedux: React.FC<MainPageNavProps> = ({ toggleOpen }) => {
+const MainPageNavRedux: React.FC<MainPageNavProps> = ({toggleOpen}) => {
   let mainPageNav: string[];
   const isAuth: boolean = false;
 
@@ -38,4 +38,4 @@ const mapDispatchToProps = {
 };
 
 const MainPageNav = connect(null, mapDispatchToProps)(MainPageNavRedux);
-export { MainPageNav };
+export {MainPageNav};
