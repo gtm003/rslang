@@ -10,14 +10,15 @@ interface WordSliderProps {
   group: number,
   page: number,
   isTranslate: boolean,
-  areButtons: boolean
+  areButtons: boolean,
+  hardWords: [],
 }
 
 const audio = new Audio();
 
-const WordSliderRedux: React.FC<WordSliderProps> = ({ group, page, isTranslate, areButtons }) => {
+const WordSliderRedux: React.FC<WordSliderProps> = ({ group, page, isTranslate, areButtons, hardWords }) => {
   const [words, setWords] = useState<WordsProps[]>([]);
-
+console.log(hardWords)
   useEffect(() => {
     setWords([]);
     getDataPage(group - 1, page).then((res: WordsProps[]) => setWords(res));
@@ -54,6 +55,7 @@ const WordSliderRedux: React.FC<WordSliderProps> = ({ group, page, isTranslate, 
                     <img src={urlBackend + item.image} alt='figure of word' />
                     <div className="carousel__content">
                       <div className="word">
+                        {hardWords.some((word:any) => word.id === item.id) && <img className="hard-icon" src='/images/lamp.png' alt='hard word'/>}
                         <p className="word__value">{item.word} {item.transcription}</p>
                         {isTranslate && <p className="word__translate">({item.wordTranslate})</p>}
                       </div>
@@ -93,6 +95,7 @@ const WordSliderRedux: React.FC<WordSliderProps> = ({ group, page, isTranslate, 
 const mapStateToProps = (state: any) => ({
   isTranslate: state.setting.isTranslate,
   areButtons: state.setting.areButtons,
+  hardWords: state.data.hardWords,
 });
 
 
