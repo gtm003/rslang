@@ -1,8 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import {Link} from "react-router-dom";
-import "./header.scss";
+import { loginUser, toggleLoginOpen } from '../../common/redux/login-action-creator';
+import { signUpUser } from '../../common/redux/signup-action-creator';
+import { SideMenu } from '../side-menu';
+import { Overlay } from '../overlay';
 
-const Header: React.FC = () => {
+interface user {
+  name: null | string,
+  userId: null | string,
+}
+
+interface HeaderProps {
+  isLoginOpen: boolean,
+  isSignUpOpen: boolean,
+  isAuth: boolean,
+  user: user,
+  toggleLoginOpen: (isLoginOpen: boolean) => void,
+  signUpUser: (name: string | null, id: string | null, email: string | null) => void,
+  loginUser: (name: string | null, userId: string | null) => void
+}
+
+const Header: React.FC<HeaderProps> = ({ isLoginOpen, isSignUpOpen, isAuth, user, toggleLoginOpen, signUpUser, loginUser }) => {
+
+  const [isMenuActive, setMenuActive] = useState(false);
+
+  const toggleMenu = () => {
+    setMenuActive(!isMenuActive);
+    document.body.classList.toggle('no-scroll');
+  }
   return (
     <header className="header">
       <nav className="header__site-nav main-nav">
@@ -25,19 +51,55 @@ const Header: React.FC = () => {
         </ul>
       </nav>
       <div className="header__right-column-wrapper right-column-wrapper">
-        <Link className="btn right-column-wrapper__login-btn" to={'/log-in'}>
-          Войти
-        </Link>
+        {
+          user.userId ?
+            <button disabled={isLoginOpen || isSignUpOpen} className="btn right-column-wrapper__login-btn" onClick={ () => {
+              signUpUser(null, null, null);
+              loginUser(null, null);
+            }}>
+              Выйти
+            </button>
+          :
+            <button disabled={isLoginOpen || isSignUpOpen} className="btn right-column-wrapper__login-btn" onClick={ () => toggleLoginOpen(true) }>
+              Войти
+            </button>
+        }
         <nav className="site-nav">
-          <button className="site-nav__btn">
+          <button className="site-nav__btn"
+                  onClick={toggleMenu}>
             <span className="visually-hidden">
               Открыть меню
             </span>
           </button>
+          <SideMenu isAuth={isAuth}
+                    isMenuOpen={isMenuActive}
+                    onMenuLinkClick={toggleMenu}/>
         </nav>
       </div>
+      <Overlay isMenuOpen={isMenuActive}
+               onOverlayClick={toggleMenu}/>
     </header>
   )
 }
 
-export { Header };
+const mapStateToProps = (state: any) => ({
+  isLoginOpen: state.login.isLoginOpen,
+  isSignUpOpen: state.signup.isSignUpOpen,
+  user: state.login.user,
+});
+
+const mapDispatchToProps = (dispatch: any) => ({
+  toggleLoginOpen: (isLoginOpen: boolean) => {
+    dispatch(toggleLoginOpen(isLoginOpen));
+  },
+  signUpUser: (name: string | null, id: string | null, email: string | null) => {
+    dispatch(signUpUser(name, id, email));
+  },
+  loginUser: (name: string | null, userId: string | null) => {
+    dispatch(loginUser(name, userId));
+  },
+});
+
+const HeaderRedux = connect(mapStateToProps, mapDispatchToProps)(Header);
+
+export { HeaderRedux };

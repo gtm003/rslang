@@ -1,3 +1,12 @@
+*,
+::after,
+::before,
+html {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   margin: 0;
   font-family: "Inter", sans-serif;
@@ -7,6 +16,12 @@ body {
 #root {
   background: url(../../data/images/dashed-line.svg) no-repeat;
   background-size: contain;
+
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
 }
 
 ul {
@@ -30,6 +45,13 @@ p {
 label {
   font-size: 18px;
   font-weight: 500;
+}
+
+button {
+  border: 0;
+  outline: none;
+  cursor: pointer;
+  background-color: transparent;
 }
 
 .btn {
@@ -57,7 +79,10 @@ label {
   overflow: hidden;
 }
 
-.main {
-  min-height: calc(100vh - 130px - 130px);
-  padding: 20px 0;
+.no-scroll {
+  overflow: hidden;
+}
+
+.main-wrapper {
+  flex-grow: 1;
 }

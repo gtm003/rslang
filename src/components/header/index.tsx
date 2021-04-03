@@ -1,3 +1,3 @@
-import { Header } from './header';
+import { HeaderRedux } from './header';
 
-export {Header};
+export { HeaderRedux };

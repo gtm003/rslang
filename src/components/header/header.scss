@@ -7,6 +7,9 @@
   max-width: $desktop-width;
   min-height: 130px;
   margin: 0 auto;
+  flex-shrink: 0;
+  width: 100%;
+  padding: 0 20px;
 }
 
 .main-nav {
@@ -53,14 +56,13 @@
   .site-nav {
     width: 52px;
     height: 52px;
-    cursor: pointer;
-
+    
     &__btn {
       width: 100%;
       height: 100%;
-      border: none;
-      background-color: #fff;
       position: relative;
+      z-index: 1001;
+      cursor: pointer;
     }
 
     &__btn::before {
@@ -76,21 +78,10 @@
   }
 }
 
-@media (max-width: $desktop-width) {
-  .header {
-    padding: 0 3%;
-  }
-
-  .main-nav {
-    &__list {
-      width: 400px;
-    }
-  }
-}
-
 @media (max-width: $tablet-width) {
   .header {
     min-height: 100px;
+    padding: 0 10px;
   }
 
   .additional-item {

@@ -1,17 +1,14 @@
 .footer {
-  min-height: 130px;
+  flex-shrink: 0;
+
   &__content {
     max-width: $desktop-width;
     margin: 0 auto;
+    padding: 0 20px;
     display: flex;
     justify-content: space-between;
-
-    & > a svg {
-      padding: 28px 10px;
-      @media (max-width: $middle-width) {
-        padding: 10px 0;
-      }
-    }
+    align-items: center;
+    flex-wrap: nowrap;
 
     @media (max-width: $middle-width) {
       flex-direction: column;
