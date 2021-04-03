@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import {useHistory} from "react-router-dom";
-import {levelsEnglish} from "../../data";
+import {NavLink, useHistory} from "react-router-dom";
+import {levelsEnglish, navLink} from "../../data";
 import {Select} from "./select";
 import {WordSlider} from "./word-slider";
 import {Pagination} from "../pagination";
@@ -28,6 +28,9 @@ const WordListRedux: React.FC<WordListProps> = ({group, pageInitial = 0, toggleO
     <div className="word-list">
       <p className='word-list__title'>топ 600 слов {name}</p>
       <div className="word-list__select">
+        <NavLink to={`/games`}>
+          <img src='/images/games.png' alt='open games' title='Open games'/>
+        </NavLink>
         <Select changeSelectItem={changeSelectItem} page={page}/>
         <img src='/images/settingsIcon.png' alt='settings' onClick={() => toggleOpen('true')}/>
       </div>
