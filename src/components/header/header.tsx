@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import {Link} from "react-router-dom";
 import { loginUser, toggleLoginOpen } from '../../common/redux/login-action-creator';
 import { signUpUser } from '../../common/redux/signup-action-creator';
-import "./header.scss";
+import { SideMenu } from '../side-menu';
+import { Overlay } from '../overlay';
 
 interface user {
   name: null | string,
@@ -13,13 +14,21 @@ interface user {
 interface HeaderProps {
   isLoginOpen: boolean,
   isSignUpOpen: boolean,
+  isAuth: boolean,
   user: user,
   toggleLoginOpen: (isLoginOpen: boolean) => void,
   signUpUser: (name: string | null, id: string | null, email: string | null) => void,
-  loginUser: (name: string | null, userId: string | null) => void,
+  loginUser: (name: string | null, userId: string | null) => void
 }
 
-const Header: React.FC<HeaderProps> = ({ isLoginOpen, isSignUpOpen, user, toggleLoginOpen, signUpUser, loginUser }) => {
+const Header: React.FC<HeaderProps> = ({ isLoginOpen, isSignUpOpen, isAuth, user, toggleLoginOpen, signUpUser, loginUser }) => {
+
+  const [isMenuActive, setMenuActive] = useState(false);
+
+  const toggleMenu = () => {
+    setMenuActive(!isMenuActive);
+    document.body.classList.toggle('no-scroll');
+  }
   return (
     <header className="header">
       <nav className="header__site-nav main-nav">
@@ -56,13 +65,19 @@ const Header: React.FC<HeaderProps> = ({ isLoginOpen, isSignUpOpen, user, toggle
             </button>
         }
         <nav className="site-nav">
-          <button className="site-nav__btn">
+          <button className="site-nav__btn"
+                  onClick={toggleMenu}>
             <span className="visually-hidden">
               Открыть меню
             </span>
           </button>
+          <SideMenu isAuth={isAuth}
+                    isMenuOpen={isMenuActive}
+                    onMenuLinkClick={toggleMenu}/>
         </nav>
       </div>
+      <Overlay isMenuOpen={isMenuActive}
+               onOverlayClick={toggleMenu}/>
     </header>
   )
 }

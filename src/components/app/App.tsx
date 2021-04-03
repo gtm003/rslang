@@ -7,10 +7,11 @@ import { Settings } from "../settings";
 import { LoginFormRedux } from '../loginform';
 import { SignUpFormRedux } from '../signupform';
 
+
 const App: React.FC = () => {
   return (
     <BrowserRouter>
-      <HeaderRedux />
+      <HeaderRedux isAuth={false}/>
       <Switcher />
       <Settings />
       <LoginFormRedux />

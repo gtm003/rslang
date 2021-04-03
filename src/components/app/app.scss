@@ -1,3 +1,12 @@
+*,
+::after,
+::before,
+html {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   margin: 0;
   font-family: "Inter", sans-serif;
@@ -32,6 +41,13 @@ label {
   font-weight: 500;
 }
 
+button {
+  border: 0;
+  outline: none;
+  cursor: pointer;
+  background-color: transparent;
+}
+
 .btn {
   width: 180px;
   height: 55px;
@@ -54,5 +70,9 @@ label {
   white-space: nowrap;
   clip-path: inset(100%);
   clip: rect(0 0 0 0);
+  overflow: hidden;
+}
+
+.no-scroll {
   overflow: hidden;
 }
