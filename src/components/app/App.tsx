@@ -4,15 +4,13 @@ import { Header } from '../header';
 import { Switcher } from "../../common/navigation";
 import { BrowserRouter } from "react-router-dom";
 import { Settings } from "../settings";
+import { Savannah } from "../savannah";
 
 
 const App: React.FC = () => {
   return (
     <BrowserRouter>
-      <Header isAuth={false}/>
-      <Switcher />
-      <Settings />
-      <Footer isAuth={false} />
+    <Savannah />
     </BrowserRouter>
   );
 }

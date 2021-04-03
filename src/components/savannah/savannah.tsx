@@ -23,31 +23,31 @@ const Savannah: React.FC = () => {
     return array;
   };
 
-  const getRandomWords = () => {
-    const randomWordIndex: number = Math.floor(Math.random() * words.length);
-    // const translations = words.map((word) => word.wordTranslate);
-    const randomWord = translations[randomWordIndex];
-    console.log(translations);
-    translations.splice(randomWordIndex, 1);
-
-
-
-    return randomWord;
-  }
-
-  if (words.length === 0) {
-    return <div>Loading...</div>
-  }
-
-  const randomWordIndex: number = Math.floor(Math.random() * words.length);
-  const translationWord: string = words[randomWordIndex].word;
-  const wordTranslation: string = words[randomWordIndex].wordTranslate;
-
   const changeWordList = (evt: any, wordTranslation: string): void => {
     if (evt.target.lastChild.data === wordTranslation) {
       const updatedWords = words.filter((word) => word.word !== translationWord);
       setWords(updatedWords);
     }
+  };
+
+  if (words.length === 0 || translations.length === 0) {
+    return <div>Loading...</div>
+  }
+  
+  const translationWordIndex: number = Math.floor(Math.random() * words.length);
+  const translationWord: string = words[translationWordIndex].word;
+  const wordTranslation: string = words[translationWordIndex].wordTranslate;
+  const translationsCopy = translations.slice();
+
+  translationsCopy.splice(translations.findIndex((word) => word === wordTranslation), 1);
+  
+  const getRandomWords = () => {
+    const randomWordIndex: number = Math.floor(Math.random() * translationsCopy.length);
+    const randomWord = translationsCopy[randomWordIndex];
+
+    translationsCopy.splice(randomWordIndex, 1); 
+
+    return randomWord;
   }
 
   const wordTranslations: string[] = [

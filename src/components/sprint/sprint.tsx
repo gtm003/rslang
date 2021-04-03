@@ -3,6 +3,7 @@ import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 import { urlBackend } from '../../data';
 import { getRandomOderArr, getRandomBoolean, getRandomInteger } from '../../data/utils';
 import { Loader } from '../loader';
+import {WordsProps} from "../../common/ts/interfaces";
 
 const getData = async (url: string): Promise<WordsProps[]> => {
   const res = await fetch(url);
@@ -30,23 +31,6 @@ const audio = new Audio();
 interface GameSprintProps {
   group: number,
   page?: number,
-}
-
-interface WordsProps {
-  "id": "string",
-  "group": 0,
-  "page": 0,
-  "word": "string",
-  "image": "string",
-  "audio": "string",
-  "audioMeaning": "string",
-  "audioExample": "string",
-  "textMeaning": "string",
-  "textExample": "string",
-  "transcription": "string",
-  "wordTranslate": "string",
-  "textMeaningTranslate": "string",
-  "textExampleTranslate": "string"
 }
 
 const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
