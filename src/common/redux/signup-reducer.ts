@@ -2,11 +2,13 @@ interface user {
     name: null | string,
     id: null | string,
     email: null | string,
+    photo: null | string,
 }
 
 interface InitialState {
     isSignUpOpen: boolean,
     user: user,
+    error: string | null
 }
 
 interface Action {
@@ -20,7 +22,9 @@ const initialState: InitialState = {
         name: null,
         id: null,
         email: null,
-    }
+        photo: null,
+    },
+    error: null
 }
 
 const signupReducer = (state = initialState, action: Action) => {
@@ -37,7 +41,13 @@ const signupReducer = (state = initialState, action: Action) => {
                     name: action.payload.name,
                     id: action.payload.id,
                     email: action.payload.email,
+                    photo: action.payload.photo,
                 }
+            }
+        case 'SET_SIGN_UP_ERROR':
+            return {
+                ...state,
+                error: action.payload
             }
         default:
             return state;

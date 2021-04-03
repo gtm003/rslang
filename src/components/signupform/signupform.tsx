@@ -2,37 +2,52 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import { loginUser } from '../../common/redux/login-action-creator';
-import { signUpUser, toggleSignUpOpen } from '../../common/redux/signup-action-creator';
+import { setSignUpError, signUpUser, toggleSignUpOpen } from '../../common/redux/signup-action-creator';
 import { urlBackend } from '../../data';
+import { FileInput } from './fileinput';
 
 interface SignUpProps {
     isSignUpOpen: boolean,
     handleSubmit: any,
+    error: string | null,
     toggleSignUpOpen: (isSignUpOpen: boolean) => void,
-    signUpUser: (name: string | null, id: string | null, email: string | null) => void,
+    signUpUser: (name: string | null, id: string | null, email: string | null, photo: string | null) => void,
     loginUser: (name: string | null, userId: string | null) => void,
+    setSignUpError: (error: string | null) => void,
 }
 
-interface submitValues {
-    name: string,
-    email: string,
-    password: string,
-}
+// interface submitValues {
+//     name: string,
+//     email: string,
+//     password: string,
+// }
 
-const SignUpForm: React.FC<SignUpProps> = ({ isSignUpOpen, handleSubmit, toggleSignUpOpen, signUpUser, loginUser }) => {
-    const submit = async (values: submitValues) => {
-        const response = await fetch(`${urlBackend}users`, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(values)
-        });
-        const content = await response.json();
-        signUpUser(content.name, content.id, content.email);
-        loginUser(content.name, content.id);
-        toggleSignUpOpen(false);
+const SignUpForm: React.FC<SignUpProps> = ({ isSignUpOpen, handleSubmit, error, toggleSignUpOpen, signUpUser, loginUser, setSignUpError }) => {
+    const submit = async (values: any) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(values.photo);
+        reader.onload = async () => {
+            values.photo = reader.result;
+            console.log(typeof reader.result);
+            const response = await fetch(`${urlBackend}users`, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(values)
+            });
+            const content = await response.json();
+            console.log(content);
+            if (content.error) {
+                setSignUpError(content.error.errors[0].message);
+            } else {
+                setSignUpError(null);
+                signUpUser(content.name, content.id, content.email, content.photo);
+                loginUser(content.name, content.id);
+                toggleSignUpOpen(false);
+            }
+        }
     }
     return (
         isSignUpOpen ?
@@ -51,7 +66,10 @@ const SignUpForm: React.FC<SignUpProps> = ({ isSignUpOpen, handleSubmit, toggleS
                     <Field className="signup-form-fields__item" name="name" component="input" type="text" placeholder="Имя" required={true} />
                     <Field className="signup-form-fields__item" name="email" component="input" type="email" placeholder="E-mail" required={true} />
                     <Field className="signup-form-fields__item" name="password" component="input" type="password" placeholder="Пароль" required={true} />
-                    <Field className="signup-form-fields__item" name="photo" component="input" type="file" accept=".jpg, .jpeg, .png" />
+                    <Field className="signup-form-fields__item" name="photo" component={FileInput} type="file" />
+                </div>
+                <div className="signup-form-error">
+                    <span>{error}</span>
                 </div>
                 <div className="signup-form-submit">
                     <button className="signup-form-submit__btn" type="submit">Создать аккаунт</button>
@@ -64,18 +82,22 @@ const SignUpForm: React.FC<SignUpProps> = ({ isSignUpOpen, handleSubmit, toggleS
 const mapStateToProps = (state: any) => ({
     isSignUpOpen: state.signup.isSignUpOpen,
     user: state.signup.user,
+    error: state.signup.error,
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
     toggleSignUpOpen: (isSignUpOpen: boolean) => {
         dispatch(toggleSignUpOpen(isSignUpOpen));
     },
-    signUpUser: (name: string | null, id: string | null, email: string | null) => {
-        dispatch(signUpUser(name, id, email));
+    signUpUser: (name: string | null, id: string | null, email: string | null, photo: string | null) => {
+        dispatch(signUpUser(name, id, email, photo));
     },
     loginUser: (name: string | null, userId: string | null) => {
         dispatch(loginUser(name, userId));
     },
+    setSignUpError: (error: string | null) => {
+        dispatch(setSignUpError(error));
+    }
 });
 
 const SignUpFormConnect = connect(mapStateToProps, mapDispatchToProps)(SignUpForm);
