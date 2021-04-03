@@ -3,11 +3,14 @@ const githubSrc: string = 'https://github.com/';
 const urlBackend: string = 'https://react-rs-lang-words.herokuapp.com/';
 
 const navLink: any = {
+  "Главная": "",
   "Учебник": "tutorial",
   "Мини-игры": "games",
   "Словарь": "dictionary",
   "Статистика": "statistics",
   "Настройка": "settings",
+  "О команде": "team",
+  "Войти": "log-in"
 };
 
 const titleGroup: any = {
@@ -43,7 +46,9 @@ const descriptionGroup: any = {
         Давно мечтали поговорить о медицине, астрологии или юриспруденции? Теперь это не будет проблемой.`,
 };
 
+const menuLinks: string[] = ['Главная', 'Учебник', 'Мини-игры', 'Словарь', 'Статистика', 'Настройка', 'О команде', 'Войти'];
 
-export {githubMembers, githubSrc, urlBackend, navLink, titleGroup, descriptionGroup};
+
+export {githubMembers, githubSrc, urlBackend, navLink, titleGroup, descriptionGroup, menuLinks};
 
 

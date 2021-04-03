@@ -9,7 +9,7 @@ import { Settings } from "../settings";
 const App: React.FC = () => {
   return (
     <BrowserRouter>
-      <Header />
+      <Header isAuth={false}/>
       <Switcher />
       <Settings />
       <Footer isAuth={false} />

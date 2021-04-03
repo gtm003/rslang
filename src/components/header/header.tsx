@@ -1,8 +1,22 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {Link} from "react-router-dom";
+import { Overlay } from '../overlay';
+
+import { SideMenu } from '../side-menu';
 import "./header.scss";
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  isAuth: boolean
+}
+
+const Header: React.FC<HeaderProps> = ({ isAuth }) => {
+  const [isMenuActive, setMenuActive] = useState(false);
+
+  const toggleMenu = () => {
+    setMenuActive(!isMenuActive);
+    document.body.classList.toggle('no-scroll');
+  }
+
   return (
     <header className="header">
       <nav className="header__site-nav main-nav">
@@ -29,13 +43,19 @@ const Header: React.FC = () => {
           Войти
         </Link>
         <nav className="site-nav">
-          <button className="site-nav__btn">
+          <button className="site-nav__btn"
+                  onClick={toggleMenu}>
             <span className="visually-hidden">
               Открыть меню
             </span>
           </button>
+          <SideMenu isAuth={isAuth}
+                    isMenuOpen={isMenuActive}
+                    onMenuLinkClick={toggleMenu}/>
         </nav>
       </div>
+      <Overlay isMenuOpen={isMenuActive}
+               onOverlayClick={toggleMenu}/>
     </header>
   )
 }
