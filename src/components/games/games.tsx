@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, {useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { levelsEnglish, urlBackend } from '../../data';
-import { Loader } from '../loader';
+import { levelsEnglish } from '../../data';
 
 interface GamesProps {
   id : string;
@@ -43,13 +42,13 @@ const Games: React.FC = () => {
   const [game, setGame] = useState<string>('sprint');
 
   const onClickHandlerSelectGame = (gameId: string) => {
-    console.log(gameId);
-    setGame(gameId)
+    setGame(gameId);
+    console.log(game);
   }
 
   const onChangeHandlerSelectLevel = (levelId: number) => {
-    console.log(levelId);
-    setLevel(levelId)
+    setLevel(levelId);
+    console.log(level);
   }
 
   return (
@@ -62,10 +61,10 @@ const Games: React.FC = () => {
                 <div className = 'game__head'>
                   <h3>{item.name}</h3>
                   <NavLink to={'/games/sprint'} key = {item.id}>
-                  <div className = 'game__icon' >
-                    <img src = {item.iconUrl} alt = {item.iconUrl} width='80%'
-                      onClick = {() => onClickHandlerSelectGame(item.id)}/>
-                  </div>
+                    <div className = 'game__icon' >
+                      <img src = {item.iconUrl} alt = {item.iconUrl} width='80%'
+                        onClick = {() => onClickHandlerSelectGame(item.id)}/>
+                    </div>
                   </NavLink>
                 </div>
                 <div className = 'game__img'>
