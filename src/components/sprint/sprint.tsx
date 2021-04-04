@@ -73,7 +73,6 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
         .then(() => getData(url))
         .then((res: WordsProps[]) => {
           WORDS_GROUP.push(res);
-
           if(WORDS_GROUP.length === 30) {
             if(page !== undefined) {
               WORDS_GAME = WORDS_GROUP[page];
@@ -87,7 +86,7 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
           }
         });
     });
-  });
+  }, [group, page]);
 
   useEffect(() => {
     const timerId = setInterval(() => {
@@ -169,6 +168,7 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
   return (
     <div className='game-sprint'>
       {
+
         !loading ?
           <React.Fragment>
 

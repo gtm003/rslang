@@ -1,42 +1,7 @@
 import React, {useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { levelsEnglish } from '../../data';
-
-interface GamesProps {
-  id : string;
-  name: string;
-  iconUrl: string;
-  imgUrl: string;
-  description: string;
-}
-
-const titleGames : GamesProps[] = [
-  {
-    id : 'constructor',
-    name: 'Конструктор слов',
-    iconUrl: '/images/games/constructor.svg',
-    imgUrl: '/images/games/constructor.png',
-    description: 'Учит быстро переводить с английского на ваш родной язык.',
-  }, {
-    id : 'savannah',
-    name: 'Саванна',
-    iconUrl: '/images/games/savannah.svg',
-    imgUrl: '/images/games/savannah.png',
-    description: 'Учит быстро переводить с английского на ваш родной язык.',
-  }, {
-    id : 'audio',
-    name: 'Аудиовызов',
-    iconUrl: '/images/games/audio.svg',
-    imgUrl: '/images/games/audio.png',
-    description: 'Учит быстро переводить с английского на ваш родной язык.',
-  }, {
-    id : 'sprint',
-    name: 'Спринт',
-    iconUrl: '/images/games/sprint.svg',
-    imgUrl: '/images/games/sprint.png',
-    description: 'Учит быстро переводить с английского на ваш родной язык.',
-  },
-]
+import {titleGames} from "../../data";
 
 const Games: React.FC = () => {
   const [level, setLevel] = useState<number>(0);
@@ -59,7 +24,7 @@ const Games: React.FC = () => {
               <div key = {index} className = {`game game--${index+1}`}>
                 <div className = 'game__head'>
                   <div className = 'game__title'>{item.name}</div>
-                  <NavLink to={`/games/sprint${level}`} key = {item.id}>
+                  <NavLink to={`/games/sprint${level}/`} key = {item.id}>
                     <div className = 'game__icon' >
                       <img src = {item.iconUrl} alt = {item.iconUrl} width='80%'
                            onClick = {() => onClickHandlerSelectGame(item.id)}/>

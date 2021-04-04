@@ -1,5 +1,6 @@
 import React from "react";
 import {NavLink} from "react-router-dom";
+import {titleGames} from "../../data";
 
 interface PaginationProps {
   page: number,
@@ -22,6 +23,21 @@ const Pagination: React.FC<PaginationProps> = ({group, page, changeSelectItem}) 
           Unit {page - 1}
         </button>
       </NavLink>
+      <div className=' tutorial__icons'>
+      {
+        titleGames.map((item) => {
+          const pageId = page > 0 ? page - 1 : 29;
+          return (
+
+                <NavLink to={`/games/${item.id}${group}/${pageId}`} key = {item.id}>
+                  <div className = 'game__icon' >
+                    <img src = {item.iconUrl} alt = {item.iconUrl} title={item.name} className='tutorial__icon' />
+                  </div>
+                </NavLink>
+              )
+        })
+      }
+      </div>
       <NavLink to={`/tutorial/group${group}/page${page + 1}`}>
         <button className={classRightBtn}  onClick={() => changeSelectItem(page)}>
           Unit {page + 1}
