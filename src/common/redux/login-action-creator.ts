@@ -9,4 +9,6 @@ const loginUser = (name: string | null, userId: string | null, photo: string | n
     }
 });
 
-export { toggleLoginOpen, loginUser }
+const setLoginError = (error: string | null) => ({ type: 'SET_LOGIN_ERROR', payload: error });
+
+export { toggleLoginOpen, loginUser, setLoginError }

@@ -23,7 +23,7 @@ interface SignUpProps {
 //     password: string,
 // }
 
-const SignUpForm: React.FC<SignUpProps> = ({ isSignUpOpen, handleSubmit, error, toggleSignUpOpen, signUpUser, loginUser, setSignUpError, reset }) => {
+const SignUpForm: React.FC<SignUpProps> = ({ isSignUpOpen, handleSubmit, reset, error, toggleSignUpOpen, signUpUser, loginUser, setSignUpError }) => {
     const fetchData = async (values: any) => {
         const response = await fetch(`${urlBackend}users`, {
             method: 'POST',
@@ -62,7 +62,7 @@ const SignUpForm: React.FC<SignUpProps> = ({ isSignUpOpen, handleSubmit, error, 
         isSignUpOpen ?
         <div className="signup-form-wrapper">
             <form className="signup-form" onSubmit={handleSubmit(submit)}>
-                <div className="signup-form__close-btn" onClick={ () => toggleSignUpOpen(false) } >
+                <div className="signup-form__close-btn" onClick={ (e) => { e.stopPropagation(); toggleSignUpOpen(false); }}>
                     <img src="/images/close.svg" alt="close"></img>
                 </div>
                 <div className="signup-form-title">
