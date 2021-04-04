@@ -64,14 +64,14 @@ const Header: React.FC<HeaderProps> = ({ isLoginOpen, isSignUpOpen, isAuth, user
         }
         {
           user.userId ?
-            <button disabled={isLoginOpen || isSignUpOpen} className="btn right-column-wrapper__login-btn" onClick={ () => {
+            <button disabled={isLoginOpen || isSignUpOpen} className="btn right-column-wrapper__login-btn-green" onClick={ () => {
               signUpUser(null, null, null, null);
               loginUser(null, null, null, false);
             }}>
               Выйти
             </button>
           :
-            <button disabled={isLoginOpen || isSignUpOpen} className="btn right-column-wrapper__login-btn" onClick={ () => toggleLoginOpen(true) }>
+            <button disabled={isLoginOpen || isSignUpOpen} className="btn right-column-wrapper__login-btn-yellow" onClick={ () => toggleLoginOpen(true) }>
               Войти
             </button>
         }
