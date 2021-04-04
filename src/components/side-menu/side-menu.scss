@@ -3,13 +3,14 @@
   background-color: $yellow-color;
 
   width: 0;
+  min-width: 0;
   position: fixed;
   right: 0;
   top: 0;
   z-index: 1000;
   overflow: hidden;
 
-  transition: width .5s ease;
+  transition: all .5s ease;
 
   &__list {
     margin-top: 150px;
@@ -24,12 +25,13 @@
       margin-bottom: 20px;
     }
     
-    a {
+    a, span {
       padding: 20px 0;
       padding-left: 60px;
       display: block;
       min-width: 200px;
       width: 100%;
+      cursor: pointer;
 
       font-size: 24px;
       line-height: 28px;
@@ -56,5 +58,6 @@
 
   &--show {
     width: 25%;
+    min-width: 250px;
   }
 }

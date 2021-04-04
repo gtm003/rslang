@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { CountdownCircleTimer } from 'react-countdown-circle-timer';
+import { CountdownCircleTimer } from 'react-countdown-circle-timer'
+import { NavLink } from 'react-router-dom';
 import { urlBackend } from '../../data';
 import { getRandomOderArr, getRandomBoolean, getRandomInteger } from '../../data/utils';
 import { Loader } from '../loader';
-import {WordsProps} from "../../common/ts/interfaces";
+import {WordsProps, GameProps} from "../../common/ts/interfaces";
 
 const getData = async (url: string): Promise<WordsProps[]> => {
   const res = await fetch(url);
 
-if (!res.ok) {
-  throw new Error(`Could not fetch ${url}, received ${res.status}`);
-}
+  if (!res.ok) {
+    throw new Error(`Could not fetch ${url}, received ${res.status}`);
+  }
 
-return await res.json();
+  return await res.json();
 };
 
 const urls: Array<string> = [];
@@ -28,13 +29,7 @@ let correctList: WordsProps[]= [];
 let errorList: WordsProps[]= [];
 const audio = new Audio();
 
-interface GameSprintProps {
-  group: number,
-  page?: number,
-}
-
-const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
-
+const GameSprint: React.FC<GameProps> = ({group, page}) => {
   //const [score, setScore] = useState<number>(0);
   const [gameStatus, setGameStatus] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(true);
@@ -47,30 +42,31 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
   }
 
   useEffect(() => {
+    WORDS_GROUP.length = 0;
     for (let j = 0; j < 30; j += 1) {
       urls.push(`${urlBackend}words?group=${group}&page=${j}`)
     }
     let chain = Promise.resolve();
     urls.forEach((url) => {
-    chain = chain
-      .then(() => getData(url))
-      .then((res: WordsProps[]) => {
-        WORDS_GROUP.push(res);
-        if(WORDS_GROUP.length === 30) {
-          if(page !== undefined) {
-            WORDS_GAME = WORDS_GROUP[page];
-            console.log(WORDS_GAME);
-            setLoading(false)
-          } else {
-            WORDS_GAME= WORDS_GROUP.flat();
-            setLoading(false)
+      chain = chain
+        .then(() => getData(url))
+        .then((res: WordsProps[]) => {
+          WORDS_GROUP.push(res);
+
+          if(WORDS_GROUP.length === 30) {
+            if(page !== undefined) {
+              WORDS_GAME = WORDS_GROUP[page];
+              setLoading(false)
+            } else {
+              WORDS_GAME= WORDS_GROUP.flat();
+              setLoading(false)
+            }
+            setWord(WORDS_GAME[indexWord!].word);
+            setWordTranslate(WORDS_GAME[indexTranslate!].wordTranslate);
           }
-          setWord(WORDS_GAME[indexWord!].word);
-          setWordTranslate(WORDS_GAME[indexTranslate!].wordTranslate);
-        }
-      });
+        });
     });
-  }, []);
+  });
 
   useEffect(() => {
     const timerId = setInterval(() => {
@@ -86,7 +82,7 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
 
     return () => (window as any).removeEventListener("keyup", onKeyPressHandler);
 
-  }, [])
+  })
   const onKeyPressHandler = (event: KeyboardEvent) => {
     event.preventDefault();
     if (event.key === 'ArrowRight') onClickHandlerGame(true)
@@ -129,7 +125,6 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
     setGameStatus(true);
     setWord(WORDS_GAME[indexWord!].word);
     setWordTranslate(WORDS_GAME[indexTranslate!].wordTranslate);
-    //setScore(0);
     correctList = [];
     errorList = [];
   }
@@ -137,11 +132,11 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
   const onToggleHandlerMute = () => {
     setMute(!mute);
   }
-
+  /*
   const playTimer = () => {
     audio.src = '/audio/timer.mp3';
     audio.play();
-  };
+  };*/
 
   const playAnswer = (answer: boolean) => {
     if (!mute) {
@@ -152,65 +147,67 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
 
   return (
     <div className='game-sprint'>
-      { 
+      {
         !loading ?
-        <React.Fragment>
+          <React.Fragment>
 
-          <Timer gameStatus={gameStatus}/>
+            <Timer gameStatus={gameStatus}/>
 
-        <div className='game-sprint__body'>
-          {gameStatus  && ( 
-          <div className='game-sprint__body game-sprint__body--game'>
-            <div className='sprint-body-game__header'>
-              <AudioWord src = {WORDS_GAME[indexWord!].audio} />
-              <h3>{correctList.length * 10}</h3>
-              <span className = 'icon-container' onClick={() => onToggleHandlerMute()}>
+            <div className='game-sprint__body'>
+              {gameStatus  && (
+                <div className='game-sprint__body game-sprint__body--game'>
+                  <div className='sprint-body-game__header'>
+                    <AudioWord src = {WORDS_GAME[indexWord!].audio} />
+                    <h3>{correctList.length * 10}</h3>
+                    <span className = 'icon-container' onClick={() => onToggleHandlerMute()}>
                 {mute ? <i className="material-icons">notifications_off</i> : <i className="material-icons">notifications</i>}
               </span>
-            </div>
-            <div className='sprint-body-game__words'>
-              <h2>{word}</h2>
-              <h3>{wordTranslate}</h3>
-            </div>
-            <div className='sprint-body__answer'>
-              <div className = 'sprint-body-answer__item'>
-                <button className='sprint-body-answer__button button--false'
-                  onClick={onClickHandlerGame.bind(null, false)}>Неверно</button>
-                <span><i className="material-icons">arrow_back</i></span>
-              </div>
-              <div className = 'sprint-body-answer__item'>
-              <button className='sprint-body-answer__button button--true'
-                onClick={onClickHandlerGame.bind(null, true)}>Верно</button>
-                <span><i className="material-icons">arrow_forward</i></span>
-              </div>
-            </div>
-          </div>)}
-          {!gameStatus  && (
-            <div className='game-sprint__body game-sprint__body--end'>
-              <h3>Твой результат {correctList.length * 10} очков</h3>
-              { listResultsNumber === 0 ?
-                <Progress result = {result(correctList.length, errorList.length)}/> :
-                <WordListResultGame errorList = {errorList} correctList ={correctList} />
-              }
-              <nav className='sprint-body__nav'>
-                <div className='sprint-body__pagination'>
-                  <div className='sprint-body-pagination__dot sprint-body-pagination__dot--activ' 
-                    onClick = {() => setListResultsNumber(0)}/>
-                  <div className='sprint-body-pagination__dot' 
-                    onClick = {() => setListResultsNumber(1)}/>
+                  </div>
+                  <div className='sprint-body-game__words'>
+                    <h2>{word}</h2>
+                    <h3>{wordTranslate}</h3>
+                  </div>
+                  <div className='sprint-body__answer'>
+                    <div className = 'sprint-body-answer__item'>
+                      <button className='sprint-body-answer__button button--false'
+                              onClick={onClickHandlerGame.bind(null, false)}>Неверно</button>
+                      <span><i className="material-icons">arrow_back</i></span>
+                    </div>
+                    <div className = 'sprint-body-answer__item'>
+                      <button className='sprint-body-answer__button button--true'
+                              onClick={onClickHandlerGame.bind(null, true)}>Верно</button>
+                      <span><i className="material-icons">arrow_forward</i></span>
+                    </div>
+                  </div>
+                </div>)}
+              {!gameStatus  && (
+                <div className='game-sprint__body game-sprint__body--end'>
+                  <h3>Твой результат {correctList.length * 10} очков</h3>
+                  { listResultsNumber === 0 ?
+                    <Progress result = {result(correctList.length, errorList.length)}/> :
+                    <WordListResultGame errorList = {errorList} correctList ={correctList} />
+                  }
+                  <nav className='sprint-body__nav'>
+                    <div className='sprint-body__pagination'>
+                      <div className='sprint-body-pagination__dot sprint-body-pagination__dot--activ'
+                           onClick = {() => setListResultsNumber(0)}/>
+                      <div className='sprint-body-pagination__dot'
+                           onClick = {() => setListResultsNumber(1)}/>
+                    </div>
+                    <span className='sprint-body-nav__link' onClick={onClickHandlerNewGame.bind(null, false)}>Продолжить игру</span>
+                    <NavLink to={`/games`} >
+                      <span className='sprint-body-nav__link'>К списку игр</span>
+                    </NavLink>
+                  </nav>
                 </div>
-                <a className='sprint-body-nav__link' onClick={onClickHandlerNewGame.bind(null, false)}>Продолжить игру</a>
-                <a className='sprint-body-nav__link'>К списку игр</a>
-              </nav>              
+              )}
             </div>
-          )}
-        </div>
-        <button className='game-sprint__button-close'>
-          <i className="material-icons sprint-body-game__icon">close</i>
-        </button>
-      </React.Fragment>:
+            <button className='game-sprint__button-close'>
+              <i className="material-icons sprint-body-game__icon">close</i>
+            </button>
+          </React.Fragment>:
 
-      <Loader />
+          <Loader />
       }
     </div>
   )
@@ -268,21 +265,21 @@ interface ProgressProps {
 }
 const Progress: React.FC<ProgressProps> = ({result}) => {
   return (
-  <div className="morph-shape" id="morph-shape"  >
-    <svg xmlns="http://www.w3.org/2000/svg" transform = {`translate(0, ${110 - 1.5 * result})`}  width="100%" height="120%" viewBox="0 0 100 100"  preserveAspectRatio="none">
-      <path fill="#afafaf" d="M 0 0 C 0 0 20 20 33 20 C 45 20 55 0 67 0 C 78 0 100 20 100 20 C 100 20 100 100 100 100 L 0 100 Z">
-        <animate
-          attributeName="d"
-	        dur="7s"
-	        repeatCount="indefinite" 
-          values=" 
+    <div className="morph-shape" id="morph-shape"  >
+      <svg xmlns="http://www.w3.org/2000/svg" transform = {`translate(0, ${110 - 1.5 * result})`}  width="100%" height="120%" viewBox="0 0 100 100"  preserveAspectRatio="none">
+        <path fill="#afafaf" d="M 0 0 C 0 0 20 20 33 20 C 45 20 55 0 67 0 C 78 0 100 20 100 20 C 100 20 100 100 100 100 L 0 100 Z">
+          <animate
+            attributeName="d"
+            dur="7s"
+            repeatCount="indefinite"
+            values="
             M 0 0 C 0 0 20 20 33 20 C 45 20 55 0 67 0 C 78 0 100 20 100 20 C 100 20 100 100 100 100 L 0 100 Z;
             M 0 20 C 0 20 20 0 33 0 C 45 0 55 20 67 20 C 77 20 100 0 100 0 C 100 0 100 100 100 100 L 0 100 Z;
             M 0 0 C 0 0 20 20 33 20 C 45 20 55 0 67 0 C 78 0 100 20 100 20 C 100 20 100 100 100 100 L 0 100 Z" />
-      </path>	
-    </svg>
-    <div className = 'result'>{`${result}%`}</div> 
-  </div>)
+        </path>
+      </svg>
+      <div className = 'result'>{`${result}%`}</div>
+    </div>)
 }
 
 interface WordListResultGameProps{
@@ -291,30 +288,30 @@ interface WordListResultGameProps{
 }
 const WordListResultGame: React.FC<WordListResultGameProps> = ({errorList, correctList}) => {
   return (
-  <div className="game-sprint__results game-sprint__results--list" >
-    <h4 className = 'result-list__header result-list__header--error'>{`Ошибок : ${errorList.length}`}</h4>
-    {
-      errorList.map((word : WordsProps, index : number) => {
-        return (
-          <div key = {index} className = 'result-list__item'>
-            <AudioWord src = {word.audio} />
-            <span className = 'result-list__item--bold'>{word.word}</span><span> &#8212; </span><span>{word.wordTranslate}</span>
-          </div>
-        )
-      })
-    }
-    <h4 className = 'result-list__header result-list__header--correct'>{`Знаю : ${correctList.length}`}</h4>
-    {
-      correctList.map((word : WordsProps, index : number) => {
-        return (
-          <div key = {index} className = 'result-list__item'>
-            <AudioWord src = {word.audio} />
-            <span className = 'result-list__item--bold'>{word.word}</span><span> &#8212; </span><span>{word.wordTranslate}</span>
-          </div>
-        )
-      })
-    }      
-  </div>)
+    <div className="game-sprint__results game-sprint__results--list" >
+      <h4 className = 'result-list__header result-list__header--error'>{`Ошибок : ${errorList.length}`}</h4>
+      {
+        errorList.map((word : WordsProps, index : number) => {
+          return (
+            <div key = {index} className = 'result-list__item'>
+              <AudioWord src = {word.audio} />
+              <span className = 'result-list__item--bold'>{word.word}</span><span> &#8212; </span><span>{word.wordTranslate}</span>
+            </div>
+          )
+        })
+      }
+      <h4 className = 'result-list__header result-list__header--correct'>{`Знаю : ${correctList.length}`}</h4>
+      {
+        correctList.map((word : WordsProps, index : number) => {
+          return (
+            <div key = {index} className = 'result-list__item'>
+              <AudioWord src = {word.audio} />
+              <span className = 'result-list__item--bold'>{word.word}</span><span> &#8212; </span><span>{word.wordTranslate}</span>
+            </div>
+          )
+        })
+      }
+    </div>)
 }
 
 interface AudioWordProps {

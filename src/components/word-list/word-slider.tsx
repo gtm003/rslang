@@ -1,27 +1,53 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
-import { Carousel } from 'react-responsive-carousel';
-import { getDataPage, urlBackend } from "../../data";
-import { Loader } from "../loader";
-import { connect } from "react-redux";
-import { WordsProps } from "../../common/ts/interfaces";
+import {Carousel} from 'react-responsive-carousel';
+import {getDataPage, urlBackend} from "../../data";
+import {Loader} from "../loader";
+import {connect} from "react-redux";
+import {WordsProps} from "../../common/ts/interfaces";
+import {ActionCreator} from "../../common/redux/action-creator";
 
 interface WordSliderProps {
   group: number,
   page: number,
   isTranslate: boolean,
-  areButtons: boolean
+  areButtons: boolean,
+  hardWords: [],
+  deletedWords: [],
+  getWords: [],
+  onHardWordClick: (word: WordsProps) => void,
+  onDeleteHardWordClick: (id: string) => void,
+  onDeleteWordClick: (word: WordsProps) => void,
 }
 
 const audio = new Audio();
 
-const WordSliderRedux: React.FC<WordSliderProps> = ({ group, page, isTranslate, areButtons }) => {
+const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isTranslate, areButtons, hardWords, deletedWords, getWords, onHardWordClick, onDeleteHardWordClick, onDeleteWordClick}) => {
   const [words, setWords] = useState<WordsProps[]>([]);
+  const [wordsRedux, setWordsRedux] = useState<WordsProps[]>([]);
+  const [isDelete, setIsDelete] = useState<number>(0);
+  const [isMessage, setMessage] = useState<boolean>(false);
+
+  useEffect(() => {
+    setWordsRedux(getWords);
+  }, [getWords]);
 
   useEffect(() => {
     setWords([]);
-    getDataPage(group - 1, page).then((res: WordsProps[]) => setWords(res));
-  }, [page, group]);
+    getDataPage(group - 1, page).then((res: WordsProps[]) => getWordsWithoutDeleted(res));
+  }, [page, group, isDelete]);
+
+  const getWordsWithoutDeleted: (words: any) => any = (words: any) => {
+    const wordsWithoutDeleted = words.filter((word: WordsProps) => deletedWords.findIndex((deletedWord: WordsProps) => deletedWord.id === word.id) === -1);
+    if (!wordsWithoutDeleted.length) {
+      const option = document.getElementsByTagName('option')[page + 1];
+      option.hidden = true;
+      setMessage(true);
+    } else {
+      setWords(wordsWithoutDeleted);
+      setMessage(false);
+    }
+  }
 
   const playWord = (audioWord: string, audioMeaning: string, audioExample: string) => {
     const tracks: Array<string> = [urlBackend + audioWord, urlBackend + audioMeaning, urlBackend + audioExample];
@@ -43,48 +69,55 @@ const WordSliderRedux: React.FC<WordSliderProps> = ({ group, page, isTranslate, 
   return (
     <div className="word-slider">
       {
-        (page < 0) ?
-          <img src={pathImg} alt='level english' />
-          :
-          words.length ?
-            <Carousel dynamicHeight={false}>
-              {words.map((item: WordsProps) => {
-                return (
-                  <div key={item.id}>
-                    <img src={urlBackend + item.image} alt='figure of word' />
-                    <div className="carousel__content">
-                      <div className="word">
-                        <p className="word__value">{item.word} {item.transcription}</p>
-                        {isTranslate && <p className="word__translate">({item.wordTranslate})</p>}
+
+        ((page < 0) && <img src={pathImg} alt='level english'/>) ||
+        (isMessage && <p className="message">The page is deleted</p>) ||
+        ((words.length && wordsRedux.length) ?
+          <Carousel dynamicHeight={false}>
+            {words.map((item: WordsProps) => {
+              const isHard: boolean = Boolean(hardWords.length) && hardWords.some((word: any) => word.id === item.id);
+              return (
+                <div key={item.id}>
+                  <img src={urlBackend + item.image} alt='figure of word'/>
+                  <div className="carousel__content">
+                    <div className="word">
+                      {isHard && <img className="hard-icon" src='/images/lamp.png' alt='hard word'/>}
+                      <p className="word__value">{item.word} {item.transcription}</p>
+                      {isTranslate && <p className="word__translate">({item.wordTranslate})</p>}
+                    </div>
+                    <div className='meaning'>
+                      <p className="meaning__value" dangerouslySetInnerHTML={{__html: item.textMeaning}}></p>
+                      {isTranslate && <p className="meaning__translate">({item.textMeaningTranslate})</p>}
+                    </div>
+                    <div className='example'>
+                      <p className="example__value" dangerouslySetInnerHTML={{__html: item.textExample}}></p>
+                      {isTranslate && <p className="example__translate">({item.textExampleTranslate})</p>}
+                    </div>
+                    <div className="carousel__content__btns">
+                      <div className="audio"
+                           onClick={() => playWord(item.audio, item.audioMeaning, item.audioExample)}>
+                        <img src="/images/audio.png" alt='audio'/>
                       </div>
-                      <div className='meaning'>
-                        <p className="meaning__value" dangerouslySetInnerHTML={{ __html: item.textMeaning }}></p>
-                        {isTranslate && <p className="meaning__translate">({item.textMeaningTranslate})</p>}
-                      </div>
-                      <div className='example'>
-                        <p className="example__value" dangerouslySetInnerHTML={{ __html: item.textExample }}></p>
-                        {isTranslate && <p className="example__translate">({item.textExampleTranslate})</p>}
-                      </div>
-                      <div className="carousel__content__btns">
-                        <div className="audio"
-                          onClick={() => playWord(item.audio, item.audioMeaning, item.audioExample)}>
-                          <img src="/images/audio.png" alt='audio' />
-                        </div>
-                        {areButtons &&
-                          <div className='btn-difficult'>
-                            Добавить в Сложные
-                        </div>}
-                        {areButtons &&
-                          <div className='btn-delete'>
-                            Удалить
-                        </div>}
-                      </div>
+                      {areButtons &&
+                      <div className='btn-difficult' onClick={() => {
+                        isHard ? onDeleteHardWordClick(item.id) : onHardWordClick(item);
+                      }}>
+                        {isHard ? 'Удалить из Сложных' : 'Добавить в Сложные'}
+                      </div>}
+                      {areButtons &&
+                      <div className='btn-delete' onClick={() => {
+                        onDeleteWordClick(item);
+                        setIsDelete((isDelete) => isDelete + 1);
+                      }}>
+                        Удалить
+                      </div>}
                     </div>
                   </div>
-                )
-              })}
-            </Carousel> :
-            <Loader />
+                </div>
+              )
+            })}
+          </Carousel> :
+          <Loader/>)
       }
     </div>
   )
@@ -93,9 +126,24 @@ const WordSliderRedux: React.FC<WordSliderProps> = ({ group, page, isTranslate, 
 const mapStateToProps = (state: any) => ({
   isTranslate: state.setting.isTranslate,
   areButtons: state.setting.areButtons,
+  hardWords: state.data.hardWords,
+  deletedWords: state.data.deletedWords,
+  getWords: state.data.words,
+});
+
+const mapDispatchToProps = (dispatch: any) => ({
+  onHardWordClick: (word: WordsProps) => {
+    dispatch(ActionCreator.addHardWord(word));
+  },
+  onDeleteHardWordClick: (id: string) => {
+    dispatch(ActionCreator.removeHardWord(id));
+  },
+  onDeleteWordClick: (word: WordsProps) => {
+    dispatch(ActionCreator.addDeletedWord(word));
+  },
 });
 
 
-const WordSlider = connect(mapStateToProps)(WordSliderRedux);
+const WordSlider = connect(mapStateToProps, mapDispatchToProps)(WordSliderRedux);
 
-export { WordSlider };
+export {WordSlider};
