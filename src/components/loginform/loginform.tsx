@@ -10,7 +10,7 @@ interface LoginProps {
     handleSubmit: any,
     toggleLoginOpen: (isLoginOpen: boolean) => void,
     toggleSignUpOpen: (isLoginOpen: boolean) => void,
-    loginUser: (name: string, userId: string) => void,
+    loginUser: (name: string, userId: string, photo: string | null) => void,
 }
 
 interface submitValues {
@@ -29,7 +29,8 @@ const LoginForm: React.FC<LoginProps> = ({ isLoginOpen, handleSubmit, toggleLogi
             body: JSON.stringify(values)
         });
         const content = await response.json();
-        loginUser(content.name, content.userId);
+        console.log(content);
+        loginUser(content.name, content.userId, content.photo);
         toggleLoginOpen(false);
     };
     
@@ -77,8 +78,8 @@ const mapDispatchToProps = (dispatch: any) => ({
     toggleSignUpOpen: (isSignUpOpen: boolean) => {
         dispatch(toggleSignUpOpen(isSignUpOpen));
     },
-    loginUser: (name: string, userId: string) => {
-        dispatch(loginUser(name, userId));
+    loginUser: (name: string, userId: string, photo: string | null) => {
+        dispatch(loginUser(name, userId, photo));
     },
 });
 
