@@ -51,7 +51,6 @@ interface WordsProps {
 }
 
 const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
-
   //const [score, setScore] = useState<number>(0);
   const [gameStatus, setGameStatus] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(true);
@@ -215,7 +214,7 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
                            onClick = {() => setListResultsNumber(1)}/>
                     </div>
                     <span className='sprint-body-nav__link' onClick={onClickHandlerNewGame.bind(null, false)}>Продолжить игру</span>
-                    <NavLink to={'/games'} >
+                    <NavLink to={`/games`} >
                       <span className='sprint-body-nav__link'>К списку игр</span>
                     </NavLink>
                   </nav>

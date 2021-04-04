@@ -44,7 +44,6 @@ const Games: React.FC = () => {
 
   const onClickHandlerSelectGame = (gameId: string) => {
     setGame(gameId);
-    console.log(game);
   }
 
   const onChangeHandlerSelectLevel = (levelId: number) => {
@@ -60,7 +59,7 @@ const Games: React.FC = () => {
               <div key = {index} className = {`game game--${index+1}`}>
                 <div className = 'game__head'>
                   <div className = 'game__title'>{item.name}</div>
-                  <NavLink to={'/games/sprint'} key = {item.id}>
+                  <NavLink to={`/games/sprint${level}`} key = {item.id}>
                     <div className = 'game__icon' >
                       <img src = {item.iconUrl} alt = {item.iconUrl} width='80%'
                            onClick = {() => onClickHandlerSelectGame(item.id)}/>
