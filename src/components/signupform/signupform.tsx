@@ -9,6 +9,7 @@ import { FileInput } from './fileinput';
 interface SignUpProps {
     isSignUpOpen: boolean,
     handleSubmit: any,
+    reset: any
     error: string | null,
     toggleSignUpOpen: (isSignUpOpen: boolean) => void,
     signUpUser: (name: string | null, id: string | null, email: string | null, photo: string | null) => void,
@@ -22,31 +23,40 @@ interface SignUpProps {
 //     password: string,
 // }
 
-const SignUpForm: React.FC<SignUpProps> = ({ isSignUpOpen, handleSubmit, error, toggleSignUpOpen, signUpUser, loginUser, setSignUpError }) => {
-    const submit = async (values: any) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(values.photo);
-        reader.onload = async () => {
-            values.photo = reader.result;
-            console.log(typeof reader.result);
-            const response = await fetch(`${urlBackend}users`, {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(values)
-            });
-            const content = await response.json();
-            if (content.error) {
-                setSignUpError(content.error.errors[0].message);
-            } else {
-                setSignUpError(null);
-                signUpUser(content.name, content.id, content.email, content.photo);
-                loginUser(content.name, content.id, content.photo);
-                toggleSignUpOpen(false);
-            }
+const SignUpForm: React.FC<SignUpProps> = ({ isSignUpOpen, handleSubmit, error, toggleSignUpOpen, signUpUser, loginUser, setSignUpError, reset }) => {
+    const fetchData = async (values: any) => {
+        const response = await fetch(`${urlBackend}users`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(values)
+        });
+        const content = await response.json();
+        if (content.error) {
+            setSignUpError(content.error.errors[0].message);
+        } else {
+            setSignUpError(null);
+            signUpUser(content.name, content.id, content.email, content.photo ? content.photo : null);
+            loginUser(content.name, content.id, content.photo ? content.photo : null);
+            toggleSignUpOpen(false);
         }
+    }
+
+    const submit = async (values: any) => {
+        if (values.photo) {
+            const reader = new FileReader();
+            reader.readAsDataURL(values.photo);
+            reader.onload = async () => {
+                values.photo = reader.result;
+                console.log(typeof reader.result);
+                fetchData(values);
+            }
+        } else {
+            fetchData(values);
+        }
+        reset('signup');
     }
     return (
         isSignUpOpen ?
