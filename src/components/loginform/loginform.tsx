@@ -11,7 +11,7 @@ interface LoginProps {
     error: string | null,
     toggleLoginOpen: (isLoginOpen: boolean) => void,
     toggleSignUpOpen: (isLoginOpen: boolean) => void,
-    loginUser: (name: string, userId: string, photo: string | null) => void,
+    loginUser: (name: string, userId: string, photo: string | null, isAuth: boolean) => void,
     setLoginError: (error: string | null) => void,
 }
 
@@ -34,7 +34,7 @@ const LoginForm: React.FC<LoginProps> = ({ isLoginOpen, handleSubmit, error, tog
         if (content.error) {
             setLoginError(content.error.errors[0].message);
         } else {
-            loginUser(content.name, content.userId, content.photo);
+            loginUser(content.name, content.userId, content.photo, true);
             toggleLoginOpen(false);
         }
     };
@@ -54,7 +54,7 @@ const LoginForm: React.FC<LoginProps> = ({ isLoginOpen, handleSubmit, error, tog
                 </div>
                 <div className="login-form-fields">
                     <Field className="login-form-fields__item" name="email" component="input" type="email" placeholder="E-mail" required={true} />
-                    <Field className="login-form-fields__item" name="password" component="input" type="password" placeholder="Пароль" required={true} />
+                    <Field className="login-form-fields__item" name="password" component="input" type="password" placeholder="Пароль" required={true} minLength={8} />
                 </div>
                 <div className="login-form-error">
                     <span>{error}</span>
@@ -87,8 +87,8 @@ const mapDispatchToProps = (dispatch: any) => ({
     toggleSignUpOpen: (isSignUpOpen: boolean) => {
         dispatch(toggleSignUpOpen(isSignUpOpen));
     },
-    loginUser: (name: string, userId: string, photo: string | null) => {
-        dispatch(loginUser(name, userId, photo));
+    loginUser: (name: string, userId: string, photo: string | null, isAuth: boolean) => {
+        dispatch(loginUser(name, userId, photo, isAuth));
     },
     setLoginError: (error: string | null) => {
         dispatch(setLoginError(error));

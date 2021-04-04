@@ -11,7 +11,7 @@ import { SignUpFormRedux } from '../signupform';
 const App: React.FC = () => {
   return (
     <BrowserRouter>
-      <HeaderRedux isAuth={false}/>
+      <HeaderRedux />
       <div className="main-wrapper">
         <Switcher />
       </div>

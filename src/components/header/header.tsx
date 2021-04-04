@@ -19,7 +19,7 @@ interface HeaderProps {
   user: user,
   toggleLoginOpen: (isLoginOpen: boolean) => void,
   signUpUser: (name: string | null, id: string | null, email: string | null, photo: string | null) => void,
-  loginUser: (name: string | null, userId: string | null, photo: string | null) => void
+  loginUser: (name: string | null, userId: string | null, photo: string | null, isAuth: boolean) => void
 }
 
 const Header: React.FC<HeaderProps> = ({ isLoginOpen, isSignUpOpen, isAuth, user, toggleLoginOpen, signUpUser, loginUser }) => {
@@ -66,7 +66,7 @@ const Header: React.FC<HeaderProps> = ({ isLoginOpen, isSignUpOpen, isAuth, user
           user.userId ?
             <button disabled={isLoginOpen || isSignUpOpen} className="btn right-column-wrapper__login-btn" onClick={ () => {
               signUpUser(null, null, null, null);
-              loginUser(null, null, null);
+              loginUser(null, null, null, false);
             }}>
               Выйти
             </button>
@@ -97,6 +97,7 @@ const mapStateToProps = (state: any) => ({
   isLoginOpen: state.login.isLoginOpen,
   isSignUpOpen: state.signup.isSignUpOpen,
   user: state.login.user,
+  isAuth: state.login.isAuth,
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
@@ -106,8 +107,8 @@ const mapDispatchToProps = (dispatch: any) => ({
   signUpUser: (name: string | null, id: string | null, email: string | null, photo: string | null) => {
     dispatch(signUpUser(name, id, email, photo));
   },
-  loginUser: (name: string | null, userId: string | null, photo: string | null) => {
-    dispatch(loginUser(name, userId, photo));
+  loginUser: (name: string | null, userId: string | null, photo: string | null, isAuth: boolean) => {
+    dispatch(loginUser(name, userId, photo, isAuth));
   },
 });
 

@@ -13,7 +13,7 @@ interface SignUpProps {
     error: string | null,
     toggleSignUpOpen: (isSignUpOpen: boolean) => void,
     signUpUser: (name: string | null, id: string | null, email: string | null, photo: string | null) => void,
-    loginUser: (name: string | null, userId: string | null, photo: string | null) => void,
+    loginUser: (name: string | null, userId: string | null, photo: string | null, isAuth: boolean) => void,
     setSignUpError: (error: string | null) => void,
 }
 
@@ -39,7 +39,7 @@ const SignUpForm: React.FC<SignUpProps> = ({ isSignUpOpen, handleSubmit, reset, 
         } else {
             setSignUpError(null);
             signUpUser(content.name, content.id, content.email, content.photo ? content.photo : null);
-            loginUser(content.name, content.id, content.photo ? content.photo : null);
+            loginUser(content.name, content.id, content.photo ? content.photo : null, true);
             toggleSignUpOpen(false);
         }
     }
@@ -74,7 +74,7 @@ const SignUpForm: React.FC<SignUpProps> = ({ isSignUpOpen, handleSubmit, reset, 
                 <div className="signup-form-fields">
                     <Field className="signup-form-fields__item" name="name" component="input" type="text" placeholder="Имя" required={true} />
                     <Field className="signup-form-fields__item" name="email" component="input" type="email" placeholder="E-mail" required={true} />
-                    <Field className="signup-form-fields__item" name="password" component="input" type="password" placeholder="Пароль" required={true} />
+                    <Field className="signup-form-fields__item" name="password" component="input" type="password" placeholder="Пароль" required={true} minLength={8} />
                     <Field className="signup-form-fields__item" name="photo" component={FileInput} type="file" />
                 </div>
                 <div className="signup-form-error">
@@ -101,8 +101,8 @@ const mapDispatchToProps = (dispatch: any) => ({
     signUpUser: (name: string | null, id: string | null, email: string | null, photo: string | null) => {
         dispatch(signUpUser(name, id, email, photo));
     },
-    loginUser: (name: string | null, userId: string | null, photo: string | null) => {
-        dispatch(loginUser(name, userId, photo));
+    loginUser: (name: string | null, userId: string | null, photo: string | null, isAuth: boolean) => {
+        dispatch(loginUser(name, userId, photo, isAuth));
     },
     setSignUpError: (error: string | null) => {
         dispatch(setSignUpError(error));
