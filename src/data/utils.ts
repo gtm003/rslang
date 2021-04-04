@@ -20,3 +20,11 @@ const getOderArr = (n : number) => {
   Array(n).fill(1).forEach((item, index) => arr.push(index));
   return arr;
 };
+
+export const playAnswer = (answer: boolean, mute: boolean) => {
+  const audio = new Audio();
+  if (!mute) {
+    audio.src = answer ? '/audio/correct.mp3' : '/audio/error.mp3';
+    audio.play();
+  }
+};

@@ -1,0 +1,33 @@
+.game-sprint__results {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 300px;
+  margin-bottom: 15px;
+  &--list {
+    overflow-y: scroll;
+    align-items: flex-start;
+    width: 100%;
+    .result-list__header {
+      margin-left: 10px;
+      &--correct {
+        color: green;
+      }
+      &--error {
+        color: red;
+      }
+    }
+    .result-list__item {
+      margin-left: 10px;
+      display: flex;
+      margin-top: 3px;
+      .result-list__item--bold {
+        font-weight: 700;
+      }
+    }
+  }
+  span {
+    margin: 0 5px;
+  }
+}
