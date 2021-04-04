@@ -1,7 +1,7 @@
 export interface WordsProps {
   id: string;
-  group: 0;
-  page: 0;
+  group: string | number;
+  page: number;
   word: string;
   image: string;
   audio: string;
@@ -20,6 +20,6 @@ export interface WordsProps {
 }
 
 export interface GameProps {
-  group: number | string,
+  group: string | number,
   page?: number,
 }

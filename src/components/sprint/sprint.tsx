@@ -66,7 +66,7 @@ const GameSprint: React.FC<GameProps> = ({group, page}) => {
           }
         });
     });
-  });
+  }, []);
 
   useEffect(() => {
     const timerId = setInterval(() => {
