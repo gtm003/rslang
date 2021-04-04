@@ -7,7 +7,7 @@ const FileInput = (props: any) => {
     }
 
     return (
-        <input type="file" value={props.value} onChange={onChange}></input>
+        <input className="signup-form-fields__item-file" type="file" value={props.value} onChange={onChange}></input>
     );
 }
 
