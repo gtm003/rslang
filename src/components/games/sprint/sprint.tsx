@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer'
 import { NavLink } from 'react-router-dom';
-import { urlBackend } from '../../data';
-import { getRandomOderArr, getRandomBoolean, getRandomInteger } from '../../data/utils';
-import { Loader } from '../loader';
+import { urlBackend } from '../../../data';
+import { WordsProps } from '../../../common/ts/interfaces';
+import { getRandomOderArr, getRandomBoolean, getRandomInteger, playAnswer } from '../../../data/utils';
+import { Loader } from '../../loader';
+import { AudioWord } from '../audioWords/audioWords';
+import { ResultPercent } from '../resultPercent/resultPercent';
+import { ResultWordsList } from '../ResultWordsList/resultWordsList';
 
 const getData = async (url: string): Promise<WordsProps[]> => {
   const res = await fetch(url);
@@ -26,28 +30,10 @@ let round: number = 0;
 
 let correctList: WordsProps[]= [];
 let errorList: WordsProps[]= [];
-const audio = new Audio();
 
 interface GameSprintProps {
   group: number,
   page?: number,
-}
-
-interface WordsProps {
-  "id": "string",
-  "group": 0,
-  "page": 0,
-  "word": "string",
-  "image": "string",
-  "audio": "string",
-  "audioMeaning": "string",
-  "audioExample": "string",
-  "textMeaning": "string",
-  "textExample": "string",
-  "transcription": "string",
-  "wordTranslate": "string",
-  "textMeaningTranslate": "string",
-  "textExampleTranslate": "string"
 }
 
 const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
@@ -58,9 +44,6 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
   const [wordTranslate, setWordTranslate] = useState<string>('');
   const [mute, setMute] = useState<boolean>(false);
   const [listResultsNumber, setListResultsNumber] = useState<number>(0);
-  const result = (correct : number, error : number) => {
-    return (correct + error) ? Math.round(correct *100 / (correct + error)) : 0
-  }
 
   useEffect(() => {
     WORDS_GROUP.length = 0;
@@ -87,7 +70,7 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
           }
         });
     });
-  });
+  }, []);
 
   useEffect(() => {
     const timerId = setInterval(() => {
@@ -112,7 +95,7 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
 
   const onClickHandlerGame = (answer : boolean) => {
     const correctAnswer : boolean = (indexWord === indexTranslate);
-    playAnswer(answer === correctAnswer);
+    playAnswer(answer === correctAnswer, mute);
     if (answer === correctAnswer) {
       //setScore(score + 10);
       correctList.push (WORDS_GAME[indexWord!]);
@@ -159,13 +142,6 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
     audio.play();
   };*/
 
-  const playAnswer = (answer: boolean) => {
-    if (!mute) {
-      audio.src = answer ? '/audio/correct.mp3' : '/audio/error.mp3';
-      audio.play();
-    }
-  };
-
   return (
     <div className='game-sprint'>
       {
@@ -205,8 +181,8 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
                 <div className='game-sprint__body game-sprint__body--end'>
                   <h3>Твой результат {correctList.length * 10} очков</h3>
                   { listResultsNumber === 0 ?
-                    <Progress result = {result(correctList.length, errorList.length)}/> :
-                    <WordListResultGame errorList = {errorList} correctList ={correctList} />
+                    <ResultPercent error = {errorList.length} correct = {correctList.length} /> :
+                    <ResultWordsList errorList = {errorList} correctList ={correctList} />
                   }
                   <nav className='sprint-body__nav'>
                     <div className='sprint-body__pagination'>
@@ -281,71 +257,7 @@ const Timer: React.FC<TimerProps> = ({gameStatus}) => {
   )
 };
 
-interface ProgressProps {
-  result: number
-}
-const Progress: React.FC<ProgressProps> = ({result}) => {
-  return (
-    <div className="morph-shape" id="morph-shape"  >
-      <svg xmlns="http://www.w3.org/2000/svg" transform = {`translate(0, ${110 - 1.5 * result})`}  width="100%" height="120%" viewBox="0 0 100 100"  preserveAspectRatio="none">
-        <path fill="#afafaf" d="M 0 0 C 0 0 20 20 33 20 C 45 20 55 0 67 0 C 78 0 100 20 100 20 C 100 20 100 100 100 100 L 0 100 Z">
-          <animate
-            attributeName="d"
-            dur="7s"
-            repeatCount="indefinite"
-            values="
-            M 0 0 C 0 0 20 20 33 20 C 45 20 55 0 67 0 C 78 0 100 20 100 20 C 100 20 100 100 100 100 L 0 100 Z;
-            M 0 20 C 0 20 20 0 33 0 C 45 0 55 20 67 20 C 77 20 100 0 100 0 C 100 0 100 100 100 100 L 0 100 Z;
-            M 0 0 C 0 0 20 20 33 20 C 45 20 55 0 67 0 C 78 0 100 20 100 20 C 100 20 100 100 100 100 L 0 100 Z" />
-        </path>
-      </svg>
-      <div className = 'result'>{`${result}%`}</div>
-    </div>)
-}
 
-interface WordListResultGameProps{
-  errorList: WordsProps[];
-  correctList: WordsProps[];
-}
-const WordListResultGame: React.FC<WordListResultGameProps> = ({errorList, correctList}) => {
-  return (
-    <div className="game-sprint__results game-sprint__results--list" >
-      <h4 className = 'result-list__header result-list__header--error'>{`Ошибок : ${errorList.length}`}</h4>
-      {
-        errorList.map((word : WordsProps, index : number) => {
-          return (
-            <div key = {index} className = 'result-list__item'>
-              <AudioWord src = {word.audio} />
-              <span className = 'result-list__item--bold'>{word.word}</span><span> &#8212; </span><span>{word.wordTranslate}</span>
-            </div>
-          )
-        })
-      }
-      <h4 className = 'result-list__header result-list__header--correct'>{`Знаю : ${correctList.length}`}</h4>
-      {
-        correctList.map((word : WordsProps, index : number) => {
-          return (
-            <div key = {index} className = 'result-list__item'>
-              <AudioWord src = {word.audio} />
-              <span className = 'result-list__item--bold'>{word.word}</span><span> &#8212; </span><span>{word.wordTranslate}</span>
-            </div>
-          )
-        })
-      }
-    </div>)
-}
 
-interface AudioWordProps {
-  src: string,
-}
-const AudioWord: React.FC<AudioWordProps> = ({src}) => {
-  const playWord = (src: string) => {
-    audio.src = urlBackend + src;
-    audio.play();
-  };
-  return (
-    <span className = 'icon-container' onClick={() => playWord(src)}>
-      <i className="material-icons sprint-body-game__icon">volume_up</i>
-    </span>
-  )
-}
+
+
