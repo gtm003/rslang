@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {WordsProps} from "../../common/ts/interfaces";
+import {WordsProps, GameProps} from "../../common/ts/interfaces";
+
+import {Loader} from "../loader";
 
 import { getDataPage } from "../../data";
 
-const Savannah: React.FC = () => {
+const Savannah: React.FC<GameProps> = ({group, page}) => {
   const [words, setWords] = useState<WordsProps[]>([]);
   const [translations, setTranslations] = useState<string[]>([]);
   const word = useRef<HTMLDivElement>(null);
-  console.log(1);
   
   useEffect(() => {
     getDataPage(1, 1).then(res => {
@@ -29,14 +30,15 @@ const Savannah: React.FC = () => {
     if (evt.target.lastChild.data === wordTranslation) {
       const updatedWords = words.filter((word) => word.word !== translationWord);
       setWords(updatedWords);
+      
 
-      word.current?.classList.remove("flow-animation");
-      setTimeout(() => word.current?.classList.add("flow-animation"), 1)
+      word.current?.classList.replace("flow-animation", "hidden");
+      setTimeout(() => word.current?.classList.replace("hidden", "flow-animation"), 50); 
     }
   };
 
   if (words.length === 0 || translations.length === 0) {
-    return <div>Loading...</div>
+    return <Loader />
   }
   
   const translationWordIndex: number = Math.floor(Math.random() * words.length);

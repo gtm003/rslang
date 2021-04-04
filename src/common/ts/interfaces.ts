@@ -18,3 +18,8 @@ export interface WordsProps {
   corrects: number;
   errorsCount: number;
 }
+
+export interface GameProps {
+  group: number | string,
+  page?: number,
+}
