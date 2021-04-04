@@ -63,6 +63,7 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
   }
 
   useEffect(() => {
+    WORDS_GROUP.length = 0;
     for (let j = 0; j < 30; j += 1) {
       urls.push(`${urlBackend}words?group=${group}&page=${j}`)
     }
@@ -72,6 +73,7 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
         .then(() => getData(url))
         .then((res: WordsProps[]) => {
           WORDS_GROUP.push(res);
+
           if(WORDS_GROUP.length === 30) {
             if(page !== undefined) {
               WORDS_GAME = WORDS_GROUP[page];
