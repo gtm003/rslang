@@ -1,6 +1,7 @@
 interface user {
     name: null | string,
     userId: null | string,
+    photo: string | null
 }
 
 interface InitialState {
@@ -18,6 +19,7 @@ const initialState: InitialState = {
     user: {
         name: null,
         userId: null,
+        photo: null,
     }
 }
 
@@ -34,6 +36,7 @@ const loginReducer = (state = initialState, action: Action) => {
                 user: {
                     name: action.payload.name,
                     userId: action.payload.userId,
+                    photo: action.payload.photo,
                 }
             }
         default:

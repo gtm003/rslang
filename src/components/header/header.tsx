@@ -7,8 +7,9 @@ import { SideMenu } from '../side-menu';
 import { Overlay } from '../overlay';
 
 interface user {
-  name: null | string,
   userId: null | string,
+  name: null | string,
+  photo: null | string,
 }
 
 interface HeaderProps {
@@ -17,8 +18,8 @@ interface HeaderProps {
   isAuth: boolean,
   user: user,
   toggleLoginOpen: (isLoginOpen: boolean) => void,
-  signUpUser: (name: string | null, id: string | null, email: string | null) => void,
-  loginUser: (name: string | null, userId: string | null) => void
+  signUpUser: (name: string | null, id: string | null, email: string | null, photo: string | null) => void,
+  loginUser: (name: string | null, userId: string | null, photo: string | null) => void
 }
 
 const Header: React.FC<HeaderProps> = ({ isLoginOpen, isSignUpOpen, isAuth, user, toggleLoginOpen, signUpUser, loginUser }) => {
@@ -52,10 +53,20 @@ const Header: React.FC<HeaderProps> = ({ isLoginOpen, isSignUpOpen, isAuth, user
       </nav>
       <div className="header__right-column-wrapper right-column-wrapper">
         {
+          user.photo ?
+          <img src={user.photo} alt="avatar" width="55px" height="55px" />
+          : null
+        }
+        {
+          user.name ?
+          <div>{user.name}</div>
+          : null
+        }
+        {
           user.userId ?
             <button disabled={isLoginOpen || isSignUpOpen} className="btn right-column-wrapper__login-btn" onClick={ () => {
-              signUpUser(null, null, null);
-              loginUser(null, null);
+              signUpUser(null, null, null, null);
+              loginUser(null, null, null);
             }}>
               Выйти
             </button>
@@ -92,11 +103,11 @@ const mapDispatchToProps = (dispatch: any) => ({
   toggleLoginOpen: (isLoginOpen: boolean) => {
     dispatch(toggleLoginOpen(isLoginOpen));
   },
-  signUpUser: (name: string | null, id: string | null, email: string | null) => {
-    dispatch(signUpUser(name, id, email));
+  signUpUser: (name: string | null, id: string | null, email: string | null, photo: string | null) => {
+    dispatch(signUpUser(name, id, email, photo));
   },
-  loginUser: (name: string | null, userId: string | null) => {
-    dispatch(loginUser(name, userId));
+  loginUser: (name: string | null, userId: string | null, photo: string | null) => {
+    dispatch(loginUser(name, userId, photo));
   },
 });
 

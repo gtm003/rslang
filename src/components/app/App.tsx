@@ -12,7 +12,9 @@ const App: React.FC = () => {
   return (
     <BrowserRouter>
       <HeaderRedux isAuth={false}/>
-      <Switcher />
+      <div className="main-wrapper">
+        <Switcher />
+      </div>
       <Settings />
       <LoginFormRedux />
       <SignUpFormRedux />
@@ -21,4 +23,4 @@ const App: React.FC = () => {
   );
 }
 
-export { App };
+export {App};

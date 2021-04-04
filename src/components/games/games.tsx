@@ -1,30 +1,33 @@
+
 import React, {useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { levelsEnglish } from '../../data';
 
+
 interface GamesProps {
-  id : string;
+  id: string;
   name: string;
   iconUrl: string;
   imgUrl: string;
   description: string;
 }
 
-const titleGames : GamesProps[] = [
+const titleGames: GamesProps[] = [
   {
     id : 'constructor',
     name: 'Конструктор слов',
     iconUrl: '/images/games/constructor.svg',
     imgUrl: '/images/games/constructor.png',
+
     description: 'Учит быстро переводить с английского на ваш родной язык.',
   }, {
-    id : 'savannah',
+    id: 'savannah',
     name: 'Саванна',
-    iconUrl: '/images/games/savannah.svg',                                
+    iconUrl: '/images/games/savannah.svg',
     imgUrl: '/images/games/savannah.png',
     description: 'Учит быстро переводить с английского на ваш родной язык.',
   }, {
-    id : 'audio',
+    id: 'audio',
     name: 'Аудиовызов',
     iconUrl: '/images/games/audio.svg',
     imgUrl: '/images/games/audio.png',
@@ -34,6 +37,7 @@ const titleGames : GamesProps[] = [
     name: 'Спринт',
     iconUrl: '/images/games/sprint.svg',
     imgUrl: '/images/games/sprint.png',
+
     description: 'Учит быстро переводить с английского на ваш родной язык.',
   }, 
 ]
@@ -49,6 +53,7 @@ const Games: React.FC = () => {
 
   const onChangeHandlerSelectLevel = (levelId: number) => {
     setLevel(levelId);
+
   }
 
   return (
@@ -85,11 +90,27 @@ const Games: React.FC = () => {
                   <span className='label__item label__title'>{item.title}</span>
                   <span className='label__item label__name'>{item.name}</span>
                 </label>
+
               </div>
             )
           })
         }
-      </div>
+        <div className='games__select--level'>
+          {
+            levelsEnglish.map((item, index) => {
+              return (
+                <div key={index} className={`level__item level__item--${index + 1}`}>
+                  <input type='radio' id={`${item.title}`} name='game' value={`${item.title}`}
+                         onChange={() => onChangeHandlerSelectLevel(item.id)}/>
+                  <label htmlFor={`${item.title}`}>
+                    <span>{item.title}</span>
+                    <span>{item.name}</span>
+                  </label>
+                </div>
+              )
+            })
+          }
+        </div>
       </div>
     </div>
   )
