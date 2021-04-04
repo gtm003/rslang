@@ -1,8 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import {CountdownCircleTimer} from 'react-countdown-circle-timer'
-import {urlBackend} from '../../data';
-import {getRandomOderArr, getRandomBoolean, getRandomInteger} from '../../data/utils';
-import {Loader} from '../loader';
+import React, { useEffect, useState } from 'react';
+import { CountdownCircleTimer } from 'react-countdown-circle-timer'
+import { NavLink } from 'react-router-dom';
+import { urlBackend } from '../../data';
+import { getRandomOderArr, getRandomBoolean, getRandomInteger } from '../../data/utils';
+import { Loader } from '../loader';
+
 
 const getData = async (url: string): Promise<WordsProps[]> => {
   const res = await fetch(url);
@@ -68,24 +70,22 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
     }
     let chain = Promise.resolve();
     urls.forEach((url) => {
-      chain = chain
-        .then(() => getData(url))
-        .then((res: WordsProps[]) => {
-          WORDS_GROUP.push(res);
-          if (WORDS_GROUP.length === 30) {
-            if (page !== undefined) {
-              WORDS_GAME = WORDS_GROUP[page];
-              setLoading(false)
-            } else {
-              WORDS_GAME = WORDS_GROUP.flat();
-              setLoading(false)
-            }
-            setWord(WORDS_GAME[indexWord!].word);
-            setWordTranslate(WORDS_GAME[indexTranslate!].wordTranslate);
+    chain = chain
+      .then(() => getData(url))
+      .then((res: WordsProps[]) => {
+        WORDS_GROUP.push(res);
+        if(WORDS_GROUP.length === 30) {
+          if(page !== undefined) {
+            WORDS_GAME = WORDS_GROUP[page];
+            setLoading(false)
+          } else {
+            WORDS_GAME= WORDS_GROUP.flat();
+            setLoading(false)
+
           }
         });
     });
-  }, []);
+  });
 
   useEffect(() => {
     const timerId = setInterval(() => {
@@ -101,7 +101,7 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
 
     return () => (window as any).removeEventListener("keyup", onKeyPressHandler);
 
-  }, [])
+  })
   const onKeyPressHandler = (event: KeyboardEvent) => {
     event.preventDefault();
     if (event.key === 'ArrowRight') onClickHandlerGame(true)
@@ -144,7 +144,6 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
     setGameStatus(true);
     setWord(WORDS_GAME[indexWord!].word);
     setWordTranslate(WORDS_GAME[indexTranslate!].wordTranslate);
-    //setScore(0);
     correctList = [];
     errorList = [];
   }
@@ -152,11 +151,11 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
   const onToggleHandlerMute = () => {
     setMute(!mute);
   }
-
+  /*
   const playTimer = () => {
     audio.src = '/audio/timer.mp3';
     audio.play();
-  };
+  };*/
 
   const playAnswer = (answer: boolean) => {
     if (!mute) {
@@ -222,7 +221,12 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
                     <a className='sprint-body-nav__link'>К списку игр</a>
                   </nav>
                 </div>
-              )}
+                <span className='sprint-body-nav__link' onClick={onClickHandlerNewGame.bind(null, false)}>Продолжить игру</span>
+                <NavLink to={'/games'} >
+                  <span className='sprint-body-nav__link'>К списку игр</span>
+                </NavLink>
+              </nav>              
+
             </div>
             <button className='game-sprint__button-close'>
               <i className="material-icons sprint-body-game__icon">close</i>
