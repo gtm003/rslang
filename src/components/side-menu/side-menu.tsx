@@ -31,8 +31,8 @@ const SideMenuRedux: React.FC<SideMenuProps> = ({isAuth, isMenuOpen, onMenuLinkC
           return (
             <li className={`side-menu__item ${clazz}`} key={item}>
               {(item === 'Настройка') ?
-                <span onClick={() => { onMenuLinkClick(); toggleOpen(true)}}>{item}</span> :
-                <NavLink to={`/${navLink[item]}`}
+                <span  onClick={() => { onMenuLinkClick(); toggleOpen(true)}}>{item}</span> :
+                <NavLink exact to={`/${navLink[item]}`}
                          onClick = {(item === 'Войти') ?  () => {onMenuLinkClick(); toggleLoginOpen(true)} :  onMenuLinkClick}
                          activeClassName='active'>
                   {item}
@@ -45,12 +45,10 @@ const SideMenuRedux: React.FC<SideMenuProps> = ({isAuth, isMenuOpen, onMenuLinkC
   )
 }
 
-const mapDispatchToProps = (dispatch: any) => ({
+const mapDispatchToProps = {
   toggleOpen,
-  toggleLoginOpen: (isLoginOpen: boolean) => {
-    dispatch(toggleLoginOpen(isLoginOpen));
-  },
-});
+  toggleLoginOpen,
+  };
 
 const SideMenu = connect(null, mapDispatchToProps)(SideMenuRedux);
 export {SideMenu};
