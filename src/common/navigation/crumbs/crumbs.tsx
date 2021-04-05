@@ -1,6 +1,7 @@
 import React from "react";
 import {NavLink} from "react-router-dom";
 import {levelsEnglish} from "../../../data";
+import {namesPath} from "../../../data/CONSTANTS";
 
 interface CrumbsProps {
   path: string,
@@ -16,13 +17,27 @@ const Crumbs: React.FC<CrumbsProps> = ({path}) => {
         <span>Главная</span>
         <img src='/images/navIconMain.png' alt='Icon main page'/>
       </NavLink>
+
       {pathComponent && pathComponent.map((path, index) => {
         currentPath += `${path}/`;
         const numberGroup: any = path.match(/^group/) && Number(path.slice(5, 7)) - 1;
         const isGroup: boolean = numberGroup || numberGroup === 0;
-        const namePath: string = isGroup ? `${levelsEnglish[numberGroup].title} ${levelsEnglish[numberGroup].name}` : path;
+
+        const numberPage: any = path.match(/^page/) && Number(path.slice(4)) - 1;
+        const isPage: boolean = numberPage || numberPage === 0;
+
+        const numberSprint: any = path.match(/^sprint/) && Number(path.slice(6, 8)) - 1;
+        const isSprint: boolean = numberSprint || numberSprint === 0;
+
+
+        const namePath: string = (isGroup && `${levelsEnglish[numberGroup].title} ${levelsEnglish[numberGroup].name}`) ||
+          (isPage && `${namesPath['page']} ${numberPage}`) ||
+          (isSprint && `${namesPath['sprint']} ${numberSprint}`) ||
+          namesPath[path];
+
         const classGroup: string = isGroup ? `crumbs__btn crumbs__btn--${numberGroup}` : '';
         const lastPath: boolean = (index === pathComponent.length - 1);
+
 
         return (
           <NavLink to={currentPath} key={path}>

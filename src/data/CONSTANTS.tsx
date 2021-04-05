@@ -49,34 +49,34 @@ const descriptionGroup: any = {
 const menuLinks: string[] = ['Главная', 'Учебник', 'Мини-игры', 'Словарь', 'Статистика', 'Настройка', 'О команде', 'Войти'];
 
 interface GamesProps {
-  id : string;
+  id: string;
   name: string;
   iconUrl: string;
   imgUrl: string;
   description: string;
 }
 
-const titleGames : GamesProps[] = [
+const titleGames: GamesProps[] = [
   {
-    id : 'constructor',
+    id: 'constructor',
     name: 'Конструктор слов',
     iconUrl: '/images/games/constructor.svg',
     imgUrl: '/images/games/constructor.png',
     description: 'Учит быстро переводить с английского на ваш родной язык.',
   }, {
-    id : 'savannah',
+    id: 'savannah',
     name: 'Саванна',
     iconUrl: '/images/games/savannah.svg',
     imgUrl: '/images/games/savannah.png',
     description: 'Учит быстро переводить с английского на ваш родной язык.',
   }, {
-    id : 'audio',
+    id: 'audio',
     name: 'Аудиовызов',
     iconUrl: '/images/games/audio.svg',
     imgUrl: '/images/games/audio.png',
     description: 'Учит быстро переводить с английского на ваш родной язык.',
   }, {
-    id : 'sprint',
+    id: 'sprint',
     name: 'Спринт',
     iconUrl: '/images/games/sprint.svg',
     imgUrl: '/images/games/sprint.png',
@@ -84,6 +84,14 @@ const titleGames : GamesProps[] = [
   },
 ]
 
-export {githubMembers, githubSrc, urlBackend, navLink, titleGroup, descriptionGroup, menuLinks , titleGames};
+const namesPath: any = {
+  tutorial: 'Учебник',
+  page: 'Страница',
+  games: 'Игры',
+  sprint: 'Спринт'
+}
+
+
+export {githubMembers, githubSrc, urlBackend, navLink, titleGroup, descriptionGroup, menuLinks, titleGames, namesPath};
 
 
