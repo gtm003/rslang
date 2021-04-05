@@ -4,19 +4,17 @@ import {
   Route,
   Redirect,
 } from 'react-router-dom';
-import {MainPage} from "../../components/main-page";
-import {Team} from "../../components/team";
-import {Tutorial} from "../../components/tutorial";
-import {WordList} from "../../components/word-list";
+import { MainPage } from "../../components/main-page";
+import { Team } from "../../components/team";
+import { Tutorial } from "../../components/tutorial";
+import { WordList } from "../../components/word-list";
 import { Games } from '../../components/games';
 import { GameSprint } from '../../components/sprint';
 import { Savannah } from '../../components/savannah';
 
-
-
 const Switcher: React.FC = () => {
 
-  const isGroupExists: React.FC<any> = ({match}) => {
+  const isGroupExists: React.FC<any> = ({ match }) => {
     const idGroup: number = Number(match.params.id);
 
     if (
@@ -24,13 +22,13 @@ const Switcher: React.FC = () => {
       || idGroup > 6
       || (idGroup ^ 0) !== idGroup
     ) {
-      return <Redirect to='/tutorial'/>
+      return <Redirect to='/tutorial' />
     }
 
-    return <WordList group={idGroup}/>
+    return <WordList group={idGroup} />
   };
 
-  const isGroupPageExists: React.FC<any> = ({match}) => {
+  const isGroupPageExists: React.FC<any> = ({ match }) => {
     const idGroup: number = Number(match.params.group);
     const idPage: number = Number(match.params.page);
 
@@ -39,7 +37,7 @@ const Switcher: React.FC = () => {
       || idGroup > 6
       || (idGroup ^ 0) !== idGroup
     ) {
-      return <Redirect to='/tutorial'/>
+      return <Redirect to='/tutorial' />
     }
 
     if (
@@ -48,35 +46,35 @@ const Switcher: React.FC = () => {
       || (idPage ^ 0) !== idPage
     ) {
       const path = `/tutorial/group${idGroup}`;
-      return <Redirect to={path}/>
+      return <Redirect to={path} />
     }
 
-    return <WordList group={idGroup} pageInitial={idPage}/>
+    return <WordList group={idGroup} pageInitial={idPage} />
   };
 
   return (
     <Switch>
-      <Route exact path='/' component={MainPage}/>
-      <Route path='/team' component={Team}/>
-      <Route exact path='/tutorial' component={Tutorial}/>
-      <Route exact path='/games' component={Games}/>
-      <Route path='/dictionary' component={Tutorial}/>
-      <Route path='/statistics' component={Tutorial}/>
-      <Route path='/games/sprint:level' render={({match}) => {
+      <Route exact path='/' component={MainPage} />
+      <Route path='/team' component={Team} />
+      <Route exact path='/tutorial' component={Tutorial} />
+      <Route exact path='/games' component={Games} />
+      <Route path='/dictionary' component={Tutorial} />
+      <Route path='/statistics' component={Tutorial} />
+      <Route path='/games/sprint:level' render={({ match }) => {
         const group = match.params.level || 0;
-        return <GameSprint group={group} page={5}/>
-      } }/>
-      <Route path='/games/savannah:level' render={({match}) => {
+        return <GameSprint group={group} page={5} />
+      }} />
+      <Route path='/games/savannah:level' render={({ match }) => {
         const group = match.params.level || 0;
-        return <Savannah group={group} page={5}/>
-      } }/>
+        return <Savannah group={group} page={5} />
+      }} />
       <Route path='/tutorial/group:group/page:page'
-             component={(...props: Array<object>) => isGroupPageExists(props[0])}/>
-      <Route path='/tutorial/group:id' component={(...props: Array<object>) => isGroupExists(props[0])}/>
+        component={(...props: Array<object>) => isGroupPageExists(props[0])} />
+      <Route path='/tutorial/group:id' component={(...props: Array<object>) => isGroupExists(props[0])} />
       <Route />
-      <Redirect path='*' to='/'/>
+      <Redirect path='*' to='/' />
     </Switch>
   );
 }
 
-export {Switcher};
+export { Switcher };
