@@ -29,7 +29,7 @@ const Pagination: React.FC<PaginationProps> = ({group, page, changeSelectItem}) 
           const pageId = page > 0 ? page - 1 : 29;
           return (
 
-                <NavLink to={`/games/${item.id}${group}/${pageId}`} key = {item.id}>
+                <NavLink to={`/games/${item.id}${group}/page${pageId}`} key = {item.id}>
                   <div className = 'game__icon' >
                     <img src = {item.iconUrl} alt = {item.iconUrl} title={item.name} className='tutorial__icon' />
                   </div>

@@ -20,7 +20,7 @@ const Games: React.FC = () => {
 
   return (
     <>
-      <Crumbs path={location.pathname} />
+      <Crumbs path={location.pathname}/>
       <div className='games'>
         <div className='games__select'>
           {

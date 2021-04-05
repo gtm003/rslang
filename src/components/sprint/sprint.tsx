@@ -63,7 +63,7 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
     return (correct + error) ? Math.round(correct * 100 / (correct + error)) : 0
   }
   const location = useLocation();
-  console.log(location.pathname);
+
   useEffect(() => {
     WORDS_GROUP.length = 0;
     for (let j = 0; j < 30; j += 1) {

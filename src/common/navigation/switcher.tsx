@@ -61,7 +61,7 @@ const Switcher: React.FC = () => {
 
       <Route path='/dictionary' component={Tutorial}/>
       <Route path='/statistics' component={Tutorial}/>
-      <Route path='/games/sprint:group/:page?' render={({match}) => {
+      <Route path='/games/sprint:group/:page(page/\d+)?' render={({match}) => {
         const group = Number(match.params.group) || 0;
         const page = Number(match.params.page) || undefined;
         return <GameSprint group={group} page={page}/>
