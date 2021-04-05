@@ -32,7 +32,7 @@ const WordListRedux: React.FC<WordListProps> = ({group, pageInitial = 0, toggleO
           <img src='/images/games.png' alt='open games' title='Open games'/>
         </NavLink>
         <Select changeSelectItem={changeSelectItem} page={page}/>
-        <img src='/images/settingsIcon.png' alt='settings' onClick={() => toggleOpen('true')}/>
+        <img src='/images/settingsIcon.png' alt='settings' title='Настройки' onClick={() => toggleOpen('true')}/>
       </div>
       <WordSlider group={group} page={page}/>
       <Pagination group={group} page={page + 1} changeSelectItem={changeSelectItem}/>
