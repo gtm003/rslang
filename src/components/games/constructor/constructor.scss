@@ -1,0 +1,138 @@
+.game-constructor {
+  background: $green-color;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding-top: 1rem;
+  margin-bottom: 2rem;
+  &__lives {
+    margin-left: 1rem;
+    color: $yellow-color;
+    i {
+      font-size: 2rem;
+    }
+  }
+  &__body {
+    background: #ffffff;
+    border-radius: 5px;
+    width: 370px;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    .constructor-body-game__header {
+      display: flex;
+      flex-direction: row;
+      width: 250px;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+      .icon-container {
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+    .constructor-body-game__letters {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      .letter {
+        width: 36px;
+        height: 30px;
+        border: 1px solid blue;
+        border-radius: 0.25rem;
+        margin: 0.25rem;
+        text-align: center;
+        padding-top: 4px;
+        &:hover {
+          box-shadow: 0 0 0.7em rgba(0,0,0,0.5);
+        }
+        &--close {
+          color: transparent;
+          &:hover {
+            box-shadow: none;
+          }
+        }
+        &--open {
+          background: $green-color;
+          color: white;
+          border: none;
+        }
+        &--question {
+          background: $blue-color;
+          color: white;
+          border: none;
+        }
+      }
+    }
+    .constructor-body__answer {
+      display: flex;
+      flex-direction: row;
+      width: 300px;
+      justify-content: space-evenly;
+      margin-bottom: 20px;
+      .constructor-body-answer__item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+    .constructor-body-answer {
+      display: flex;
+      &__button {
+        //width: 70px;
+        height: 40px;
+        margin-bottom: 5px;
+        width: 110px;
+        background: $yellow-color;
+        &:hover {
+          cursor: pointer;
+        }
+        &.button--false {
+          background: $pink-color;
+          width: 70px;
+        }
+        &.button--true {
+          background: $light-green-color;
+          width: 70px;
+        }
+      }
+    }
+    .constructor-body__pagination {
+      display: flex;
+      .constructor-body-pagination__dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin: 10px;
+        background: $default-color;
+        &:hover {
+          cursor: pointer;
+        }
+        &--activ {
+          background: $green-color;
+        }
+      }
+    }
+    .constructor-body__nav {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 20px;
+      .constructor-body-nav__link {
+        margin-top: 5px;
+        &:hover {
+          cursor: pointer;
+          color: $orange-color;
+        }
+      }
+    }
+  }
+  &__button-close {
+    margin-right: 1rem;
+  }
+}
