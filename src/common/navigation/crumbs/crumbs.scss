@@ -1,0 +1,21 @@
+.crumbs {
+  max-width: $desktop-width;
+  padding: 0 40px 40px 40px;
+  margin: 0 auto;
+  display: flex;
+
+
+  a {
+    display: flex;
+    align-items: center;
+    color: $disabled-color;
+
+    img {
+      padding: 0 8px;
+    }
+  }
+}
+
+.actual-menu {
+  color: $default-color;
+}
