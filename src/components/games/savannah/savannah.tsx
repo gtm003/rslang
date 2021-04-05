@@ -1,22 +1,23 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { WordsProps, GameProps } from "../../common/ts/interfaces";
+import { WordsProps, GameProps } from "../../../common/ts/interfaces";
 import { connect } from "react-redux";
-import { Loader } from "../loader";
-import { ActionCreator } from "../../common/redux/action-creator";
-import { getDataPage } from "../../data";
+import { Loader } from "../../loader";
+import { Lives } from "./lives/lives";
+import { ActionCreator } from "../../../common/redux/action-creator";
+import { getDataPage } from "../../../data";
 
 interface SavannahProps {
   words: WordsProps[]
 }
 
 const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page, words }) => {
-  // const [gameWords, setWords] = useState<WordsProps[]>([]);
   const [gameWords, setGameWords] = useState<WordsProps[]>([]);
   const [translations, setTranslations] = useState<string[]>([]);
+  const [lives, setLives] = useState<number>(5);
   const word = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setGameWords(words.slice((0 * 600), (1 * 600)));
+    setGameWords(words.slice((Number(group) * 600), ((Number(group) + 1) * 600)));
   }, [words])
 
   useEffect(() => {
@@ -39,17 +40,31 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page, words
     return array;
   };
 
-  const changeWordList = (evt: any, wordTranslation: string): void => {
-    if (evt.target.lastChild.data === wordTranslation) {
+  const changeWordList = (wordTranslation: string, evt?: any): void => {
+    setTimeout(() => {
+      if (evt === undefined || evt.target.lastChild.data !== wordTranslation) {
+        setLives(prevLives => prevLives - 1);
+      }
+
       const updatedWords = gameWords.filter((word) => word.word !== translationWord);
       setGameWords(updatedWords);
 
+      word.current!.style.animationPlayState = "running";
       word.current?.classList.replace("flow-animation", "word-hidden");
       setTimeout(() => word.current?.classList.replace("word-hidden", "flow-animation"), 50);
-    }
+    }, 800);
+
+    word.current!.style.animationPlayState = "paused";
+    const wordTranslations = document.querySelectorAll(".savannah__translation-item");
+
+    wordTranslations?.forEach((translation) => {
+      translation.lastChild?.textContent === wordTranslation ?
+        translation.classList.add("word-correct") :
+        translation.classList.add("word-wrong");
+    })
   };
 
-  if (gameWords.length === 0) {
+  if (gameWords.length === 0 || translations.length === 0) {
     return <Loader />
   }
 
@@ -78,7 +93,8 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page, words
 
   return (
     <main className="savannah">
-      <div className="savannah__word flow-animation" ref={word}>
+      <Lives lives={lives} />
+      <div className="savannah__word flow-animation" ref={word} onAnimationEnd={(evt) => changeWordList(wordTranslation)}>
         {
           translationWord
         }
@@ -88,7 +104,7 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page, words
           {
             shuffleArray(wordTranslations).map((translation: string, i: number) => {
               return (
-                <li key={translation + i} className="savannah__translation-item" onClick={evt => changeWordList(evt, wordTranslation)}>
+                <li key={translation + i} className="savannah__translation-item" onClick={evt => changeWordList(wordTranslation, evt)} >
                   <span>{i + 1}. </span>
                   <span>
                     {translation}

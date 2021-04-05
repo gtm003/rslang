@@ -32,7 +32,7 @@ let correctList: WordsProps[] = [];
 let errorList: WordsProps[] = [];
 
 interface GameSprintProps {
-  group: number,
+  group: string | number,
   page?: number,
 }
 
