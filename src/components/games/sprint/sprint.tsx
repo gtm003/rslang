@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { CountdownCircleTimer } from 'react-countdown-circle-timer'
+import { CountdownCircleTimer } from 'react-countdown-circle-timer';
+import { useLocation } from 'react-router-dom';
 import { urlBackend } from '../../../data';
 import { WordsProps } from '../../../common/ts/interfaces';
 import { getRandomOderArr, getRandomBoolean, getRandomInteger, playAnswer } from '../../../data/utils';
 import { Loader } from '../../loader';
 import { AudioWord } from '../audioWords/audioWords';
+import { Crumbs } from "../../../common/navigation/crumbs";
 import { ResultsGame } from '../resultsGame';
 
 const getData = async (url: string): Promise<WordsProps[]> => {
@@ -41,6 +43,7 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
   const [word, setWord] = useState<string>('');
   const [wordTranslate, setWordTranslate] = useState<string>('');
   const [mute, setMute] = useState<boolean>(false);
+  const location = useLocation();
 
   useEffect(() => {
     WORDS_GROUP.length = 0;
@@ -54,12 +57,12 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
         .then(() => getData(url))
         .then((res: WordsProps[]) => {
           WORDS_GROUP.push(res);
-          if(WORDS_GROUP.length === 30) {
-            if(page !== undefined) {
+          if (WORDS_GROUP.length === 30) {
+            if (page !== undefined) {
               WORDS_GAME = WORDS_GROUP[page];
               setLoading(false)
             } else {
-              WORDS_GAME= WORDS_GROUP.flat();
+              WORDS_GAME = WORDS_GROUP.flat();
               setLoading(false)
             }
             setWord(WORDS_GAME[indexWord!].word);
@@ -67,7 +70,7 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
           }
         });
     });
-  }, []);
+  }, [group, page]);
 
   useEffect(() => {
     const timerId = setInterval(() => {
@@ -97,11 +100,11 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
     playAnswer(answer === correctAnswer, mute);
     if (answer === correctAnswer) {
       //setScore(score + 10);
-      correctList.push (WORDS_GAME[indexWord!]);
+      correctList.push(WORDS_GAME[indexWord!]);
     } else {
-      errorList.push (WORDS_GAME[indexWord!]);
+      errorList.push(WORDS_GAME[indexWord!]);
     }
-    if(indexesWord.length) {
+    if (indexesWord.length) {
       indexWord = indexesWord.pop();
       indexTranslate = getRandomBoolean() ? indexWord : getRandomInteger(19);
       setWord(WORDS_GAME[indexWord!].word);
@@ -142,39 +145,45 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
   };*/
 
   return (
-    <div className='game-sprint'>
-      {
-        !loading ?
-          <React.Fragment>
+    <>
+      <Crumbs path={location.pathname}/>
+      <div className='game-sprint'>
+        {
 
-            <Timer gameStatus={gameStatus}/>
+          !loading ?
+            <React.Fragment>
 
-            <div className='game-sprint__body'>
-              {gameStatus  && (
-                <div className='game-sprint__body game-sprint__body--game'>
-                  <div className='sprint-body-game__header'>
-                    <AudioWord src = {WORDS_GAME[indexWord!].audio} />
-                    <h3>{correctList.length * 10}</h3>
-                    <span className = 'icon-container' onClick={() => onToggleHandlerMute()}>
-                {mute ? <i className="material-icons">notifications_off</i> : <i className="material-icons">notifications</i>}
+              <Timer gameStatus={gameStatus}/>
+
+              <div className='game-sprint__body'>
+                {gameStatus && (
+                  <div className='game-sprint__body game-sprint__body--game'>
+                    <div className='sprint-body-game__header'>
+                      <AudioWord src={WORDS_GAME[indexWord!].audio}/>
+                      <h3>{correctList.length * 10}</h3>
+                      <span className='icon-container' onClick={() => onToggleHandlerMute()}>
+                {mute ? <i className="material-icons">notifications_off</i> :
+                  <i className="material-icons">notifications</i>}
               </span>
-                  </div>
-                  <div className='sprint-body-game__words'>
-                    <h2>{word}</h2>
-                    <h3>{wordTranslate}</h3>
-                  </div>
-                  <div className='sprint-body__answer'>
-                    <div className = 'sprint-body-answer__item'>
-                      <button className='sprint-body-answer__button button--false'
-                              onClick={onClickHandlerGame.bind(null, false)}>Неверно</button>
-                      <span><i className="material-icons">arrow_back</i></span>
                     </div>
-                    <div className = 'sprint-body-answer__item'>
-                      <button className='sprint-body-answer__button button--true'
-                              onClick={onClickHandlerGame.bind(null, true)}>Верно</button>
-                      <span><i className="material-icons">arrow_forward</i></span>
+                    <div className='sprint-body-game__words'>
+                      <h2>{word}</h2>
+                      <h3>{wordTranslate}</h3>
                     </div>
-                  </div>
+                    <div className='sprint-body__answer'>
+                      <div className='sprint-body-answer__item'>
+                        <button className='sprint-body-answer__button button--false'
+                                onClick={onClickHandlerGame.bind(null, false)}>Неверно
+                        </button>
+                        <span><i className="material-icons">arrow_back</i></span>
+                      </div>
+                      <div className='sprint-body-answer__item'>
+                        <button className='sprint-body-answer__button button--true'
+                                onClick={onClickHandlerGame.bind(null, true)}>Верно
+                        </button>
+                        <span><i className="material-icons">arrow_forward</i></span>
+                      </div>
+                      </div>
                 </div>)}
               {!gameStatus  && (
               <ResultsGame correctList={correctList} errorList={errorList} onClickHandlerNewGame={onClickHandlerNewGame}/>
@@ -188,6 +197,7 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
           <Loader />
       }
     </div>
+    </>
   )
 };
 
@@ -205,7 +215,7 @@ const Timer: React.FC<TimerProps> = ({gameStatus}) => {
     trailColor: '#afafaf'
   };
 
-  const renderTime = (dimension:string, time:number) => {
+  const renderTime = (dimension: string, time: number) => {
     return (
       <div className="time-wrapper">
         <div className="time">{time}</div>
@@ -218,7 +228,7 @@ const Timer: React.FC<TimerProps> = ({gameStatus}) => {
 
   return (
     <div className='game-sprint__timer'>
-      {gameStatus &&(<CountdownCircleTimer
+      {gameStatus && (<CountdownCircleTimer
         {...timerProps}
         duration={60}
         colors={[
@@ -230,15 +240,10 @@ const Timer: React.FC<TimerProps> = ({gameStatus}) => {
           true, 0
         ]}
       >
-        {({ elapsedTime }) =>
+        {({elapsedTime}) =>
           renderTime("sec", getTimeSeconds(elapsedTime))
         }
       </CountdownCircleTimer>)}
     </div>
   )
 };
-
-
-
-
-

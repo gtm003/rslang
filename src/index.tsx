@@ -10,6 +10,7 @@ import { createStore } from "redux";
 import { reducer } from './common/redux/store';
 import { ActionCreator } from './common/redux/action-creator';
 import thunk from 'redux-thunk';
+import { loginUser } from './common/redux/login-action-creator';
 
 const store = createStore(
   reducer,
@@ -20,6 +21,12 @@ const store = createStore(
 );
 
 store.dispatch(ActionCreator.getWords());
+
+const userData = localStorage.user ? JSON.parse(localStorage.user) : null;
+
+if (userData) {
+  store.dispatch(loginUser(userData.name, userData.userId, userData.photo, userData.isAuth));
+}
 
 ReactDOM.render(
   <Provider store={store}>
