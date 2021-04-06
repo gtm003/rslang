@@ -62,9 +62,10 @@ const Switcher: React.FC = () => {
 
       <Route path='/dictionary' component={Tutorial}/>
       <Route path='/statistics' component={Tutorial}/>
-      <Route path='/games/sprint:level' render={({match}) => {
-        const group = match.params.level || 0;
-        return <GameSprint group={group} page={5}/>
+      <Route path='/games/sprint:group/:page(page/\d+)?' render={({match}) => {
+        const group = Number(match.params.group) || 0;
+        const page = Number(match.params.page) || undefined;
+        return <GameSprint group={group} page={page}/>
       } }/>
       <Route path='/games/constructor:level' render={({match}) => {
         const group = match.params.level || 0;
