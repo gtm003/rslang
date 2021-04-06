@@ -48,7 +48,20 @@ const descriptionGroup: any = {
 
 const menuLinks: string[] = ['Главная', 'Учебник', 'Мини-игры', 'Словарь', 'Статистика', 'Настройка', 'О команде', 'Войти'];
 
+const dictionaryLinks: any[] = [
+  {
+    name: 'Изучаемые слова',
+    link: 'learning'
+  },
+  {
+    name: 'Сложные слова',
+    link: 'hard'
+  },
+  {
+    name: 'Удаленные слова',
+    link: 'deleted'
+  }
+];
 
-export {githubMembers, githubSrc, urlBackend, navLink, titleGroup, descriptionGroup, menuLinks};
 
-
+export {githubMembers, githubSrc, urlBackend, navLink, titleGroup, descriptionGroup, menuLinks, dictionaryLinks};

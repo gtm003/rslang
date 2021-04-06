@@ -11,14 +11,14 @@ import { SignUpFormRedux } from '../signupform';
 const App: React.FC = () => {
   return (
     <BrowserRouter>
-      <HeaderRedux isAuth={false}/>
+      <HeaderRedux isAuth={true}/>
       <div className="main-wrapper">
         <Switcher />
       </div>
       <Settings />
       <LoginFormRedux />
       <SignUpFormRedux />
-      <Footer isAuth={false} />
+      <Footer isAuth={true} />
     </BrowserRouter>
   );
 }

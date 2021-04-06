@@ -10,6 +10,9 @@ import {Tutorial} from "../../components/tutorial";
 import {WordList} from "../../components/word-list";
 import { Games } from '../../components/games';
 import { GameSprint } from '../../components/sprint';
+import { Dictionary } from '../../components/dictionary';
+import { HardWords } from '../../components/hard-words';
+import { HardWordsList } from '../../components/hard-words-list';
 
 
 const Switcher: React.FC = () => {
@@ -59,7 +62,10 @@ const Switcher: React.FC = () => {
       <Route exact path='/tutorial' component={Tutorial}/>
       <Route exact path='/games' component={Games}/>
 
-      <Route path='/dictionary' component={Tutorial}/>
+      <Route exact path='/dictionary' component={Dictionary}/>
+      <Route exact path='/dictionary/hard' component={HardWords}/>
+      <Route path='/dictionary/hard/group1' component={() => <HardWordsList group={1}/>}/>
+
       <Route path='/statistics' component={Tutorial}/>
       <Route path='/games/sprint:level' render={({match}) => {
         const group = match.params.level || 0;
