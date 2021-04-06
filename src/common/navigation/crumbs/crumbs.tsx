@@ -20,13 +20,13 @@ const Crumbs: React.FC<CrumbsProps> = ({path}) => {
 
       {pathComponent && pathComponent.map((path, index) => {
         currentPath += `${path}/`;
-        const numberGroup: any = path.match(/^group/) && Number(path.slice(5, 7)) - 1;
+        const numberGroup: any = path.match(/^group/) && Number(path.slice(5, 7));
         const isGroup: boolean = numberGroup || numberGroup === 0;
 
-        const numberPage: any = path.match(/^page/) && Number(path.slice(4)) - 1;
+        const numberPage: any = path.match(/^page/) && Number(path.slice(4));
         const isPage: boolean = numberPage || numberPage === 0;
 
-        const numberSprint: any = path.match(/^sprint/) && Number(path.slice(6, 8)) - 1;
+        const numberSprint: any = path.match(/^sprint/) && Number(path.slice(6, 8));
         const isSprint: boolean = numberSprint || numberSprint === 0;
 
 
