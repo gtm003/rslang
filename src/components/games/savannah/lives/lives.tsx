@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 interface LivesProps {
   lives: number
 }
 
 const Lives: React.FC<LivesProps> = ({ lives }) => {
-
   return (
     <ul className="game-lives">
       {new Array(5).fill(``).map((_, i) => {
