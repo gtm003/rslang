@@ -10,6 +10,7 @@ import {Tutorial} from "../../components/tutorial";
 import {WordList} from "../../components/word-list";
 import { Games } from '../../components/games';
 import { GameSprint } from '../../components/games/sprint';
+import { GameConstructor } from '../../components/games/constructor';
 
 
 const Switcher: React.FC = () => {
@@ -64,6 +65,10 @@ const Switcher: React.FC = () => {
       <Route path='/games/sprint:level' render={({match}) => {
         const group = match.params.level || 0;
         return <GameSprint group={group} page={5}/>
+      } }/>
+      <Route path='/games/constructor:level' render={({match}) => {
+        const group = match.params.level || 0;
+        return <GameConstructor group={group} page={5}/>
       } }/>
       <Route path='/tutorial/group:group/page:page'
              component={(...props: Array<object>) => isGroupPageExists(props[0])}/>
