@@ -1,4 +1,27 @@
-.tutorial-wrapper {
+.game__icon {
+  width: 65px;
+  height: 65px;
+  margin: 0 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5em;
+
+  &--1 {
+    background: $constructor-color;
+  }
+
+  &--2 {
+    background: $savahna-color;
+  }
+
+  &--3 {
+    background: $audio-color;
+  }
+
+  &--4 {
+    background: $sprint-color;
+  }
 }
 
 .tutorial {
@@ -39,10 +62,16 @@
   }
 
   &__icon {
-    width: 50px;
-    margin: 0 25px;
-  }
+    width: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 0.5em;
+    box-shadow: 0 0 0.7em rgba(0, 0, 0, 0.5);
 
+    &:hover {
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.3);
+    }
+  }
 }
 
 .group {

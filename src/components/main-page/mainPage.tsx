@@ -1,14 +1,9 @@
 import React from 'react';
-import {useLocation} from 'react-router-dom';
 
 import {MainPageNav} from '../main-page-nav';
-import {Crumbs} from "../../common/navigation/crumbs";
 
 const MainPage: React.FC = () => {
-  const location = useLocation();
   return (
-    <>
-      <Crumbs path={location.pathname}/>
       <main className="main-page">
         <h1 className="visually-hidden">Главная страница</h1>
         <section className="main-page__promo">
@@ -25,8 +20,6 @@ const MainPage: React.FC = () => {
           <MainPageNav/>
         </div>
       </main>
-    </>
-
   );
 }
 
