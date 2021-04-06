@@ -1,7 +1,6 @@
-.game-sprint__results {
+.game__results {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   align-items: center;
   height: 300px;
   margin-bottom: 15px;
@@ -10,7 +9,8 @@
     align-items: flex-start;
     width: 100%;
     .result-list__header {
-      margin-left: 10px;
+      margin-left: 1rem;
+      margin-top: 1rem;
       &--correct {
         color: green;
       }
