@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer'
-import { NavLink } from 'react-router-dom';
 import { urlBackend } from '../../../data';
 import { WordsProps } from '../../../common/ts/interfaces';
 import { getRandomOderArr, getRandomBoolean, getRandomInteger, playAnswer } from '../../../data/utils';
 import { Loader } from '../../loader';
 import { AudioWord } from '../audioWords/audioWords';
-import { ResultPercent } from '../resultPercent/resultPercent';
-import { ResultWordsList } from '../ResultWordsList/resultWordsList';
+import { ResultsGame } from '../resultsGame';
 
 const getData = async (url: string): Promise<WordsProps[]> => {
   const res = await fetch(url);
@@ -43,10 +41,10 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
   const [word, setWord] = useState<string>('');
   const [wordTranslate, setWordTranslate] = useState<string>('');
   const [mute, setMute] = useState<boolean>(false);
-  const [listResultsNumber, setListResultsNumber] = useState<number>(0);
 
   useEffect(() => {
     WORDS_GROUP.length = 0;
+    urls.length = 0;
     for (let j = 0; j < 30; j += 1) {
       urls.push(`${urlBackend}words?group=${group}&page=${j}`)
     }
@@ -56,7 +54,6 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
         .then(() => getData(url))
         .then((res: WordsProps[]) => {
           WORDS_GROUP.push(res);
-
           if(WORDS_GROUP.length === 30) {
             if(page !== undefined) {
               WORDS_GAME = WORDS_GROUP[page];
@@ -89,8 +86,10 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
   })
   const onKeyPressHandler = (event: KeyboardEvent) => {
     event.preventDefault();
-    if (event.key === 'ArrowRight') onClickHandlerGame(true)
-    else if (event.key === 'ArrowLeft') onClickHandlerGame(false)
+    if(gameStatus) {
+      if (event.key === 'ArrowRight') onClickHandlerGame(true);
+      else if (event.key === 'ArrowLeft') onClickHandlerGame(false);
+    }
   }
 
   const onClickHandlerGame = (answer : boolean) => {
@@ -178,25 +177,7 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
                   </div>
                 </div>)}
               {!gameStatus  && (
-                <div className='game-sprint__body game-sprint__body--end'>
-                  <h3>Твой результат {correctList.length * 10} очков</h3>
-                  { listResultsNumber === 0 ?
-                    <ResultPercent error = {errorList.length} correct = {correctList.length} /> :
-                    <ResultWordsList errorList = {errorList} correctList ={correctList} />
-                  }
-                  <nav className='sprint-body__nav'>
-                    <div className='sprint-body__pagination'>
-                      <div className='sprint-body-pagination__dot sprint-body-pagination__dot--activ'
-                           onClick = {() => setListResultsNumber(0)}/>
-                      <div className='sprint-body-pagination__dot'
-                           onClick = {() => setListResultsNumber(1)}/>
-                    </div>
-                    <span className='sprint-body-nav__link' onClick={onClickHandlerNewGame.bind(null, false)}>Продолжить игру</span>
-                    <NavLink to={`/games`} >
-                      <span className='sprint-body-nav__link'>К списку игр</span>
-                    </NavLink>
-                  </nav>
-                </div>
+              <ResultsGame correctList={correctList} errorList={errorList} onClickHandlerNewGame={onClickHandlerNewGame}/>
               )}
             </div>
             <button className='game-sprint__button-close'>

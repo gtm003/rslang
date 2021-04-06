@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { NavLink } from 'react-router-dom';
 import { urlBackend } from '../../../data';
 import { WordsProps } from '../../../common/ts/interfaces';
-import { getRandomOderArr, getRandomBoolean, getRandomInteger, playAnswer } from '../../../data/utils';
+import { getRandomOderArr, playAnswer } from '../../../data/utils';
 import { AudioWord } from '../audioWords/audioWords';
 import { Loader } from '../../loader';
-import { ResultPercent } from '../resultPercent/resultPercent';
-import { ResultWordsList } from '../ResultWordsList/resultWordsList';
-//import { Loader } from '../loader';
+import { ResultsGame } from '../resultsGame';
 
 const getData = async (url: string): Promise<WordsProps[]> => {
   const res = await fetch(url);
@@ -21,6 +18,7 @@ const getData = async (url: string): Promise<WordsProps[]> => {
 
 const urls: Array<string> = [];
 const WORDS_GROUP: WordsProps[][] = [];
+let round: number = 0;
 
 const CONTROL_TEXT = [
   {
@@ -47,9 +45,7 @@ let error = {
 
 /*
 let round: number = 0;
-
-
-const audio = new Audio();*/
+*/
 
 interface GameProps {
   group: number,
@@ -57,20 +53,20 @@ interface GameProps {
 }
 
 const GameConstructor: React.FC<GameProps> = ({group, page}) => {
-  const [score, setScore] = useState<number>(0);
+  //const [score, setScore] = useState<number>(0);
   const [gameStatus, setGameStatus] = useState<boolean>(true);
-  const [loading, setLoading] = useState<boolean>(true);
+  //const [loading, setLoading] = useState<boolean>(true);
   const [word, setWord] = useState<WordsProps>();
   const [solved, setSolved] = useState<boolean>(false);
   const [mute, setMute] = useState<boolean>(false);
-  const [listResultsNumber, setListResultsNumber] = useState<number>(0);
   const [stars, setStars] = useState<boolean[]>(new Array(quantityStars).fill(true));
   const [letters, setLetters] = useState<string[]>([]);
-  const [mixedLetters, setMixedLetters] = useState<string[]>([]);
   const [indexLetter, setIndexLetter] = useState<number>(0);
   const [mixedOder, setMixedOder] = useState<number[]>([]);
 
   useEffect(() => {
+    WORDS_GROUP.length = 0;
+    urls.length = 0;
     for (let j = 0; j < 30; j += 1) {
       urls.push(`${urlBackend}words?group=${group}&page=${j}`)
     }
@@ -83,17 +79,15 @@ const GameConstructor: React.FC<GameProps> = ({group, page}) => {
         if(WORDS_GROUP.length === 30) {
           if(page !== undefined) {
             WORDS_GAME = WORDS_GROUP[page];
-            console.log(WORDS_GAME);
-            setLoading(false)
+            //setLoading(false)
           } else {
             WORDS_GAME= WORDS_GROUP.flat();
             console.log(WORDS_GAME);
-            setLoading(false);
+            //setLoading(false);
           }
           setWord(WORDS_GAME[indexWord!]);
           setLetters(getLetters(WORDS_GAME[indexWord!]));
           setMixedOder(getRandomOderArr(WORDS_GAME[indexWord!].word.length));
-          //setMixedLetters(getMixedLetters(WORDS_GAME[indexWord!]));
         }
       });
     });
@@ -105,18 +99,26 @@ const GameConstructor: React.FC<GameProps> = ({group, page}) => {
 
   const onClickHandlerControl = () : void => {
     if (solved) {
-      console.log('new word');
-      indexWord = indexesWord.pop();
-      console.log(indexWord);
-      setWord(WORDS_GAME[indexWord!]);
-      setLetters(getLetters(WORDS_GAME[indexWord!]));
-      setMixedOder(getRandomOderArr(WORDS_GAME[indexWord!].word.length));
-      setIndexLetter(0);
-      setSolved(false);
+      if(indexesWord.length) {
+        indexWord = indexesWord.pop();
+        getNewWord(indexWord!);
+      } else {
+        indexesWord = getRandomOderArr(20);
+        if (page! > round) {
+          round += 1;
+          WORDS_GAME = WORDS_GROUP[page! - round];
+          indexWord = indexesWord.pop();
+          getNewWord(indexWord!);
+        } else {
+          setGameStatus(false);
+        }
+      }
     } else {
 
     }
   }
+
+
 /*
   useEffect(() => {
     window.addEventListener("keyup", onKeyPressHandler);
@@ -140,6 +142,7 @@ const GameConstructor: React.FC<GameProps> = ({group, page}) => {
       setIndexLetter(indexLetter + 1);
       if (indexLetter === letters.length - 1) {
         correctList.push(word!);
+        playWord(word!.audio)
         setSolved(true);
       } 
     }
@@ -149,7 +152,7 @@ const GameConstructor: React.FC<GameProps> = ({group, page}) => {
       const newStars = new Array(quantityStars).fill(true);
       newStars.fill(false, quantityStars - error.totalErrors);
       setStars(newStars);
-      if(error.totalErrors === quantityStars) {
+      if(error.totalErrors >= quantityStars) {
         setGameStatus(false);
       }
     }
@@ -159,17 +162,27 @@ const GameConstructor: React.FC<GameProps> = ({group, page}) => {
     indexesWord = getRandomOderArr(20);
     indexWord = indexesWord.pop();
     setGameStatus(true);
-    setWord(WORDS_GAME[indexWord!]);
-    setLetters(getLetters(WORDS_GAME[indexWord!]));
-    setMixedOder(getRandomOderArr(WORDS_GAME[indexWord!].word.length));
-    setIndexLetter(0);
-    setSolved(false);
+    getNewWord(indexWord!);
+    setStars(new Array(quantityStars).fill(true));
+    error.totalErrors = 0;
+    correctList = [];
     errorList = [];
   }
 
-  const onChangeHandlerPagination = (index: number) => {
-    setListResultsNumber(index);
+  const getNewWord = (index: number) => {
+    setWord(WORDS_GAME[index]);
+    setLetters(getLetters(WORDS_GAME[index]));
+    setMixedOder(getRandomOderArr(WORDS_GAME[index].word.length));
+    setIndexLetter(0);
+    setSolved(false);
   }
+
+  const playWord = (src: string) => {
+    const audio = new Audio();
+    audio.src = urlBackend + src;
+    audio.play();
+  };
+
   /*
 
 
@@ -195,8 +208,6 @@ const GameConstructor: React.FC<GameProps> = ({group, page}) => {
           }
         </div>
         <div className='game-constructor__body'>
-
-
           { gameStatus ?
             ( <React.Fragment>
               <div className='constructor-body-game__header'>
@@ -228,26 +239,7 @@ const GameConstructor: React.FC<GameProps> = ({group, page}) => {
                 </button>
               </div>
             </React.Fragment>) :
-            ( <React.Fragment>
-              <div className='game-constructor__body game-constructor__body--end'>
-                <p className='game-result__title'>Твой результат {correctList.length * 10} очков</p>
-                  { listResultsNumber === 0 ?
-                    <ResultPercent  error = {errorList.length} correct = {correctList.length}/> :
-                    <ResultWordsList  errorList = {errorList} correctList ={correctList} />
-                  }
-                  <nav className='constructor-body__nav'>
-                    <Pagination quantityPages = {2} onChangeHandler = {onChangeHandlerPagination}/>
-                    <span className='constructor-body-nav__link' onClick={onClickHandlerNewGame.bind(null, false)}>Продолжить игру</span>
-                    <NavLink to={`/games`} >
-                      <span className='constructor-body-nav__link'>К списку игр</span>
-                    </NavLink>
-                  </nav>
-                </div>
-            </React.Fragment>)}
-
-
-
-          
+            <ResultsGame correctList={correctList} errorList={errorList} onClickHandlerNewGame={onClickHandlerNewGame}/>}
         </div>
         <button className='game-constructor__button-close'>
           <i className="material-icons">close</i>
@@ -312,30 +304,3 @@ const WordInEnglish: React.FC<WordInEnglishProps> = ({letters, indexLetter}) => 
   </div> )
 }
 
-interface PaginationProps {
-  onChangeHandler: (index: number) => void;
-  quantityPages: number
-}
-
-const Pagination: React.FC<PaginationProps> = ({quantityPages, onChangeHandler}) => {
-  const pages = new Array(quantityPages).fill(null);
-  const [indexPage, setIndex] = useState(0);
-  return (
-    <div className = 'game-result__pagination'>
-    {
-      pages.map((item, index) => {
-        return (
-          <div key = {index} className = 'pagination__item' >
-            <input type='radio' name='game' id={`${index}`} value={`${index}`} className='pagination__input'
-                   checked = {index === indexPage} onChange ={(e) => {
-                     console.log(index);
-                     setIndex(index);
-                     onChangeHandler(+e.target.value);
-                     }} />
-            <label className='pagination__label' htmlFor={`${index}`} />
-          </div>
-        )
-      })
-    }
-  </div>)
-}
