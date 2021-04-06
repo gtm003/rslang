@@ -42,14 +42,26 @@
   max-width: 600px;
 
   &__login-btn {
-    background-color: #f7cc7e;
     display: flex;
     justify-content: center;
     align-items: center;
 
-    &:hover {
-      box-shadow: 2px 2px 0px 0px #f7cc7e inset, -2px -2px 0px 0px #f7cc7e inset;
-      background-color: #fff;
+    &-yellow {
+      background-color: #f7cc7e;
+
+      &:hover {
+        box-shadow: 2px 2px 0px 0px #f7cc7e inset, -2px -2px 0px 0px #f7cc7e inset;
+        background-color: #fff;
+      }
+    }
+
+    &-green {
+      background-color: #51BFA6;
+
+      &:hover {
+        box-shadow: 2px 2px 0px 0px #51BFA6 inset, -2px -2px 0px 0px #51BFA6 inset;
+        background-color: #fff;
+      }
     }
   }
 

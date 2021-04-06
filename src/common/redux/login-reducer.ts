@@ -6,7 +6,9 @@ interface user {
 
 interface InitialState {
     isLoginOpen: boolean,
-    user: user
+    user: user,
+    error: string | null,
+    isAuth: boolean,
 }
 
 interface Action {
@@ -20,7 +22,9 @@ const initialState: InitialState = {
         name: null,
         userId: null,
         photo: null,
-    }
+    },
+    error: null,
+    isAuth: false,
 }
 
 const loginReducer = (state = initialState, action: Action) => {
@@ -37,7 +41,14 @@ const loginReducer = (state = initialState, action: Action) => {
                     name: action.payload.name,
                     userId: action.payload.userId,
                     photo: action.payload.photo,
-                }
+                },
+                isAuth: action.payload.isAuth,
+            }
+
+        case 'SET_LOGIN_ERROR':
+            return {
+                ...state,
+                error: action.payload
             }
         default:
             return state;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Footer } from '../footer';
+import { FooterRedux } from '../footer';
 import { HeaderRedux } from '../header';
 import { Switcher } from "../../common/navigation";
 import { BrowserRouter } from "react-router-dom";
@@ -11,14 +11,14 @@ import { SignUpFormRedux } from '../signupform';
 const App: React.FC = () => {
   return (
     <BrowserRouter>
-      <HeaderRedux isAuth={false}/>
+      <HeaderRedux />
       <div className="main-wrapper">
         <Switcher />
       </div>
       <Settings />
       <LoginFormRedux />
       <SignUpFormRedux />
-      <Footer isAuth={false} />
+      <FooterRedux />
     </BrowserRouter>
   );
 }

@@ -6,13 +6,8 @@ import {Crumbs} from "../../common/navigation/crumbs";
 
 const Games: React.FC = () => {
   const [level, setLevel] = useState<number>(0);
-  const [game, setGame] = useState<string>('sprint');
 
   const location = useLocation();
-
-  const onClickHandlerSelectGame = (gameId: string) => {
-    setGame(gameId);
-  }
 
   const onChangeHandlerSelectLevel = (levelId: number) => {
     setLevel(levelId);
@@ -29,10 +24,9 @@ const Games: React.FC = () => {
                 <div key={index} className={`game game--${index + 1}`}>
                   <div className='game__head'>
                     <div className='game__title'>{item.name}</div>
-                    <NavLink to={`/games/sprint${level}/`} key={item.id}>
+                    <NavLink to={`/games/${item.id}${level}`} key = {item.id}>
                       <div className='game__icon'>
-                        <img src={item.iconUrl} alt={item.iconUrl} width='80%'
-                             onClick={() => onClickHandlerSelectGame(item.id)}/>
+                        <img src={item.iconUrl} alt={item.iconUrl} width='80%'/>
                       </div>
                     </NavLink>
                   </div>

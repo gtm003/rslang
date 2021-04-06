@@ -60,65 +60,6 @@
         }
       }
     }
-    &--end {
-      .game-sprint__results {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: center;
-        height: 300px;
-        margin-bottom: 15px;
-        &--list {
-          overflow-y: scroll;
-          align-items: flex-start;
-          width: 100%;
-          .result-list__header {
-            margin-left: 10px;
-            &--correct {
-              color: green;
-            }
-            &--error {
-              color: red;
-            }
-          }
-          .result-list__item {
-            margin-left: 10px;
-            display: flex;
-            margin-top: 3px;
-            .result-list__item--bold {
-              font-weight: 700;
-            }
-          }
-        }
-        span {
-          margin: 0 5px;
-        }
-      }
-      .morph-shape {
-        width: 150px;
-        height: 150px;
-        background: #51BFA6;
-        border-radius: 50%;
-        overflow: hidden;
-        position: relative;
-        margin: 2rem;
-        svg {
-          top: 20px;
-          position: absolute;
-          z-index: 1;
-        }
-        .result {
-          position: absolute;
-          color: greenyellow;
-          z-index: 2;
-          margin: 45px 15px 0;
-          font-size: 45px;
-          width: 120px;
-          font-weight: bold;
-          text-align: center;
-        }
-      }
-    }
     .sprint-body-answer {
       display: flex;
       &__button {
@@ -180,3 +121,6 @@
     cursor: pointer;
   }
 }
+
+
+
