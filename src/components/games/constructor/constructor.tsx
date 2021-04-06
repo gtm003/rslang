@@ -5,6 +5,7 @@ import { getRandomOderArr, playAnswer } from '../../../data/utils';
 import { AudioWord } from '../audioWords/audioWords';
 import { Loader } from '../../loader';
 import { ResultsGame } from '../resultsGame';
+import { FullScreen } from '../fullScreen/fullScreen';
 
 const getData = async (url: string): Promise<WordsProps[]> => {
   const res = await fetch(url);
@@ -244,6 +245,7 @@ const GameConstructor: React.FC<GameProps> = ({group, page}) => {
         <button className='game-constructor__button-close'>
           <i className="material-icons">close</i>
         </button>
+        <FullScreen />
       </React.Fragment> :
       <Loader />}
     </div>
