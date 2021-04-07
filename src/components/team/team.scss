@@ -1,0 +1,47 @@
+.team-wrapper {
+  h1 {
+    font-size: 30px;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-align: center;
+    margin: 0;
+  }
+}
+
+.team {
+  width: $desktop-width;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.team-member {
+  width: 30%;
+  margin: 75px 20px;
+  text-align: center;
+
+  img {
+    width: 360px;
+    height: 360px;
+    padding-bottom: 22px;
+  }
+
+  &__name {
+    @include body-text-l;
+    padding-bottom: 10px;
+  }
+
+  &__role {
+    @include body-text-sm;
+    color: $secondary-color;
+  }
+
+  &__description {
+    font-size: 18px;
+    font-weight: 300;
+    text-align: left;
+    padding: 20px 0;
+  }
+
+}

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {NavLink, useHistory, useLocation} from "react-router-dom";
-import {levelsEnglish, navLink} from "../../data";
+import {levelsEnglish} from "../../data";
 import {Select} from "./select";
 import {WordSlider} from "./word-slider";
 import {Pagination} from "../pagination";
