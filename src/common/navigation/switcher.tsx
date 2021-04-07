@@ -74,7 +74,6 @@ const Switcher: React.FC = () => {
       <Route path='/games/savannah:group/:page(page/\d+)?' render={({ match }) => {
         const group = Number(match.params.group) || 0;
         const page = Number(match.params.page) || undefined;
-        console.log(page);
 
         return <Savannah group={group} page={page} />
       }} />

@@ -29,14 +29,27 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page, words
     wrongAnswers = [];
   }, [words, group]);
 
+  useEffect(() => {
+    window.addEventListener("keyup", onKeyUpHandler);
+
+    return () => (window as any).removeEventListener("keyup", onKeyUpHandler);
+
+  }, [gameWords]);
+
+
+
   const shuffleArray = (array: WordsProps[]) => {
     return array.sort(() => Math.random() - 0.5);
   };
 
-  const onAnswer = (wordTranslation: WordsProps, evt?: any): void => {
-    console.log(evt);
-
-    const wrongAnswer = evt === undefined || evt.target.innerText.match(/[а-я]/gi).join('') !== wordTranslation.wordTranslate;
+  const onAnswer = (wordTranslation: WordsProps, evt?: any, wordForTranslation?: string): void => {
+    console.log(typeof evt);
+    let wrongAnswer: boolean;
+    if (typeof evt === "string") {
+      wrongAnswer = wordForTranslation !== wordTranslation.wordTranslate;
+    } else {
+      wrongAnswer = evt === undefined || evt.target.innerText.match(/[а-я]/gi).join('') !== wordTranslation.wordTranslate;
+    }
 
     word.current!.style.animationPlayState = "paused";
     const wordTranslations = document.querySelectorAll(".savannah__translation-item");
@@ -73,7 +86,18 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page, words
     }, 800);
   };
 
-
+  const onKeyUpHandler = (evt: KeyboardEvent) => {
+    switch (evt.key) {
+      case "1":
+        return onAnswer(wordsOnScreen[0], wordForTranslation.word);
+      case "2":
+        return onAnswer(wordsOnScreen[1], wordForTranslation.word);
+      case "3":
+        return onAnswer(wordsOnScreen[2], wordForTranslation.word);
+      case "4":
+        return onAnswer(wordsOnScreen[3], wordForTranslation.word);
+    }
+  }
 
   const restartGame = () => {
     const necessaryArray = words.slice((Number(group) * 600), 4);
@@ -104,6 +128,8 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page, words
     getRandomWords(),
     wordForTranslation
   ]
+
+
 
   if (gameWords.length === 0 && translations.length === 0) {
     return <Loader />
