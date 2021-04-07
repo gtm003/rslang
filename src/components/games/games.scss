@@ -53,14 +53,14 @@
       }
       &--1 {
         grid-area: 1 / 1 / 2 / 3;
-        background: #f7cc7e;
+        background: $constructor-color;
         .game__img {
           width: 24rem;
         }
       }
       &--2 {
         grid-area: 1 / 3 / 3 / 4;
-        background: #51bfa6;
+        background: $savahna-color;
         flex-direction: column;
         padding-top: 2.2em;
         .game__img {
@@ -69,7 +69,7 @@
       }
       &--3 {
         grid-area: 3 / 2 / 4 / 4;
-        background: #184656;
+        background: $audio-color;
         flex-direction: row-reverse;
         color: rgb(255, 255, 255);
         .game__img {
@@ -78,7 +78,7 @@
       }
       &--4 {
         grid-area: 2 / 1 / 4 / 2;
-        background: #f57359;
+        background: $sprint-color;
         flex-direction: column-reverse;
         padding-bottom: 2.2em;
         .game__img {

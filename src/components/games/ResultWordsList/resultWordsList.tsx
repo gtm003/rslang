@@ -10,7 +10,7 @@ interface ResultWordsListProps {
 }
 const ResultWordsList: React.FC<ResultWordsListProps> = ({errorList, correctList}) => {
   return (
-    <div className="game-sprint__results game-sprint__results--list" >
+    <div className="game__results game__results--list" >
       <h4 className = 'result-list__header result-list__header--error'>{`Ошибок : ${errorList.length}`}</h4>
       {
         errorList.map((word : WordsProps, index : number) => {

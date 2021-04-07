@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { CountdownCircleTimer } from 'react-countdown-circle-timer'
-import { NavLink } from 'react-router-dom';
+import { CountdownCircleTimer } from 'react-countdown-circle-timer';
+import { useLocation } from 'react-router-dom';
 import { urlBackend } from '../../../data';
 import { WordsProps } from '../../../common/ts/interfaces';
 import { getRandomOderArr, getRandomBoolean, getRandomInteger, playAnswer } from '../../../data/utils';
 import { Loader } from '../../loader';
 import { AudioWord } from '../audioWords/audioWords';
-import { ResultPercent } from '../resultPercent/resultPercent';
-import { ResultWordsList } from '../ResultWordsList/resultWordsList';
+import { Crumbs } from "../../../common/navigation/crumbs";
+import { ResultsGame } from '../resultsGame';
 
 const getData = async (url: string): Promise<WordsProps[]> => {
   const res = await fetch(url);
@@ -43,10 +43,11 @@ const GameSprint: React.FC<GameSprintProps> = ({ group, page }) => {
   const [word, setWord] = useState<string>('');
   const [wordTranslate, setWordTranslate] = useState<string>('');
   const [mute, setMute] = useState<boolean>(false);
-  const [listResultsNumber, setListResultsNumber] = useState<number>(0);
+  const location = useLocation();
 
   useEffect(() => {
     WORDS_GROUP.length = 0;
+    urls.length = 0;
     for (let j = 0; j < 30; j += 1) {
       urls.push(`${urlBackend}words?group=${group}&page=${j}`)
     }
@@ -70,7 +71,7 @@ const GameSprint: React.FC<GameSprintProps> = ({ group, page }) => {
           }
         });
     });
-  }, []);
+  }, [group, page]);
 
   useEffect(() => {
     const timerId = setInterval(() => {
@@ -89,8 +90,10 @@ const GameSprint: React.FC<GameSprintProps> = ({ group, page }) => {
   })
   const onKeyPressHandler = (event: KeyboardEvent) => {
     event.preventDefault();
-    if (event.key === 'ArrowRight') onClickHandlerGame(true)
-    else if (event.key === 'ArrowLeft') onClickHandlerGame(false)
+    if (gameStatus) {
+      if (event.key === 'ArrowRight') onClickHandlerGame(true);
+      else if (event.key === 'ArrowLeft') onClickHandlerGame(false);
+    }
   }
 
   const onClickHandlerGame = (answer: boolean) => {
@@ -143,70 +146,59 @@ const GameSprint: React.FC<GameSprintProps> = ({ group, page }) => {
   };*/
 
   return (
-    <div className='game-sprint'>
-      {
-        !loading ?
-          <React.Fragment>
+    <>
+      <Crumbs path={location.pathname} />
+      <div className='game-sprint'>
+        {
 
-            <Timer gameStatus={gameStatus} />
+          !loading ?
+            <React.Fragment>
 
-            <div className='game-sprint__body'>
-              {gameStatus && (
-                <div className='game-sprint__body game-sprint__body--game'>
-                  <div className='sprint-body-game__header'>
-                    <AudioWord src={WORDS_GAME[indexWord!].audio} />
-                    <h3>{correctList.length * 10}</h3>
-                    <span className='icon-container' onClick={() => onToggleHandlerMute()}>
-                      {mute ? <i className="material-icons">notifications_off</i> : <i className="material-icons">notifications</i>}
-                    </span>
-                  </div>
-                  <div className='sprint-body-game__words'>
-                    <h2>{word}</h2>
-                    <h3>{wordTranslate}</h3>
-                  </div>
-                  <div className='sprint-body__answer'>
-                    <div className='sprint-body-answer__item'>
-                      <button className='sprint-body-answer__button button--false'
-                        onClick={onClickHandlerGame.bind(null, false)}>Неверно</button>
-                      <span><i className="material-icons">arrow_back</i></span>
-                    </div>
-                    <div className='sprint-body-answer__item'>
-                      <button className='sprint-body-answer__button button--true'
-                        onClick={onClickHandlerGame.bind(null, true)}>Верно</button>
-                      <span><i className="material-icons">arrow_forward</i></span>
-                    </div>
-                  </div>
-                </div>)}
-              {!gameStatus && (
-                <div className='game-sprint__body game-sprint__body--end'>
-                  <h3>Твой результат {correctList.length * 10} очков</h3>
-                  { listResultsNumber === 0 ?
-                    <ResultPercent error={errorList.length} correct={correctList.length} /> :
-                    <ResultWordsList errorList={errorList} correctList={correctList} />
-                  }
-                  <nav className='sprint-body__nav'>
-                    <div className='sprint-body__pagination'>
-                      <div className='sprint-body-pagination__dot sprint-body-pagination__dot--activ'
-                        onClick={() => setListResultsNumber(0)} />
-                      <div className='sprint-body-pagination__dot'
-                        onClick={() => setListResultsNumber(1)} />
-                    </div>
-                    <span className='sprint-body-nav__link' onClick={onClickHandlerNewGame.bind(null, false)}>Продолжить игру</span>
-                    <NavLink to={`/games`} >
-                      <span className='sprint-body-nav__link'>К списку игр</span>
-                    </NavLink>
-                  </nav>
-                </div>
-              )}
-            </div>
-            <button className='game-sprint__button-close'>
-              <i className="material-icons sprint-body-game__icon">close</i>
-            </button>
-          </React.Fragment> :
+              <Timer gameStatus={gameStatus} />
 
-          <Loader />
-      }
-    </div>
+              <div className='game-sprint__body'>
+                {gameStatus && (
+                  <div className='game-sprint__body game-sprint__body--game'>
+                    <div className='sprint-body-game__header'>
+                      <AudioWord src={WORDS_GAME[indexWord!].audio} />
+                      <h3>{correctList.length * 10}</h3>
+                      <span className='icon-container' onClick={() => onToggleHandlerMute()}>
+                        {mute ? <i className="material-icons">notifications_off</i> :
+                          <i className="material-icons">notifications</i>}
+                      </span>
+                    </div>
+                    <div className='sprint-body-game__words'>
+                      <h2>{word}</h2>
+                      <h3>{wordTranslate}</h3>
+                    </div>
+                    <div className='sprint-body__answer'>
+                      <div className='sprint-body-answer__item'>
+                        <button className='sprint-body-answer__button button--false'
+                          onClick={onClickHandlerGame.bind(null, false)}>Неверно
+                        </button>
+                        <span><i className="material-icons">arrow_back</i></span>
+                      </div>
+                      <div className='sprint-body-answer__item'>
+                        <button className='sprint-body-answer__button button--true'
+                          onClick={onClickHandlerGame.bind(null, true)}>Верно
+                        </button>
+                        <span><i className="material-icons">arrow_forward</i></span>
+                      </div>
+                    </div>
+                  </div>)}
+                {!gameStatus && (
+                  <ResultsGame correctList={correctList} errorList={errorList} onClickHandlerNewGame={onClickHandlerNewGame} />
+                )}
+              </div>
+              <button className='game-sprint__button-close'>
+                <i className="material-icons sprint-body-game__icon">close</i>
+              </button>
+            </React.Fragment> :
+
+            <Loader />
+        }
+      </div>
+    </>
   )
 };
 
@@ -256,8 +248,3 @@ const Timer: React.FC<TimerProps> = ({ gameStatus }) => {
     </div>
   )
 };
-
-
-
-
-
