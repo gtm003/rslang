@@ -1,4 +1,4 @@
-const githubMembers: string[] = ['Alekseishkel', 'Kkasya', "Alexk08", '11alexey11', 'gtm003'];
+const githubMembers: string[] = ['Alexk08', 'Kkasya', '11alexey11', 'gtm003', 'Alekseishkel'];
 const githubSrc: string = 'https://github.com/';
 const urlBackend: string = 'https://react-rs-lang-words.herokuapp.com/';
 

@@ -26,10 +26,9 @@ const Pagination: React.FC<PaginationProps> = ({group, page, changeSelectItem}) 
       <div className=' tutorial__icons'>
       {
         titleGames.map((item, index) => {
-          const pageId = page > 0 ? page - 1 : 29;
+          const link = page > 0 ? `/games/${item.id}${group}/page${page}` : `/games/${item.id}${group}`;
           return (
-
-                <NavLink to={`/games/${item.id}${group}/page${pageId}`} key = {item.id}>
+                <NavLink to={link} key = {item.id}>
                   <div className ={`game__icon game__icon--${index + 1}`} >
                     <img src = {item.iconUrl} alt = {item.iconUrl} title={item.name} className='tutorial__icon' />
                   </div>
