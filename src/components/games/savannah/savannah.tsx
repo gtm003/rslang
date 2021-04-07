@@ -18,52 +18,37 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page, words
   const [gameWords, setGameWords] = useState<WordsProps[]>([]);
   const [translations, setTranslations] = useState<WordsProps[]>([]);
   const [lives, setLives] = useState<number>(5);
-  const [isPlay, setIsPlay] = useState<boolean>(false);
   const [listResultsNumber, setListResultsNumber] = useState<number>(0);
   const word = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setIsPlay(true);
-  }, [words])
-
-  useEffect(() => {
-    if (isPlay) {
-      const necessaryArray = words.slice((Number(group) * 600), 4);
-      setGameWords(necessaryArray);
-      setTranslations(necessaryArray);
-      correctAnswers = [];
-      wrongAnswers = [];
-    }
-  }, [words, group, isPlay]);
-
-  useEffect(() => {
-
-    // bug is here
-      if (isPlay && (lives <= 0 || (lives > 0 && gameWords.length === 0))) {
-        console.log(1);
-        
-      setIsPlay(false);
-    }
-  }, [lives, gameWords, isPlay])
+    const necessaryArray = words.slice((Number(group) * 600), 4);
+    setGameWords(necessaryArray);
+    setTranslations(necessaryArray);
+    correctAnswers = [];
+    wrongAnswers = [];
+  }, [words, group]);
 
   const shuffleArray = (array: WordsProps[]) => {
     return array.sort(() => Math.random() - 0.5);
   };
 
   const onAnswer = (wordTranslation: WordsProps, evt?: any): void => {
-    const wrongAnswer = evt === undefined || evt.target.lastChild.data !== wordTranslation.wordTranslate;
+    console.log(evt);
+
+    const wrongAnswer = evt === undefined || evt.target.innerText.match(/[а-я]/gi).join('') !== wordTranslation.wordTranslate;
 
     word.current!.style.animationPlayState = "paused";
     const wordTranslations = document.querySelectorAll(".savannah__translation-item");
 
     wordTranslations?.forEach((translation) => {
-      translation.lastChild?.textContent === wordTranslation.wordTranslate ?
+      translation.textContent?.match(/[а-я]/gi)?.join('') === wordTranslation.wordTranslate ?
         translation.classList.add("word-correct") :
         translation.classList.add("word-wrong");
-      })
-      
-      setTimeout(() => {
-        if (wrongAnswer) {
+    })
+
+    setTimeout(() => {
+      if (wrongAnswer) {
         setLives(prevLives => prevLives - 1);
         wrongAnswers.push(wordTranslation);
       } else {
@@ -78,21 +63,24 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page, words
       }
 
       wordTranslations?.forEach((translation) => {
-        translation.lastChild?.textContent === wordTranslation.wordTranslate ?
+        translation.textContent?.match(/[а-я]/gi)?.join('') === wordTranslation.wordTranslate ?
           translation.classList.remove("word-correct") :
           translation.classList.remove("word-wrong");
-        })
+      })
 
       word.current?.classList.replace("flow-animation", "word-hidden");
       setTimeout(() => word.current?.classList.replace("word-hidden", "flow-animation"), 50);
     }, 800);
   };
 
+
+
   const restartGame = () => {
-    console.log(3);
-    
-    setIsPlay(true);
+    const necessaryArray = words.slice((Number(group) * 600), 4);
+    setGameWords(necessaryArray);
     setLives(5);
+    correctAnswers = [];
+    wrongAnswers = [];
   }
 
   const translationWordIndex: number = Math.floor(Math.random() * gameWords.length);
@@ -123,7 +111,7 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page, words
 
   return (
     <main className="savannah">
-      {isPlay && gameWords.length !== 0?
+      {lives > 0 && gameWords.length !== 0 ?
         <>
           <Lives lives={lives} />
           <div className="savannah__word flow-animation" ref={word} onAnimationEnd={() => { onAnswer(wordForTranslation) }}>
@@ -136,11 +124,12 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page, words
               {
                 shuffleArray(wordsOnScreen).map((word: WordsProps, i: number) => {
                   return (
-                    <li key={word.wordTranslate + i} className="savannah__translation-item" onClick={evt => onAnswer(wordForTranslation, evt)} >
-                      <span>{i + 1}. </span>
-                      <span>
-                        {word.wordTranslate}
-                      </span>
+                    <li
+                      key={word.wordTranslate + i}
+                      className="savannah__translation-item"
+                      onClick={evt => onAnswer(wordForTranslation, evt)}
+                    >
+                      <span tabIndex={0}>{i + 1}. {word.wordTranslate}</span>
                     </li>
                   )
                 })

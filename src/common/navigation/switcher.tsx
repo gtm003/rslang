@@ -71,9 +71,11 @@ const Switcher: React.FC = () => {
         const group = match.params.level || 0;
         return <GameConstructor group={group} page={5} />
       }} />
-      <Route path='/games/sprint:group/:page(page/\d+)?' render={({ match }) => {
+      <Route path='/games/savannah:group/:page(page/\d+)?' render={({ match }) => {
         const group = Number(match.params.group) || 0;
         const page = Number(match.params.page) || undefined;
+        console.log(page);
+
         return <Savannah group={group} page={page} />
       }} />
       <Route path='/tutorial/group:group/page:page'

@@ -31,7 +31,9 @@ let round: number = 0;
 let correctList: WordsProps[] = [];
 let errorList: WordsProps[] = [];
 
-const GameSprint: React.FC<GameProps> = ({group, page}) => {
+const GameSprint: React.FC<GameProps> = ({ group, page }) => {
+  console.log(page);
+
   //const [score, setScore] = useState<number>(0);
   const [gameStatus, setGameStatus] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(true);
