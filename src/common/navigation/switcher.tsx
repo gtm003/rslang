@@ -9,10 +9,9 @@ import { Team } from "../../components/team";
 import { Tutorial } from "../../components/tutorial";
 import { WordList } from "../../components/word-list";
 import { Games } from '../../components/games';
-import { Savannah } from '../../components/games/savannah';
 import { GameSprint } from '../../components/games/sprint';
 import { GameConstructor } from '../../components/games/constructor';
-
+import { Savannah } from '../../components/games/savannah';
 
 const Switcher: React.FC = () => {
 

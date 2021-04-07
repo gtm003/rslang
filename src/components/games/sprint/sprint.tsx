@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 import { useLocation } from 'react-router-dom';
 import { urlBackend } from '../../../data';
-import { WordsProps } from '../../../common/ts/interfaces';
+import { WordsProps, GameProps } from '../../../common/ts/interfaces';
 import { getRandomOderArr, getRandomBoolean, getRandomInteger, playAnswer } from '../../../data/utils';
 import { Loader } from '../../loader';
 import { AudioWord } from '../audioWords/audioWords';
@@ -31,12 +31,7 @@ let round: number = 0;
 let correctList: WordsProps[] = [];
 let errorList: WordsProps[] = [];
 
-interface GameSprintProps {
-  group: string | number,
-  page?: number,
-}
-
-const GameSprint: React.FC<GameSprintProps> = ({ group, page }) => {
+const GameSprint: React.FC<GameProps> = ({group, page}) => {
   //const [score, setScore] = useState<number>(0);
   const [gameStatus, setGameStatus] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(true);
