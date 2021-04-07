@@ -20,7 +20,7 @@ interface submitValues {
     password: string,
 }
 
-const LoginForm: React.FC<LoginProps> = ({ isLoginOpen, handleSubmit, error, toggleLoginOpen, toggleSignUpOpen, loginUser, setLoginError }) => {
+const LoginFormRedux: React.FC<LoginProps> = ({ isLoginOpen, handleSubmit, error, toggleLoginOpen, toggleSignUpOpen, loginUser, setLoginError }) => {
     const submit = async (values: submitValues) => {
         const response = await fetch(`${urlBackend}signin`, {
             method: 'POST',
@@ -95,10 +95,10 @@ const mapDispatchToProps = (dispatch: any) => ({
     }
 });
 
-const LoginFormConnect = connect(mapStateToProps, mapDispatchToProps)(LoginForm);
+const LoginFormConnect = connect(mapStateToProps, mapDispatchToProps)(LoginFormRedux);
 
-const LoginFormRedux = reduxForm({
+const LoginForm = reduxForm({
     form: 'login'
 })(LoginFormConnect);
 
-export {LoginFormRedux};
+export {LoginForm};

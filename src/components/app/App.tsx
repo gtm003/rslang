@@ -1,24 +1,24 @@
 import React from 'react';
-import { FooterRedux } from '../footer';
-import { HeaderRedux } from '../header';
+import { Footer } from '../footer';
+import { Header } from '../header';
 import { Switcher } from "../../common/navigation";
 import { BrowserRouter } from "react-router-dom";
 import { Settings } from "../settings";
-import { LoginFormRedux } from '../loginform';
-import { SignUpFormRedux } from '../signupform';
+import { LoginForm } from '../loginform';
+import { SignUpForm } from '../signupform';
 
 
 const App: React.FC = () => {
   return (
     <BrowserRouter>
-      <HeaderRedux />
+      <Header />
       <div className="main-wrapper">
         <Switcher />
       </div>
       <Settings />
-      <LoginFormRedux />
-      <SignUpFormRedux />
-      <FooterRedux />
+      <LoginForm />
+      <SignUpForm />
+      <Footer />
     </BrowserRouter>
   );
 }
