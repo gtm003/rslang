@@ -62,19 +62,30 @@ const Switcher: React.FC = () => {
 
       <Route path='/dictionary' component={Tutorial} />
       <Route path='/statistics' component={Tutorial} />
-      <Route path='/games/sprint:group//(page)?:page?' render={({ match }) => {
+      <Route path='/games/sprint:group/page:page' render={({ match }) => {
+        const group = Number(match.params.group);
+        const page = Number(match.params.page);
+        return <GameSprint group={group - 1} page={page - 1} />
+      }} />
+      <Route path='/games/sprint:group' render={({ match }) => {
         const group = Number(match.params.group) || 0;
-        const page = Number(match.params.page) || undefined;
-        return <GameSprint group={group} page={page} />
+        return <GameSprint group={group - 1} />
       }} />
       <Route path='/games/constructor:level' render={({ match }) => {
         const group = match.params.level || 0;
         return <GameConstructor group={group} page={5} />
       }} />
-      <Route path='/games/savannah:group/(page)?:page?' render={({ match }) => {
+      <Route path='/games/savannah:group/page:page' render={({ match }) => {
+        const group = Number(match.params.group);
+        const page = Number(match.params.page);
+        console.log(group, page);
+
+        return <Savannah group={group - 1} page={page - 1} />
+      }} />
+      <Route path='/games/savannah:group' render={({ match }) => {
         const group = Number(match.params.group) || 0;
-        const page = Number(match.params.page) || undefined;
-        return <Savannah group={group} page={page} />
+        console.log(group);
+        return <Savannah group={group - 1} />
       }} />
       <Route path='/tutorial/group:group/page:page'
         component={(...props: Array<object>) => isGroupPageExists(props[0])} />

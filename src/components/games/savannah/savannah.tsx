@@ -23,15 +23,13 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = 1, w
 
   useEffect(() => {
     let necessaryWords: WordsProps[];
-    console.log(page, group);
+    console.log(group, page);
+    console.log((Number(group) * 600), ((Number(group)) * 600) + ((page + 1) * 20));
 
-    page ?
-      necessaryWords = words.slice((Number(group) * 600), ((Number(group)) * 600) + (page * 30)) :
+    page > -1 ?
+      necessaryWords = words.slice((Number(group) * 600), ((Number(group)) * 600) + ((page + 1) * 20)) :
       necessaryWords = words.slice((Number(group) * 600), ((Number(group) + 1) * 600));
 
-    // const necessaryArray = words.slice((Number(group) * 600), ((Number(group) + 1) * 600));
-    // necessaryWords = words.slice((Number(group) * 600), ((Number(group) + 1) * 600) + page);
-    console.log(necessaryWords);
     setGameWords(necessaryWords);
     setTranslations(necessaryWords);
     correctAnswers = [];
