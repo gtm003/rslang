@@ -1,15 +1,17 @@
 @keyframes flow {
   0% {
-    transform: translateY(-45vh);
+    top: -50%;
+    transform: translateY(50%);
   }
 
   100% {
-    transform: translateY(0);
+    top: 0;
   }
 }
 
 .flow-animation {
   animation: flow 5s linear;
+  animation-fill-mode: forwards;
 }
 
 .word-hidden {
@@ -36,9 +38,9 @@
   background-position-y: bottom;
   // background-position: left 0 bottom 0;
   // animation: bg-scroll 1s linear;
-  // animation-fill-mode: forwards;
 
   &__word {
+    position: relative;
     width: 100%;
     text-align: center;
     color: #fff;

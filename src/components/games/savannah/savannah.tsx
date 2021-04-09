@@ -82,6 +82,15 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = 1, w
       }
 
       if (!wrongAnswer) {
+        word.current?.animate([
+          // { transform: `translateY(${savannahHeight / 2}px)` }
+          { top: "50%" },
+          // { transform: "translateY(50%)" }
+        ], {
+          duration: 801,
+          // fill: "backwards"
+        });
+
         bgPosition -= bgShift;
         if (bgPosition >= -BG_IMAGE_HEIGHT + savannahHeight) {
           moveBackground(bgPosition, 800);
@@ -104,12 +113,7 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = 1, w
       })
       console.log(savannahHeight);
 
-      word.current?.animate([
-        { transform: `translateY(${savannahHeight / 2}px)` }
-      ], {
-        duration: 801,
-        // fill: "backwards"
-      });
+
 
       setTimeout(() => {
         if (wrongAnswer) {
