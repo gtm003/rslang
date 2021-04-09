@@ -185,28 +185,52 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = 1, w
     <main className="savannah" ref={savannah}>
       {lives > 0 && gameWords.length !== 0 ?
         <>
-          <Lives lives={lives} />
-          <div className="savannah__word flow-animation" ref={word} onAnimationEnd={() => { onAnswer(translationWord) }}>
-            {
-              translationWord.word
-            }
-          </div>
-          <div className="savannah__translation">
-            <ul className="svannah__translation-list">
+          <div className="savannah__wrapper">
+            <div className="savannah-panel">
+              <div className="savannah-panel__right-panel">
+                <button className="savannah-panel__fullscreen" onClick={() => {
+                  if (savannah.current !== null) {
+                    savannah.current.requestFullscreen();
+                  }
+                }
+                }>
+                  <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5.57143 5.57143H0V7.42859H6.50001C7.01328 7.42859 7.42859 7.01328 7.42859 6.50001V0H5.57143V5.57143Z" fill="white" />
+                    <path d="M19.8572 0H18V6.50001C18 7.01328 18.4153 7.42859 18.9286 7.42859H25.4286V5.57143H19.8572V0Z" fill="white" />
+                    <path d="M19.8572 25.4286H18V18.9286C18 18.4153 18.4153 18 18.9286 18H25.4286V19.8572H19.8572V25.4286Z" fill="white" />
+                    <path d="M6.50001 18H0V19.8572H5.57143V25.4286H7.42859V18.9286C7.42859 18.4153 7.01328 18 6.50001 18V18Z" fill="white" />
+                  </svg>
+                </button>
+              </div>
+              <Lives lives={lives} />
+              <button className="savannah-panel__close" >
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M11.4347 14.022L0.532091 3.11904C-0.177435 2.40985 -0.177435 1.26318 0.532091 0.55399C1.24129 -0.155204 2.38795 -0.155204 3.09715 0.55399L14.0001 11.457L24.9028 0.55399C25.6123 -0.155204 26.7587 -0.155204 27.4679 0.55399C28.1774 1.26318 28.1774 2.40985 27.4679 3.11904L16.5652 14.022L27.4679 24.925C28.1774 25.6342 28.1774 26.7808 27.4679 27.49C27.1144 27.8438 26.6497 28.0215 26.1853 28.0215C25.7209 28.0215 25.2566 27.8438 24.9028 27.49L14.0001 16.5871L3.09715 27.49C2.74338 27.8438 2.279 28.0215 1.81462 28.0215C1.35024 28.0215 0.885857 27.8438 0.532091 27.49C-0.177435 26.7808 -0.177435 25.6342 0.532091 24.925L11.4347 14.022Z" fill="#CDCDCD" />
+                </svg>
+              </button>
+            </div>
+            <div className="savannah__word flow-animation" ref={word} onAnimationEnd={() => { onAnswer(translationWord) }}>
               {
-                shuffleArray(translationsOnScreen).map((word: WordsProps, i: number) => {
-                  return (
-                    <li
-                      key={word.wordTranslate + i}
-                      className="savannah__translation-item"
-                      onClick={evt => onAnswer(translationWord, evt)}
-                    >
-                      <span tabIndex={0}>{i + 1}. {word.wordTranslate}</span>
-                    </li>
-                  )
-                })
+                translationWord.word
               }
-            </ul>
+            </div>
+            <div className="savannah__translation">
+              <ul className="svannah__translation-list">
+                {
+                  shuffleArray(translationsOnScreen).map((word: WordsProps, i: number) => {
+                    return (
+                      <li
+                        key={word.wordTranslate + i}
+                        className="savannah__translation-item"
+                        onClick={evt => onAnswer(translationWord, evt)}
+                      >
+                        <span tabIndex={0}>{i + 1}. {word.wordTranslate}</span>
+                      </li>
+                    )
+                  })
+                }
+              </ul>
+            </div>
           </div>
         </>
         :
@@ -230,7 +254,7 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = 1, w
           </nav>
         </div>
       }
-    </main>
+    </main >
   )
 }
 

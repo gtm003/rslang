@@ -27,17 +27,22 @@
 }
 
 .savannah {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  width: 100%;
-  height: calc(100vh - 130px - 94px);
   background: url("../../../data/images/savannah-bg.jpg") no-repeat;
   background-position-y: bottom;
-  // background-position: left 0 bottom 0;
-  // animation: bg-scroll 1s linear;
+
+  &__wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    height: calc(100vh - 130px - 94px);
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    flex-shrink: 0;
+  }
 
   &__word {
     position: relative;
@@ -66,5 +71,19 @@
     & > * {
       cursor: pointer;
     }
+  }
+}
+
+.savannah-panel {
+  width: 100%;
+  flex-shrink: 0;
+  &__right-panel {
+    display: flex;
+  }
+
+  &__close {
+    position: absolute;
+    right: 0;
+    transform: translateX(-50%);
   }
 }
