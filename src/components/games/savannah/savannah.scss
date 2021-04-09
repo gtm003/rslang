@@ -8,18 +8,8 @@
   }
 }
 
-@keyframes flow {
-  0% {
-    transform: translateY(-45vh);
-  }
-
-  100% {
-    transform: translateY(0);
-  }
-}
-
 .flow-animation {
-  animation: flow 8s linear;
+  animation: flow 5s linear;
 }
 
 .word-hidden {
@@ -42,7 +32,11 @@
   position: relative;
   width: 100%;
   height: calc(100vh - 130px - 94px);
-  background: url("../../../data/images/savannah-bg.jpg") bottom no-repeat;
+  background: url("../../../data/images/savannah-bg.jpg") no-repeat;
+  background-position-y: bottom;
+  // background-position: left 0 bottom 0;
+  // animation: bg-scroll 1s linear;
+  // animation-fill-mode: forwards;
 
   &__word {
     width: 100%;

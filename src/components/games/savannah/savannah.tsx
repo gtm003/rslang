@@ -7,8 +7,12 @@ import { ResultPercent } from '../resultPercent/resultPercent';
 import { ResultWordsList } from '../ResultWordsList/resultWordsList';
 import { NavLink } from 'react-router-dom';
 
+const savannahHeight = window.innerHeight - 130 - 94;
+const BG_IMAGE_HEIGHT = 4500;
 let correctAnswers: WordsProps[] = [];
 let wrongAnswers: WordsProps[] = [];
+let bgPosition: number = 0;
+let bgShift: number = 225;
 
 interface SavannahProps {
   words: WordsProps[]
@@ -20,11 +24,10 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = 1, w
   const [lives, setLives] = useState<number>(5);
   const [listResultsNumber, setListResultsNumber] = useState<number>(0);
   const word = useRef<HTMLDivElement>(null);
+  const savannah = useRef<HTMLElement>(null);
 
   useEffect(() => {
     let necessaryWords: WordsProps[];
-    console.log(group, page);
-    console.log((Number(group) * 600), ((Number(group)) * 600) + ((page + 1) * 20));
 
     page > -1 ?
       necessaryWords = words.slice((Number(group) * 600), ((Number(group)) * 600) + ((page + 1) * 20)) :
@@ -43,6 +46,8 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = 1, w
 
   const restartGame = () => {
     const necessaryWords = words.slice((Number(group) * 600), ((Number(group) + 1) * 600));
+    moveBackground(0, 300);
+    bgPosition = 0;
     setGameWords(necessaryWords);
     setLives(5);
     correctAnswers = [];
@@ -53,12 +58,20 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = 1, w
     return array.sort(() => Math.random() - 0.5);
   };
 
+  const moveBackground = (bgPosition: number, duration: number): void => {
+    savannah.current?.animate([
+      { backgroundPosition: `left 0 bottom ${bgPosition}px` }
+    ], {
+      duration: duration,
+      fill: "forwards"
+    });
+  }
+
   let answers: number = 0;
 
   const onAnswer = (wordTranslation: WordsProps, translate?: React.MouseEvent | string): void => {
     ++answers;
-    if (answers === 1) {
-
+    if (answers === 1 && lives > 0 && gameWords.length !== 0) {
       let wrongAnswer: boolean;
 
       if (typeof translate === "string") {
@@ -68,7 +81,20 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = 1, w
         wrongAnswer = translate === undefined || evtTarget.innerText.match(/[а-я]/gi)?.join('') !== wordTranslation.wordTranslate;
       }
 
-      word.current!.style.animationPlayState = "paused";
+      if (!wrongAnswer) {
+        bgPosition -= bgShift;
+        if (bgPosition >= -BG_IMAGE_HEIGHT + savannahHeight) {
+          moveBackground(bgPosition, 800);
+          // savannah.current?.animate([
+          //   { backgroundPosition: `left 0 bottom ${bgPosition}px` }
+          // ], {
+          //   duration: 800,
+          //   fill: "forwards"
+          // });
+        }
+      }
+
+      // word.current!.style.animationPlayState = "paused";
       const wordTranslations = document.querySelectorAll(".savannah__translation-item");
 
       wordTranslations?.forEach((translation) => {
@@ -76,6 +102,14 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = 1, w
           translation.classList.add("word-correct") :
           translation.classList.add("word-wrong");
       })
+      console.log(savannahHeight);
+
+      word.current?.animate([
+        { transform: `translateY(${savannahHeight / 2}px)` }
+      ], {
+        duration: 801,
+        // fill: "backwards"
+      });
 
       setTimeout(() => {
         if (wrongAnswer) {
@@ -88,9 +122,9 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = 1, w
         const updatedWords = gameWords.filter((word) => word.word !== wordTranslation.word);
         setGameWords(updatedWords);
 
-        if (word.current) {
-          word.current.style.animationPlayState = "running";
-        }
+        // if (word.current) {
+        //   word.current.style.animationPlayState = "running";
+        // }
 
         wordTranslations?.forEach((translation) => {
           translation.textContent?.match(/[а-я]/gi)?.join('') === wordTranslation.wordTranslate ?
@@ -98,8 +132,8 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = 1, w
             translation.classList.remove("word-wrong");
         })
 
-        word.current?.classList.replace("flow-animation", "word-hidden");
-        setTimeout(() => word.current?.classList.replace("word-hidden", "flow-animation"), 50);
+        word.current?.classList.replace("flow-animation", "hidden");
+        setTimeout(() => word.current?.classList.replace("hidden", "flow-animation"), 50);
       }, 800);
     }
   };
@@ -144,7 +178,7 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = 1, w
   }
 
   return (
-    <main className="savannah">
+    <main className="savannah" ref={savannah}>
       {lives > 0 && gameWords.length !== 0 ?
         <>
           <Lives lives={lives} />
