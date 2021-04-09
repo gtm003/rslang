@@ -1,124 +1,188 @@
-.game-sprint {
-  background: $green-color;
+.sprint {
+  background: url('../../../data/images/bg-sprint.png') 100%/cover no-repeat;
+  height: 100vh;
   position: relative;
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  padding-top: 1rem;
-  margin-bottom: 2rem;
-  &__timer {
-    margin-left: 1rem;
-    width: 100px;
-    .time-wrapper {
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  &__header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 96px;
+    width: 100%;
+    .sprint-header__icons {
+      color: white;
+      font-size: 48px;
+      &:hover {
+        cursor: pointer;
+      }
+      &--sound {
+        margin-left: 200px;
+      }
+      &--fullscreen {
+        margin-left: 48px;
+        margin-right: calc(100% - 522px);
+      }
+      &--close {
+        margin-right: 200px;
+      }
+    }
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 96px;
+    width: 605px;
+    margin-top: 81px;
+    margin-bottom: 16px;
+    .sprint-info__score {
       display: flex;
       flex-direction: column;
       align-items: center;
-      font-size: 20px;
-      font-weight: 700;
-      color: #151515;
+      .increment {
+        font-size: 26px;
+        &--first {
+          opacity: 0.32;
+        }
+        &--second {
+          opacity: 0.65;
+        }
+        &--third {
+          opacity: 1;
+        }
+      }
+      .score-value {
+        font-size: 40px;
+        margin-bottom: 34px;
+      }
+    }
+    .sprint-info__timer {
+      margin-left: 1rem;
+      width: 100px;
+      .time-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-weight: 700;
+        color: white;
+        font-size: 30px;
+      }
     }
   }
-  &__body {
-    background: #ffffff;
-    border-radius: 5px;
-    width: 370px;
-    height: 500px;
+  &__field {
+    background: rgba(75, 106, 93, 0.56);
+    position: relative;
+    width: 605px;
+    height: 552px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    &--game {
-      .sprint-body-game__header {
-        display: flex;
-        flex-direction: row;
-        width: 250px;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 20px;
-        .icon-container {
-          &:hover {
-            cursor: pointer;
-          }
+    .sprint-field__border {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      .frame {
+        fill: none;
+        stroke: white;
+        stroke-width: 8px;
+        width: 100%;
+        height: 100%;
+        stroke-dasharray: 20;
+        &--correct {
+          animation: correct 1s linear 0s;
+        }
+        &--error {
+          animation: error 1s linear 0s;
         }
       }
-      .sprint-body-game__words {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
+      @keyframes correct {
+        0% {
+          stroke: white;
+        }
+        50% {
+          stroke: $correct-color;
+        }
+        100% {
+          stroke: white;
+        }
       }
-      .sprint-body__answer {
-        display: flex;
-        flex-direction: row;
-        width: 300px;
-        justify-content: space-evenly;
-        margin-bottom: 20px;
-        .sprint-body-answer__item {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
+      @keyframes error {
+        0% {
+          stroke: white;
+        }
+        50% {
+          stroke: $error-color;
+        }
+        100% {
+          stroke: white;
         }
       }
     }
-    .sprint-body-answer {
+    .sprint-field__series {
+      margin-top: 48px;
+      .icon-container {
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+    .sprint-field__words {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 2;
+      .word {
+        font-size: 60px;
+        line-height: 72.61px;
+        margin-bottom: 15px;
+      }
+      .translate {
+        font-size: 30px;
+        line-height: 36.31px;
+      }
+    }
+    .sprint-field__answer {
+      display: flex;
+      flex-direction: row;
+      //width: 300px;
+      height: 111px;
+      justify-content: space-evenly;
+      margin-bottom: 56.54px;
+      z-index: 2;
+      .sprint-field-answer__item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+    .sprint-field-answer {
       display: flex;
       &__button {
-        //width: 70px;
-        height: 40px;
-        margin-bottom: 5px;
-        width: 110px;
-        background: $yellow-color;
+        height: 55px;
+        width: 218px;
         &:hover {
           cursor: pointer;
         }
         &.button--false {
-          background: $pink-color;
-          width: 70px;
+          background: $error-color;
+          margin-right: 15px;
         }
         &.button--true {
-          background: $light-green-color;
-          width: 70px;
+          background: $correct-color;
+          margin-left: 15px;
         }
       }
     }
-    .sprint-body__pagination {
-      display: flex;
-      .sprint-body-pagination__dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        margin: 10px;
-        background: $default-color;
-        &:hover {
-          cursor: pointer;
-        }
-        &--activ {
-          background: $green-color;
-        }
-      }
-    }
-    .sprint-body__nav {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-bottom: 20px;
-      .sprint-body-nav__link {
-        margin-top: 5px;
-        &:hover {
-          cursor: pointer;
-          color: $orange-color;
-        }
-      }
-    }
-  }
-  &__button-close {
-    margin-right: 1rem;
-  }
-}
-
-.icon-container {
-  &:hover {
-    cursor: pointer;
   }
 }
 
