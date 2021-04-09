@@ -1,6 +1,5 @@
 import React from "react";
-import {TEAM} from "../../data";
-import {githubMembers, githubSrc} from "../../data";
+import {TEAM, githubMembers, githubSrc} from "../../data";
 import {ReactComponent as GithubLogo} from "../../data/images/github.svg";
 import {useLocation} from "react-router-dom";
 import {Crumbs} from "../../common/navigation/crumbs";
