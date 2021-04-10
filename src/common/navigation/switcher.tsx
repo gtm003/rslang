@@ -9,7 +9,7 @@ import {Team} from "../../components/team";
 import {Tutorial} from "../../components/tutorial";
 import {WordList} from "../../components/word-list";
 import { Games } from '../../components/games';
-import { GameSprint } from '../../components/games/sprint';
+import { Sprint } from '../../components/games/sprint';
 import { GameConstructor } from '../../components/games/constructor';
 
 
@@ -65,7 +65,7 @@ const Switcher: React.FC = () => {
       <Route path='/games/sprint:group/:page(page/\d+)?' render={({match}) => {
         const group = Number(match.params.group) || 0;
         const page = Number(match.params.page) || undefined;
-        return <GameSprint group={group} page={page}/>
+        return <Sprint group={group} page={page}/>
       } }/>
       <Route path='/games/constructor:level' render={({match}) => {
         const group = match.params.level || 0;

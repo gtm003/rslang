@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 import { useLocation } from 'react-router-dom';
-import { urlBackend } from '../../../data';
 import { WordsProps } from '../../../common/ts/interfaces';
 import { getRandomOderArr, getRandomBoolean, getRandomInteger, playAnswer } from '../../../data/utils';
 import { Loader } from '../../loader';
-import { AudioWord } from '../audioWords/audioWords';
 import { Crumbs } from "../../../common/navigation/crumbs";
 import { ResultsGame } from '../resultsGame';
+import { connect } from 'react-redux';
 
+/*
 const getData = async (url: string): Promise<WordsProps[]> => {
   const res = await fetch(url);
 
@@ -17,15 +17,17 @@ const getData = async (url: string): Promise<WordsProps[]> => {
   }
 
   return await res.json();
-};
+};*/
 
-const urls: Array<string> = [];
-const WORDS_GROUP: WordsProps[][] = [];
+//const urls: Array<string> = [];
+//const WORDS_GROUP: WordsProps[][] = [];
+//let WORDS_GAME: WordsProps[] = [];
+let WORDS_GROUP_NEW : WordsProps[];
+let WORDS_GAME_NEW : WordsProps[];
 
-let WORDS_GAME: WordsProps[] = [];
-let indexesWord = getRandomOderArr(20);
-let indexWord = indexesWord.pop();
-let indexTranslate = getRandomBoolean() ? indexWord : getRandomInteger(19);
+let indexesWord : number[];
+let indexWord : number | undefined;
+let indexTranslate : number | undefined;
 let round: number = 0;
 let series: number = 0;
 let seriesMax: number = 0;
@@ -34,16 +36,32 @@ let correctList: WordsProps[]= [];
 let errorList: WordsProps[]= [];
 
 interface GameSprintProps {
-  group: number,
+  words: WordsProps[],
+  hardWords: WordsProps[],
+  group?: number,
   page?: number,
+  hard?: string | undefined,
 }
 
-const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
+const SprintRedax: React.FC<GameSprintProps> = ({words, hardWords, group, page, hard}) => {
+  // WORDS_GROUP - массив со словами, используемый в игре (или сложные слова и группа слов)
+  const getWordsGroup = () => {
+    if (hard) return hardWords;
+    return words.filter(item => item.group === group);
+  }
+
+  // WORDS_GAME - массив со словами, используемый в игре с учетом номера страницы (сложные слова или игра из меню 
+  // соответствует массиву WORDS_GROUP - иначе конкретная страница)
+  const getWordsGame = () => {
+    if (page) return words.filter(item => item.page === page - round);
+    return WORDS_GROUP_NEW;
+  }
+
   const [score, setScore] = useState<number>(0);
   const [gameStatus, setGameStatus] = useState<boolean>(true);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [word, setWord] = useState<string>('');
-  const [wordTranslate, setWordTranslate] = useState<string>('');
+  //const [loading, setLoading] = useState<boolean>(true);
+  const [word, setWord] = useState<string>();
+  const [wordTranslate, setWordTranslate] = useState<string>();
   const [mute, setMute] = useState<boolean>(false);
   const location = useLocation();
   const colorsBase: string[] = ['#51BFA6', '#184656', '#F7CC7E', '#F57359'];
@@ -52,6 +70,20 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
   const [increment, setIncrement] = useState<string>('');
 
   useEffect(() => {
+    if(words.length) {
+      WORDS_GROUP_NEW = getWordsGroup();
+      WORDS_GAME_NEW = getWordsGame();
+      indexesWord = getRandomOderArr(WORDS_GAME_NEW.length);
+      indexWord = indexesWord.pop();
+      indexTranslate = getRandomBoolean() ? indexWord : getRandomInteger(WORDS_GAME_NEW.length);
+      setWord(WORDS_GAME_NEW[indexWord!].word);
+      setWordTranslate(WORDS_GAME_NEW[indexTranslate!].wordTranslate);
+    }
+  }, [words])
+
+  /*
+  useEffect(() => {
+    console.log(WORDS_GROUP_NEW);
     WORDS_GROUP.length = 0;
     urls.length = 0;
     for (let j = 0; j < 30; j += 1) {
@@ -76,7 +108,7 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
           }
         });
     });
-  }, [group, page]);
+  }, [group, page]);*/
 
   useEffect(() => {
     const timerId = setInterval(() => {
@@ -110,7 +142,6 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
     const colorBorder = answer ? 'frame--correct' : 'frame--error';
     border?.classList.add(colorBorder);
     setTimeout(() => (border?.classList.remove(colorBorder)), 1000);
-    //border?.classList.remove(colorBorder);
   }
 
   const onClickHandlerGame = (answer : boolean) => {
@@ -118,14 +149,14 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
     playAnswer(answer === correctAnswer, mute);
     changeBorder(answer === correctAnswer);
     if (answer === correctAnswer) {
-      correctList.push(WORDS_GAME[indexWord!]);
+      correctList.push(WORDS_GAME_NEW[indexWord!]);
       series += 1;
       seriesMax = (seriesMax < series) ? series : seriesMax;
       setColors(getColors(series));
       setIncrement(`+${Math.min(series * 20, 80)}`);
       setScore(score + Math.min(series * 20, 80));
     } else {
-      errorList.push(WORDS_GAME[indexWord!]);
+      errorList.push(WORDS_GAME_NEW[indexWord!]);
       series = 0;
       setColors(getColors(series));
       setIncrement('');
@@ -133,17 +164,17 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
     if (indexesWord.length) {
       indexWord = indexesWord.pop();
       indexTranslate = getRandomBoolean() ? indexWord : getRandomInteger(19);
-      setWord(WORDS_GAME[indexWord!].word);
-      setWordTranslate(WORDS_GAME[indexTranslate!].wordTranslate);
+      setWord(WORDS_GAME_NEW[indexWord!].word);
+      setWordTranslate(WORDS_GAME_NEW[indexTranslate!].wordTranslate);
     } else {
-      indexesWord = getRandomOderArr(20);
+      indexesWord = getRandomOderArr(WORDS_GAME_NEW.length);
       if (page! > round) {
         round += 1;
-        WORDS_GAME = WORDS_GROUP[page! - round];
+        WORDS_GAME_NEW = getWordsGame();
         indexWord = indexesWord.pop();
         indexTranslate = getRandomBoolean() ? indexWord : getRandomInteger(19);
-        setWord(WORDS_GAME[indexWord!].word);
-        setWordTranslate(WORDS_GAME[indexTranslate!].wordTranslate);
+        setWord(WORDS_GAME_NEW[indexWord!].word);
+        setWordTranslate(WORDS_GAME_NEW[indexTranslate!].wordTranslate);
       } else {
         setGameStatus(false);
       }
@@ -151,12 +182,12 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
   }
 
   const onClickHandlerNewGame = () => {
-    indexesWord = getRandomOderArr(20);
+    indexesWord = getRandomOderArr(WORDS_GAME_NEW.length);
     indexWord = indexesWord.pop();
     indexTranslate = getRandomBoolean() ? indexWord : getRandomInteger(19);
     setGameStatus(true);
-    setWord(WORDS_GAME[indexWord!].word);
-    setWordTranslate(WORDS_GAME[indexTranslate!].wordTranslate);
+    setWord(WORDS_GAME_NEW[indexWord!].word);
+    setWordTranslate(WORDS_GAME_NEW[indexTranslate!].wordTranslate);
     correctList = [];
     errorList = [];
     series = 0;
@@ -178,7 +209,7 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
       <Crumbs path={location.pathname}/>
       <div className='sprint'>
         {
-          !loading ?
+          words.length ?
             <React.Fragment>
               <div className='sprint__header'>
                 <i className="material-icons sprint-header__icons sprint-header__icons--sound"
@@ -234,8 +265,6 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
     </>
   )
 };
-
-export {GameSprint};
 
 interface TimerProps {
   gameStatus: boolean,
@@ -298,3 +327,12 @@ const Series: React.FC<SeriesProps> = ({colors}) => {
   </svg>
   )
 }
+
+const mapStateToProps = (state: any) => ({
+  words: state.data.words,
+  hardWords: state.data.hardWords,
+});
+
+const Sprint = connect(mapStateToProps)(SprintRedax);
+
+export { Sprint };
