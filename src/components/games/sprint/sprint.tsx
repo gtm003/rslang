@@ -68,6 +68,7 @@ const SprintRedax: React.FC<GameSprintProps> = ({words, hardWords, group, page, 
   const colorsNone: string = "rgba(255,255,255,0.37)";
   const [colors, setColors] = useState<string[]>(new Array(4).fill(colorsNone));
   const [increment, setIncrement] = useState<string>('');
+  const [fullscreen, setFullscreen] = useState<boolean>(false);
 
   useEffect(() => {
     if(words.length) {
@@ -198,6 +199,18 @@ const SprintRedax: React.FC<GameSprintProps> = ({words, hardWords, group, page, 
   const onToggleHandlerMute = () => {
     setMute(!mute);
   }
+
+  const onToggleHandlerFullScreen = () => {
+    const sprint = document.querySelector('.sprint');
+    setFullscreen(!fullscreen);
+    if (!document.fullscreenElement) {
+      sprint!.requestFullscreen().catch(err => {
+        alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+      });
+    } else {
+      document.exitFullscreen();
+    }
+  }
   /*
   const playTimer = () => {
     audio.src = '/audio/timer.mp3';
@@ -208,57 +221,43 @@ const SprintRedax: React.FC<GameSprintProps> = ({words, hardWords, group, page, 
     <>
       <Crumbs path={location.pathname}/>
       <div className='sprint'>
-        {
-          words.length ?
-            <React.Fragment>
-              <div className='sprint__header'>
-                <i className="material-icons sprint-header__icons sprint-header__icons--sound"
-                  onClick={() => onToggleHandlerMute()}>{mute ? 'notifications_off' : 'notifications'}</i>
-                <i className="material-icons sprint-header__icons sprint-header__icons--fullscreen">fullscreen</i>
-                <i className="material-icons sprint-header__icons sprint-header__icons--close">close</i>
-              </div>
-              <div className='sprint__info'>
-                <div className='sprint-info__score'>
-                  <p className='increment increment--first'>{increment}</p>
-                  <p className='increment increment--second'>{increment}</p>
-                  <p className='increment increment--third'>{increment}</p>
-                  <p className='score-value'>{score}</p>
-                </div>
-                <Timer gameStatus={gameStatus}/>
-              </div>
-              <div className='sprint__field'>
-                {gameStatus && (
-                  <div className='sprint__field sprint__field--game'>
-                    <svg className='sprint-field__border' >
-                      <rect className='frame frame--none' x="0" y="0" width="100" height="100"></rect>
-                    </svg>
-                    <Series colors = {colors}/>
-                    <div className='sprint-field__words'>
-                      <p className='word'>{word}</p>
-                      <p className='translate'>{wordTranslate}</p>
-                    </div>
-                    <div className='sprint-field__answer'>
-                      <div className='sprint-field-answer__item'>
-                        <button className='sprint-field-answer__button button--false'
-                                onClick={onClickHandlerGame.bind(null, false)}>Неверно
-                        </button>
-                        <span><i className="material-icons">arrow_back</i></span>
-                      </div>
-                      <div className='sprint-field-answer__item'>
-                        <button className='sprint-field-answer__button button--true'
-                                onClick={onClickHandlerGame.bind(null, true)}>Верно
-                        </button>
-                        <span><i className="material-icons">arrow_forward</i></span>
-                      </div>
-                      </div>
-                </div>)}
-              {!gameStatus  && (
-              <ResultsGame correctList={correctList} errorList={errorList} onClickHandlerNewGame={onClickHandlerNewGame}
-                seriesLength={seriesMax} score={score}/>
-              )}
+        { words.length ?
+          <React.Fragment>
+            <div className='sprint__header'>
+              <i className="material-icons sprint-header__icons sprint-header__icons--sound"
+                onClick={() => onToggleHandlerMute()}>{mute ? 'notifications_off' : 'notifications'}</i>
+              <i className="material-icons sprint-header__icons sprint-header__icons--fullscreen"
+                onClick={() => onToggleHandlerFullScreen()}>{fullscreen ? 'fullscreen_exit' : 'fullscreen'}</i>
+              <i className="material-icons sprint-header__icons sprint-header__icons--close">close</i>
             </div>
+              {gameStatus && (
+                <React.Fragment>
+                  <div className='sprint__info'>
+                    <div className='sprint-info__score'>
+                      <p className='increment increment--first'>{increment}</p>
+                      <p className='increment increment--second'>{increment}</p>
+                      <p className='increment increment--third'>{increment}</p>
+                      <p className='score-value'>{score}</p>
+                    </div>
+                    <Timer gameStatus={gameStatus}/>
+                  </div>
+                  <div className='sprint__field'>
+                      <svg className='sprint-field__border' >
+                        <rect className='frame frame--none' x="0" y="0" width="100" height="100"></rect>
+                      </svg>
+                      <Series colors = {colors}/>
+                      <div className='sprint-field__words'>
+                        <p className='word'>{word}</p>
+                        <p className='translate'>{wordTranslate}</p>
+                      </div>
+                      <SprintAnswer onClickHandlerGame={onClickHandlerGame}/>
+                  </div>
+                </React.Fragment>)}
+              {!gameStatus  && ( <div className='sprint__field'>
+                <ResultsGame correctList={correctList} errorList={errorList} onClickHandlerNewGame={onClickHandlerNewGame}
+                seriesLength={seriesMax} score={score}/>
+              </div>)}
           </React.Fragment>:
-
           <Loader />
       }
     </div>
@@ -325,6 +324,28 @@ const Series: React.FC<SeriesProps> = ({colors}) => {
     <path d="M36.7148 78V68.8086H35.5596C30.5055 68.8086 26.3936 64.6967 26.3936 59.6426C26.3936 54.5884 30.5055 50.4765 35.5596 50.4765H36.7148V41.2852H25.2383C23.9763 41.2852 22.9532 40.262 22.9532 39V35.5596C22.9532 33.0255 20.8915 30.9639 18.3574 30.9639C15.8233 30.9639 13.7617 33.0255 13.7617 35.5596V39C13.7617 40.262 12.7385 41.2852 11.4765 41.2852H0V73.4042C0 75.9383 2.06167 78 4.59575 78H36.7148Z"
     fill={colors[3]}/>
   </svg>
+  )
+}
+
+interface SprintAnswerProps {
+  onClickHandlerGame : (answer: boolean) => void;
+}
+const SprintAnswer: React.FC<SprintAnswerProps> = ({onClickHandlerGame}) => {
+  return (
+    <div className='sprint-field__answer'>
+    <div className='sprint-field-answer__item'>
+      <button className='sprint-field-answer__button button--false'
+              onClick={() => onClickHandlerGame(false)}>Неверно
+      </button>
+      <span><i className="material-icons">arrow_back</i></span>
+    </div>
+    <div className='sprint-field-answer__item'>
+      <button className='sprint-field-answer__button button--true'
+              onClick={() => onClickHandlerGame(true)}>Верно
+      </button>
+      <span><i className="material-icons">arrow_forward</i></span>
+    </div>
+  </div>
   )
 }
 

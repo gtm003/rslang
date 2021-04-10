@@ -1,3 +1,3 @@
-import {SignUpFormRedux} from "./signupform";
+import {SignUpForm} from "./signupform";
 
-export {SignUpFormRedux};
+export {SignUpForm};

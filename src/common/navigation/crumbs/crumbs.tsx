@@ -30,12 +30,12 @@ const Crumbs: React.FC<CrumbsProps> = ({path}) => {
         const isSprint: boolean = numberSprint || numberSprint === 0;
 
 
-        const namePath: string = (isGroup && `${levelsEnglish[numberGroup].title} ${levelsEnglish[numberGroup].name}`) ||
+        const namePath: string = (isGroup && `${levelsEnglish[numberGroup-1].title} ${levelsEnglish[numberGroup-1].name}`) ||
           (isPage && `${namesPath['page']} ${numberPage}`) ||
           (isSprint && `${namesPath['sprint']} ${numberSprint}`) ||
           namesPath[path];
 
-        const classGroup: string = isGroup ? `crumbs__btn crumbs__btn--${numberGroup}` : '';
+        const classGroup: string = isGroup ? `crumbs__btn crumbs__btn--${numberGroup-1}` : '';
         const lastPath: boolean = (index === pathComponent.length - 1);
 
 

@@ -1,6 +1,6 @@
 .sprint {
   background: url('../../../data/images/bg-sprint.png') 100%/cover no-repeat;
-  height: 100vh;
+  //height: 100vh;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -84,6 +84,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
+    margin-bottom: 234px;
     .sprint-field__border {
       position: absolute;
       width: 100%;

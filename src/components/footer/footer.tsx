@@ -9,7 +9,7 @@ interface FooterProps {
   isAuth: boolean,
 }
 
-const Footer: React.FC<FooterProps> = ({ isAuth }) => {
+const FooterRedux: React.FC<FooterProps> = ({ isAuth }) => {
   const classFooter = (isAuth) ? 'footer auth' : 'footer no-auth';
 
   return (
@@ -44,6 +44,6 @@ const mapStateToProps = (state: any) => ({
   isAuth: state.login.isAuth,
 });
 
-const FooterRedux = connect(mapStateToProps)(Footer);
+const Footer = connect(mapStateToProps)(FooterRedux);
 
-export { FooterRedux };
+export { Footer };
