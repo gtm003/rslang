@@ -24,7 +24,7 @@ const Games: React.FC = () => {
                 <div key={index} className={`game game--${index + 1}`}>
                   <div className='game__head'>
                     <div className='game__title'>{item.name}</div>
-                    <NavLink to={`/games/${item.id}${level}`} key = {item.id}>
+                    <NavLink to={`/games/${item.id}${level+1}`} key = {item.id}>
                       <div className='game__icon'>
                         <img src={item.iconUrl} alt={item.iconUrl} width='80%'/>
                       </div>

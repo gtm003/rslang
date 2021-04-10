@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {NavLink, useHistory, useLocation} from "react-router-dom";
-import {levelsEnglish, navLink} from "../../data";
+import {levelsEnglish} from "../../data";
 import {Select} from "./select";
 import {WordSlider} from "./word-slider";
 import {Pagination} from "../pagination";
@@ -16,6 +16,7 @@ interface WordListProps {
 }
 
 const WordListRedux: React.FC<WordListProps> = ({group, pageInitial = 0, toggleOpen, toggleButtons}) => {
+  console.log(group)
   const [page, setPage] = useState(pageInitial - 1);
   const location = useLocation();
   const history = useHistory();
