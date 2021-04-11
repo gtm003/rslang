@@ -16,7 +16,6 @@ interface WordListProps {
 }
 
 const WordListRedux: React.FC<WordListProps> = ({group, pageInitial = 0, toggleOpen, toggleButtons}) => {
-  console.log(group)
   const [page, setPage] = useState(pageInitial - 1);
   const location = useLocation();
   const history = useHistory();
@@ -48,7 +47,7 @@ const WordListRedux: React.FC<WordListProps> = ({group, pageInitial = 0, toggleO
 
 const mapDispatchToProps = {
   toggleOpen,
-  toggleButtons
+  toggleButtons,
 };
 
 const WordList = connect(null, mapDispatchToProps)(WordListRedux);
