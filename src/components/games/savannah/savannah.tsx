@@ -4,10 +4,10 @@ import { connect } from "react-redux";
 import { Loader } from "../../loader";
 import { Lives } from "./lives/lives";
 import { ResultsGame } from '../resultsGame/resultsGame';
-import { NavLink } from 'react-router-dom';
 
 const savannahHeight = window.innerHeight;
 const BG_IMAGE_HEIGHT = 4500;
+let necessaryWords: WordsProps[];
 let correctAnswers: WordsProps[] = [];
 let wrongAnswers: WordsProps[] = [];
 let bgPosition: number = 0;
@@ -21,19 +21,15 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
   const [gameWords, setGameWords] = useState<WordsProps[]>([]);
   const [translations, setTranslations] = useState<WordsProps[]>([]);
   const [lives, setLives] = useState<number>(5);
-  const [listResultsNumber, setListResultsNumber] = useState<number>(0);
   const savannah = useRef<HTMLElement>(null);
   const word = useRef<HTMLDivElement>(null);
   const sun = useRef<HTMLImageElement>(null);
 
-
   useEffect(() => {
-    let necessaryWords: WordsProps[];
-
     page > -1 ?
-      necessaryWords = words.slice((Number(group) * 600), ((Number(group)) * 600) + ((page + 1) * 20)) :
-      necessaryWords = words.slice((Number(group) * 600), ((Number(group) + 1) * 600));
-
+    necessaryWords = words.slice((Number(group) * 600), ((Number(group)) * 600) + ((page + 1) * 20)) :
+    necessaryWords = words.slice((Number(group) * 600), ((Number(group) + 1) * 600));
+    
     setGameWords(necessaryWords);
     setTranslations(necessaryWords);
 
@@ -46,28 +42,79 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
     return () => (window as any).removeEventListener("keyup", onKeyUpHandler);
   }, [gameWords]);
 
+  const onKeyUpHandler = (evt: KeyboardEvent) => {
+    switch (evt.key) {
+      case "1":
+        return onAnswer(translationWord, translationsOnScreen[0].wordTranslate);
+      case "2":
+        return onAnswer(translationWord, translationsOnScreen[1].wordTranslate);
+      case "3":
+        return onAnswer(translationWord, translationsOnScreen[2].wordTranslate);
+      case "4":
+        return onAnswer(translationWord, translationsOnScreen[3].wordTranslate);
+    }
+  };
+
   const restartGame = () => {
-    const necessaryWords = words.slice((Number(group) * 600), ((Number(group) + 1) * 600));
+    page > -1 ?
+    necessaryWords = words.slice((Number(group) * 600), ((Number(group)) * 600) + ((page + 1) * 20)) :
+    necessaryWords = words.slice((Number(group) * 600), ((Number(group) + 1) * 600));
     moveBackground(0, 300);
     bgPosition = 0;
     setGameWords(necessaryWords);
     setLives(5);
     correctAnswers = [];
     wrongAnswers = [];
-  }
+  };
 
   const shuffleArray = (array: WordsProps[]) => {
     return array.sort(() => Math.random() - 0.5);
   };
 
   const moveBackground = (bgPosition: number, duration: number): void => {
-    savannah.current?.animate([
-      { backgroundPosition: `left 0 bottom ${bgPosition}px` }
+      savannah.current?.animate([
+        { backgroundPosition: `left 0 bottom ${bgPosition}px` }
+      ], {
+        duration: duration,
+        fill: "forwards"
+      });
+  };
+
+  const moveWord = (): void => {
+    word.current?.animate([
+      { top: "90%" }
     ], {
-      duration: duration,
-      fill: "forwards"
+      duration: 800,
     });
-  }
+  };
+
+  const increaseSun = (): void => {
+    if (sun.current) {
+      const sunWidth = sun.current.width;
+      sunWidth <= 160 ? sun.current.width = sunWidth + 3 : sun.current.width = sunWidth;
+    }
+  };
+
+  const highlightWords = (wordTranslations: NodeListOf<HTMLLIElement>, wordTranslation: WordsProps): void => {
+    wordTranslations?.forEach((translation: HTMLLIElement) => {
+      translation.textContent?.match(/[а-я-]/gi)?.join('') === wordTranslation.wordTranslate.replace(/\s/g, '') ?
+        translation.classList.add("word-correct") :
+        translation.classList.add("word-wrong");
+    });
+  };
+
+  const removeWordsHighliting = (wordTranslations: NodeListOf<HTMLLIElement>, wordTranslation: WordsProps): void => {
+    wordTranslations?.forEach((translation) => {
+      translation.textContent?.match(/[а-я]/gi)?.join('') === wordTranslation.wordTranslate ?
+        translation.classList.remove("word-correct") :
+        translation.classList.remove("word-wrong");
+    })
+  };
+
+  const addFlowAnimation = (): void => {
+    word.current?.classList.replace("flow-animation", "hidden");
+    setTimeout(() => word.current?.classList.replace("hidden", "flow-animation"), 50);
+  };
 
   let answers: number = 0;
 
@@ -82,35 +129,21 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
         const evtTarget = translate?.target as HTMLElement;
 
         wrongAnswer = translate === undefined || evtTarget.innerText.match(/[а-я-]/gi)?.join('') !== wordTranslation.wordTranslate;
-      }
+      };
 
       if (!wrongAnswer) {
-        word.current?.animate([
-          { top: "90%" }
-        ], {
-          duration: 800,
-        });
-
-
         bgPosition += bgShift;
 
         if (bgPosition <= BG_IMAGE_HEIGHT - savannahHeight) {
           moveBackground(-bgPosition, 800);
         }
 
-        if (sun.current) {
-          const sunWidth = sun.current.width;
-          sunWidth <= 160 ? sun.current.width = sunWidth + 3: sun.current.width = sunWidth;
-        }
-      }
+        moveWord();
+        increaseSun();
+      };
 
-      const wordTranslations = document.querySelectorAll(".savannah__translation-item");
-
-      wordTranslations?.forEach((translation) => {
-        translation.textContent?.match(/[а-я-]/gi)?.join('') === wordTranslation.wordTranslate.replace(/\s/g, '') ?
-          translation.classList.add("word-correct") :
-          translation.classList.add("word-wrong");
-      })
+      const wordTranslations = document.querySelectorAll<HTMLLIElement>(".savannah__translation-item");
+      highlightWords(wordTranslations, wordTranslation);
 
       setTimeout(() => {
         if (wrongAnswer) {
@@ -118,35 +151,16 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
           wrongAnswers.push(wordTranslation);
         } else {
           correctAnswers.push(wordTranslation);
-        }
+        };
 
         const updatedWords = gameWords.filter((word) => word.word !== wordTranslation.word);
+
         setGameWords(updatedWords);
-
-        wordTranslations?.forEach((translation) => {
-          translation.textContent?.match(/[а-я]/gi)?.join('') === wordTranslation.wordTranslate ?
-            translation.classList.remove("word-correct") :
-            translation.classList.remove("word-wrong");
-        })
-
-        word.current?.classList.replace("flow-animation", "hidden");
-        setTimeout(() => word.current?.classList.replace("hidden", "flow-animation"), 50);
+        removeWordsHighliting(wordTranslations, wordTranslation);
+        addFlowAnimation();
       }, 800);
-    }
+    };
   };
-
-  const onKeyUpHandler = (evt: KeyboardEvent) => {
-    switch (evt.key) {
-      case "1":
-        return onAnswer(translationWord, translationsOnScreen[0].wordTranslate);
-      case "2":
-        return onAnswer(translationWord, translationsOnScreen[1].wordTranslate);
-      case "3":
-        return onAnswer(translationWord, translationsOnScreen[2].wordTranslate);
-      case "4":
-        return onAnswer(translationWord, translationsOnScreen[3].wordTranslate);
-    }
-  }
 
   const translationWordIndex: number = Math.floor(Math.random() * gameWords.length);
   const translationWord: WordsProps = gameWords[translationWordIndex] || {};
@@ -168,11 +182,11 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
     getRandomWords(),
     getRandomWords(),
     translationWord
-  ]
+  ];
 
   if (gameWords.length === 0 && translations.length === 0) {
     return <Loader />
-  }
+  };
 
   return (
     <main className="savannah" ref={savannah}>
@@ -234,7 +248,7 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
       </div>
     </main >
   )
-}
+};
 
 const mapStateToProps = (state: any) => ({
   words: state.data.words
