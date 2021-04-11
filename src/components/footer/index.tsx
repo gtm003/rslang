@@ -1,3 +1,3 @@
-import {FooterRedux} from './footer';
+import {Footer} from './footer';
 
-export {FooterRedux};
+export {Footer};

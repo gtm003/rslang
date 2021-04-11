@@ -22,7 +22,7 @@ interface HeaderProps {
   loginUser: (name: string | null, userId: string | null, photo: string | null, isAuth: boolean) => void
 }
 
-const Header: React.FC<HeaderProps> = ({ isLoginOpen, isSignUpOpen, isAuth, user, toggleLoginOpen, signUpUser, loginUser }) => {
+const HeaderRedux: React.FC<HeaderProps> = ({ isLoginOpen, isSignUpOpen, isAuth, user, toggleLoginOpen, signUpUser, loginUser }) => {
 
   const [isMenuActive, setMenuActive] = useState(false);
 
@@ -112,6 +112,6 @@ const mapDispatchToProps = (dispatch: any) => ({
   },
 });
 
-const HeaderRedux = connect(mapStateToProps, mapDispatchToProps)(Header);
+const Header = connect(mapStateToProps, mapDispatchToProps)(HeaderRedux);
 
-export { HeaderRedux };
+export { Header };
