@@ -37,9 +37,8 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    height: 96px;
+    height: 170px;
     width: 605px;
-    margin-top: 81px;
     margin-bottom: 16px;
     .sprint-info__score {
       display: flex;
@@ -59,7 +58,6 @@
       }
       .score-value {
         font-size: 40px;
-        margin-bottom: 34px;
       }
     }
     .sprint-info__timer {
@@ -84,7 +82,10 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 234px;
+    margin-bottom: 100px;
+    &--result {
+      margin-top: 170px;
+    }
     .sprint-field__border {
       position: absolute;
       width: 100%;
