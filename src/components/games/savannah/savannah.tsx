@@ -3,11 +3,10 @@ import { WordsProps, GameProps } from "../../../common/ts/interfaces";
 import { connect } from "react-redux";
 import { Loader } from "../../loader";
 import { Lives } from "./lives/lives";
-import { ResultPercent } from '../resultPercent/resultPercent';
-import { ResultWordsList } from '../ResultWordsList/resultWordsList';
+import { ResultsGame } from '../resultsGame/resultsGame';
 import { NavLink } from 'react-router-dom';
 
-const savannahHeight = window.innerHeight - 130 - 94;
+const savannahHeight = window.innerHeight;
 const BG_IMAGE_HEIGHT = 4500;
 let correctAnswers: WordsProps[] = [];
 let wrongAnswers: WordsProps[] = [];
@@ -18,13 +17,15 @@ interface SavannahProps {
   words: WordsProps[]
 }
 
-const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = 1, words }) => {
+const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, words }) => {
   const [gameWords, setGameWords] = useState<WordsProps[]>([]);
   const [translations, setTranslations] = useState<WordsProps[]>([]);
   const [lives, setLives] = useState<number>(5);
   const [listResultsNumber, setListResultsNumber] = useState<number>(0);
-  const word = useRef<HTMLDivElement>(null);
   const savannah = useRef<HTMLElement>(null);
+  const word = useRef<HTMLDivElement>(null);
+  const sun = useRef<HTMLImageElement>(null);
+
 
   useEffect(() => {
     let necessaryWords: WordsProps[];
@@ -35,6 +36,7 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = 1, w
 
     setGameWords(necessaryWords);
     setTranslations(necessaryWords);
+
     correctAnswers = [];
     wrongAnswers = [];
   }, [words, group, page]);
@@ -78,42 +80,37 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = 1, w
         wrongAnswer = translate !== wordTranslation.wordTranslate;
       } else {
         const evtTarget = translate?.target as HTMLElement;
-        wrongAnswer = translate === undefined || evtTarget.innerText.match(/[а-я]/gi)?.join('') !== wordTranslation.wordTranslate;
+
+        wrongAnswer = translate === undefined || evtTarget.innerText.match(/[а-я-]/gi)?.join('') !== wordTranslation.wordTranslate;
       }
 
       if (!wrongAnswer) {
         word.current?.animate([
-          // { transform: `translateY(${savannahHeight / 2}px)` }
-          { top: "50%" },
-          // { transform: "translateY(50%)" }
+          { top: "90%" }
         ], {
-          duration: 801,
-          // fill: "backwards"
+          duration: 800,
         });
 
-        bgPosition -= bgShift;
-        if (bgPosition >= -BG_IMAGE_HEIGHT + savannahHeight) {
-          moveBackground(bgPosition, 800);
-          // savannah.current?.animate([
-          //   { backgroundPosition: `left 0 bottom ${bgPosition}px` }
-          // ], {
-          //   duration: 800,
-          //   fill: "forwards"
-          // });
+
+        bgPosition += bgShift;
+
+        if (bgPosition <= BG_IMAGE_HEIGHT - savannahHeight) {
+          moveBackground(-bgPosition, 800);
+        }
+
+        if (sun.current) {
+          const sunWidth = sun.current.width;
+          sunWidth <= 160 ? sun.current.width = sunWidth + 3: sun.current.width = sunWidth;
         }
       }
 
-      // word.current!.style.animationPlayState = "paused";
       const wordTranslations = document.querySelectorAll(".savannah__translation-item");
 
       wordTranslations?.forEach((translation) => {
-        translation.textContent?.match(/[а-я]/gi)?.join('') === wordTranslation.wordTranslate ?
+        translation.textContent?.match(/[а-я-]/gi)?.join('') === wordTranslation.wordTranslate.replace(/\s/g, '') ?
           translation.classList.add("word-correct") :
           translation.classList.add("word-wrong");
       })
-      console.log(savannahHeight);
-
-
 
       setTimeout(() => {
         if (wrongAnswer) {
@@ -125,10 +122,6 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = 1, w
 
         const updatedWords = gameWords.filter((word) => word.word !== wordTranslation.word);
         setGameWords(updatedWords);
-
-        // if (word.current) {
-        //   word.current.style.animationPlayState = "running";
-        // }
 
         wordTranslations?.forEach((translation) => {
           translation.textContent?.match(/[а-я]/gi)?.join('') === wordTranslation.wordTranslate ?
@@ -183,77 +176,62 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = 1, w
 
   return (
     <main className="savannah" ref={savannah}>
-      {lives > 0 && gameWords.length !== 0 ?
-        <>
-          <div className="savannah__wrapper">
+      <div className="savannah__wrapper">
+        {lives > 0 && gameWords.length !== 0 ?
+          <>
             <div className="savannah-panel">
-              <div className="savannah-panel__right-panel">
-                <button className="savannah-panel__fullscreen" onClick={() => {
-                  if (savannah.current !== null) {
-                    savannah.current.requestFullscreen();
-                  }
+              <button className="savannah-panel__fullscreen" onClick={() => {
+                if (savannah.current !== null) {
+                  savannah.current.requestFullscreen();
                 }
-                }>
-                  <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M5.57143 5.57143H0V7.42859H6.50001C7.01328 7.42859 7.42859 7.01328 7.42859 6.50001V0H5.57143V5.57143Z" fill="white" />
-                    <path d="M19.8572 0H18V6.50001C18 7.01328 18.4153 7.42859 18.9286 7.42859H25.4286V5.57143H19.8572V0Z" fill="white" />
-                    <path d="M19.8572 25.4286H18V18.9286C18 18.4153 18.4153 18 18.9286 18H25.4286V19.8572H19.8572V25.4286Z" fill="white" />
-                    <path d="M6.50001 18H0V19.8572H5.57143V25.4286H7.42859V18.9286C7.42859 18.4153 7.01328 18 6.50001 18V18Z" fill="white" />
+              }
+              }>
+                <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg" >
+                  <path d="M5.57143 5.57143H0V7.42859H6.50001C7.01328 7.42859 7.42859 7.01328 7.42859 6.50001V0H5.57143V5.57143Z" fill="white" />
+                  <path d="M19.8572 0H18V6.50001C18 7.01328 18.4153 7.42859 18.9286 7.42859H25.4286V5.57143H19.8572V0Z" fill="white" />
+                  <path d="M19.8572 25.4286H18V18.9286C18 18.4153 18.4153 18 18.9286 18H25.4286V19.8572H19.8572V25.4286Z" fill="white" />
+                  <path d="M6.50001 18H0V19.8572H5.57143V25.4286H7.42859V18.9286C7.42859 18.4153 7.01328 18 6.50001 18V18Z" fill="white" />
+                </svg>
+              </button>
+              <div className="savannah-panel__right-panel">
+                <Lives lives={lives} />
+                <button className="savannah-panel__close" >
+                  <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M11.4347 14.022L0.532091 3.11904C-0.177435 2.40985 -0.177435 1.26318 0.532091 0.55399C1.24129 -0.155204 2.38795 -0.155204 3.09715 0.55399L14.0001 11.457L24.9028 0.55399C25.6123 -0.155204 26.7587 -0.155204 27.4679 0.55399C28.1774 1.26318 28.1774 2.40985 27.4679 3.11904L16.5652 14.022L27.4679 24.925C28.1774 25.6342 28.1774 26.7808 27.4679 27.49C27.1144 27.8438 26.6497 28.0215 26.1853 28.0215C25.7209 28.0215 25.2566 27.8438 24.9028 27.49L14.0001 16.5871L3.09715 27.49C2.74338 27.8438 2.279 28.0215 1.81462 28.0215C1.35024 28.0215 0.885857 27.8438 0.532091 27.49C-0.177435 26.7808 -0.177435 25.6342 0.532091 24.925L11.4347 14.022Z" fill="#CDCDCD" />
                   </svg>
                 </button>
               </div>
-              <Lives lives={lives} />
-              <button className="savannah-panel__close" >
-                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M11.4347 14.022L0.532091 3.11904C-0.177435 2.40985 -0.177435 1.26318 0.532091 0.55399C1.24129 -0.155204 2.38795 -0.155204 3.09715 0.55399L14.0001 11.457L24.9028 0.55399C25.6123 -0.155204 26.7587 -0.155204 27.4679 0.55399C28.1774 1.26318 28.1774 2.40985 27.4679 3.11904L16.5652 14.022L27.4679 24.925C28.1774 25.6342 28.1774 26.7808 27.4679 27.49C27.1144 27.8438 26.6497 28.0215 26.1853 28.0215C25.7209 28.0215 25.2566 27.8438 24.9028 27.49L14.0001 16.5871L3.09715 27.49C2.74338 27.8438 2.279 28.0215 1.81462 28.0215C1.35024 28.0215 0.885857 27.8438 0.532091 27.49C-0.177435 26.7808 -0.177435 25.6342 0.532091 24.925L11.4347 14.022Z" fill="#CDCDCD" />
-                </svg>
-              </button>
             </div>
             <div className="savannah__word flow-animation" ref={word} onAnimationEnd={() => { onAnswer(translationWord) }}>
               {
                 translationWord.word
               }
             </div>
-            <div className="savannah__translation">
-              <ul className="svannah__translation-list">
-                {
-                  shuffleArray(translationsOnScreen).map((word: WordsProps, i: number) => {
-                    return (
-                      <li
-                        key={word.wordTranslate + i}
-                        className="savannah__translation-item"
-                        onClick={evt => onAnswer(translationWord, evt)}
-                      >
-                        <span tabIndex={0}>{i + 1}. {word.wordTranslate}</span>
-                      </li>
-                    )
-                  })
-                }
-              </ul>
+            <ul className="savannah__translation-list">
+              {
+                shuffleArray(translationsOnScreen).map((word: WordsProps, i: number) => {
+                  return (
+                    <li
+                      key={word.wordTranslate + i}
+                      className="savannah__translation-item"
+                      onClick={evt => onAnswer(translationWord, evt)}
+                    >
+                      <span tabIndex={0}>{i + 1}. {word.wordTranslate}</span>
+                    </li>
+                  )
+                })
+              }
+            </ul>
+            <div className="savannah__sun-wrapper">
+              <img className="savannah__sun" src="/images/games/sun.png" alt="sun" width="100px" ref={sun} />
             </div>
+          </>
+          :
+          <div className='savannah-result'>
+            <ResultsGame errorList={wrongAnswers} correctList={correctAnswers} onClickHandlerNewGame={restartGame} />
           </div>
-        </>
-        :
-        <div className='game-sprint__body game-sprint__body--end'>
-          <h3>Твой результат {correctAnswers.length * 10} очков</h3>
-          {listResultsNumber === 0 ?
-            <ResultPercent error={wrongAnswers.length} correct={correctAnswers.length} /> :
-            <ResultWordsList errorList={wrongAnswers} correctList={correctAnswers} />
-          }
-          <nav className='sprint-body__nav'>
-            <div className='sprint-body__pagination'>
-              <div className='sprint-body-pagination__dot sprint-body-pagination__dot--activ'
-                onClick={() => setListResultsNumber(0)} />
-              <div className='sprint-body-pagination__dot'
-                onClick={() => setListResultsNumber(1)} />
-            </div>
-            <span className='sprint-body-nav__link' onClick={restartGame}>Продолжить игру</span>
-            <NavLink to={`/games`} >
-              <span className='sprint-body-nav__link'>К списку игр</span>
-            </NavLink>
-          </nav>
-        </div>
-      }
+        }
+      </div>
     </main >
   )
 }
