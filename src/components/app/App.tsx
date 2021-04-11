@@ -1,24 +1,24 @@
 import React from 'react';
 import { Footer } from '../footer';
-import { HeaderRedux } from '../header';
+import { Header } from '../header';
 import { Switcher } from "../../common/navigation";
 import { BrowserRouter } from "react-router-dom";
 import { Settings } from "../settings";
-import { LoginFormRedux } from '../loginform';
-import { SignUpFormRedux } from '../signupform';
+import { LoginForm } from '../loginform';
+import { SignUpForm } from '../signupform';
 
 
 const App: React.FC = () => {
   return (
     <BrowserRouter>
-      <HeaderRedux isAuth={true}/>
+      <Header />
       <div className="main-wrapper">
         <Switcher />
       </div>
       <Settings />
-      <LoginFormRedux />
-      <SignUpFormRedux />
-      <Footer isAuth={true} />
+      <LoginForm />
+      <SignUpForm />
+      <Footer />
     </BrowserRouter>
   );
 }

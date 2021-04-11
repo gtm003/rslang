@@ -9,7 +9,8 @@ import {Team} from "../../components/team";
 import {Tutorial} from "../../components/tutorial";
 import {WordList} from "../../components/word-list";
 import { Games } from '../../components/games';
-import { GameSprint } from '../../components/sprint';
+import { GameSprint } from '../../components/games/sprint';
+import { GameConstructor } from '../../components/games/constructor';
 import { Dictionary } from '../../components/dictionary';
 import { HardWords } from '../../components/hard-words';
 import { HardWordsList } from '../../components/hard-words-list';
@@ -19,7 +20,6 @@ const Switcher: React.FC = () => {
 
   const isGroupExists: React.FC<any> = ({match}) => {
     const idGroup: number = Number(match.params.id);
-
     if (
       idGroup < 0
       || idGroup > 6
@@ -34,7 +34,6 @@ const Switcher: React.FC = () => {
   const isGroupPageExists: React.FC<any> = ({match}) => {
     const idGroup: number = Number(match.params.group);
     const idPage: number = Number(match.params.page);
-
     if (
       idGroup < 0
       || idGroup > 6
@@ -51,7 +50,6 @@ const Switcher: React.FC = () => {
       const path = `/tutorial/group${idGroup}`;
       return <Redirect to={path}/>
     }
-
     return <WordList group={idGroup} pageInitial={idPage}/>
   };
 
@@ -67,9 +65,18 @@ const Switcher: React.FC = () => {
       <Route path='/dictionary/hard/group1' component={() => <HardWordsList group={1}/>}/>
 
       <Route path='/statistics' component={Tutorial}/>
-      <Route path='/games/sprint:level' render={({match}) => {
+      <Route path='/games/sprint:group/page:page' render={({match}) => {
+        const group: number = Number(match.params.group);
+        const page: number = Number(match.params.page);
+        return <GameSprint group={group-1} page={page-1}/>
+      } }/>
+      <Route path='/games/sprint:group' render={({match}) => {
+        const group: number = Number(match.params.group) || 0;
+        return <GameSprint group={group-1}/>
+      } }/>
+      <Route path='/games/constructor:level' render={({match}) => {
         const group = match.params.level || 0;
-        return <GameSprint group={group} page={5}/>
+        return <GameConstructor group={group} page={5}/>
       } }/>
       <Route path='/tutorial/group:group/page:page'
              component={(...props: Array<object>) => isGroupPageExists(props[0])}/>

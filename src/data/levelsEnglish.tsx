@@ -37,4 +37,4 @@ const levelsEnglish: Array<Levels> = [
     }
 ];
 
-export default levelsEnglish;
+export {levelsEnglish};

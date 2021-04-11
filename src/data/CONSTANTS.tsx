@@ -1,4 +1,4 @@
-const githubMembers: string[] = ['Alekseishkel', 'Kkasya', "Alexk08", '11alexey11', 'gtm003'];
+const githubMembers: string[] = ['Alexk08', 'Kkasya', 'Alekseishkel', 'gtm003', '11alexey11'];
 const githubSrc: string = 'https://github.com/';
 const urlBackend: string = 'https://react-rs-lang-words.herokuapp.com/';
 
@@ -63,5 +63,49 @@ const dictionaryLinks: any[] = [
   }
 ];
 
+interface GamesProps {
+  id: string;
+  name: string;
+  iconUrl: string;
+  imgUrl: string;
+  description: string;
+}
 
-export {githubMembers, githubSrc, urlBackend, navLink, titleGroup, descriptionGroup, menuLinks, dictionaryLinks};
+const titleGames: GamesProps[] = [
+  {
+    id: 'constructor',
+    name: 'Конструктор слов',
+    iconUrl: '/images/games/constructor.svg',
+    imgUrl: '/images/games/constructor.png',
+    description: 'Учит быстро переводить с английского на ваш родной язык.',
+  }, {
+    id: 'savannah',
+    name: 'Саванна',
+    iconUrl: '/images/games/savannah.svg',
+    imgUrl: '/images/games/savannah.png',
+    description: 'Учит быстро переводить с английского на ваш родной язык.',
+  }, {
+    id: 'audio',
+    name: 'Аудиовызов',
+    iconUrl: '/images/games/audio.svg',
+    imgUrl: '/images/games/audio.png',
+    description: 'Учит быстро переводить с английского на ваш родной язык.',
+  }, {
+    id: 'sprint',
+    name: 'Спринт',
+    iconUrl: '/images/games/sprint.svg',
+    imgUrl: '/images/games/sprint.png',
+    description: 'Учит быстро переводить с английского на ваш родной язык.',
+  },
+]
+
+const namesPath: any = {
+  tutorial: 'Учебник',
+  page: 'Страница',
+  games: 'Игры',
+  sprint: 'Спринт',
+  team: 'О команде'
+}
+
+
+export {githubMembers, githubSrc, urlBackend, navLink, titleGroup, descriptionGroup, menuLinks, dictionaryLinks, titleGames, namesPath};

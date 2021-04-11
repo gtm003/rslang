@@ -1,3 +1,4 @@
 import {Switcher} from "./switcher";
+import {Crumbs} from "./crumbs";
 
-export {Switcher};
+export {Switcher, Crumbs};

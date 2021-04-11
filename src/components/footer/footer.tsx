@@ -3,12 +3,13 @@ import {ItemGithubMember} from "./itemGithubMember";
 import {ReactComponent as RsLogo} from '../../data/images/rs.svg';
 import {ReactComponent as GithubLogo} from '../../data/images//github.svg';
 import {githubMembers} from "../../data";
+import { connect } from 'react-redux';
 
 interface FooterProps {
   isAuth: boolean,
 }
 
-const Footer: React.FC<FooterProps> = ({isAuth}) => {
+const FooterRedux: React.FC<FooterProps> = ({ isAuth }) => {
   const classFooter = (isAuth) ? 'footer auth' : 'footer no-auth';
 
   return (
@@ -39,4 +40,10 @@ const Footer: React.FC<FooterProps> = ({isAuth}) => {
   );
 };
 
-export {Footer};
+const mapStateToProps = (state: any) => ({
+  isAuth: state.login.isAuth,
+});
+
+const Footer = connect(mapStateToProps)(FooterRedux);
+
+export { Footer };

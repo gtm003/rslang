@@ -1,16 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
-import { loginUser, toggleLoginOpen } from '../../common/redux/login-action-creator';
+import { loginUser, setLoginError, toggleLoginOpen } from '../../common/redux/login-action-creator';
 import { toggleSignUpOpen } from '../../common/redux/signup-action-creator';
 import { urlBackend } from '../../data';
 
 interface LoginProps {
     isLoginOpen: boolean,
     handleSubmit: any,
+    error: string | null,
     toggleLoginOpen: (isLoginOpen: boolean) => void,
     toggleSignUpOpen: (isLoginOpen: boolean) => void,
-    loginUser: (name: string, userId: string, photo: string | null) => void,
+    loginUser: (name: string, userId: string, photo: string | null, isAuth: boolean) => void,
+    setLoginError: (error: string | null) => void,
 }
 
 interface submitValues {
@@ -18,7 +20,7 @@ interface submitValues {
     password: string,
 }
 
-const LoginForm: React.FC<LoginProps> = ({ isLoginOpen, handleSubmit, toggleLoginOpen, toggleSignUpOpen, loginUser }) => {
+const LoginFormRedux: React.FC<LoginProps> = ({ isLoginOpen, handleSubmit, error, toggleLoginOpen, toggleSignUpOpen, loginUser, setLoginError }) => {
     const submit = async (values: submitValues) => {
         const response = await fetch(`${urlBackend}signin`, {
             method: 'POST',
@@ -29,14 +31,17 @@ const LoginForm: React.FC<LoginProps> = ({ isLoginOpen, handleSubmit, toggleLogi
             body: JSON.stringify(values)
         });
         const content = await response.json();
-        console.log(content);
-        loginUser(content.name, content.userId, content.photo);
-        toggleLoginOpen(false);
+        if (content.error) {
+            setLoginError(content.error.errors[0].message);
+        } else {
+            loginUser(content.name, content.userId, content.photo, true);
+            toggleLoginOpen(false);
+        }
     };
     
     return (
         isLoginOpen ?
-        <div className="login-form-wrapper" >
+        <div className="login-form-wrapper">
             <form className="login-form" onSubmit={handleSubmit(submit)}>
                 <div className="login-form__close-btn" onClick={ () => toggleLoginOpen(false) } >
                     <img src="/images/close.svg" alt="close"></img>
@@ -49,7 +54,10 @@ const LoginForm: React.FC<LoginProps> = ({ isLoginOpen, handleSubmit, toggleLogi
                 </div>
                 <div className="login-form-fields">
                     <Field className="login-form-fields__item" name="email" component="input" type="email" placeholder="E-mail" required={true} />
-                    <Field className="login-form-fields__item" name="password" component="input" type="password" placeholder="Пароль" required={true} />
+                    <Field className="login-form-fields__item" name="password" component="input" type="password" placeholder="Пароль" required={true} minLength={8} />
+                </div>
+                <div className="login-form-error">
+                    <span>{error}</span>
                 </div>
                 <div className="login-form-submit">
                     <button className="login-form-submit__btn" type="submit">Войти</button>
@@ -69,6 +77,7 @@ const LoginForm: React.FC<LoginProps> = ({ isLoginOpen, handleSubmit, toggleLogi
 const mapStateToProps = (state: any) => ({
     isLoginOpen: state.login.isLoginOpen,
     user: state.login.user,
+    error: state.login.error,
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
@@ -78,15 +87,18 @@ const mapDispatchToProps = (dispatch: any) => ({
     toggleSignUpOpen: (isSignUpOpen: boolean) => {
         dispatch(toggleSignUpOpen(isSignUpOpen));
     },
-    loginUser: (name: string, userId: string, photo: string | null) => {
-        dispatch(loginUser(name, userId, photo));
+    loginUser: (name: string, userId: string, photo: string | null, isAuth: boolean) => {
+        dispatch(loginUser(name, userId, photo, isAuth));
     },
+    setLoginError: (error: string | null) => {
+        dispatch(setLoginError(error));
+    }
 });
 
-const LoginFormConnect = connect(mapStateToProps, mapDispatchToProps)(LoginForm);
+const LoginFormConnect = connect(mapStateToProps, mapDispatchToProps)(LoginFormRedux);
 
-const LoginFormRedux = reduxForm({
+const LoginForm = reduxForm({
     form: 'login'
 })(LoginFormConnect);
 
-export {LoginFormRedux};
+export {LoginForm};
