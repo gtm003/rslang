@@ -16,8 +16,9 @@ interface SavannahProps {
 const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, words }) => {
   const [gameWords, setGameWords] = useState<WordsProps[]>([]);
   const [translations, setTranslations] = useState<WordsProps[]>([]);
+  const [isWelcomeScreen, setIsWelcomeScreen] = useState<boolean>(true);
   const [lives, setLives] = useState<number>(5);
-  const savannah = useRef<HTMLElement>(null);
+  const audioChallenge = useRef<HTMLElement>(null);
   const word = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -37,9 +38,9 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
     return () => (window as any).removeEventListener("keyup", onKeyUpHandler);
   }, [gameWords]);
 
-  // useEffect(() => {
-  //   playAudio(translationWord.audio);
-  // }, []);
+  useEffect(() => {
+    playAudio(translationWord.audio);
+  }, [gameWords]);
 
   const playAudio = (audioSrc: string): void => {
     const audio = new Audio();
@@ -148,19 +149,27 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
     translationWord
   ];
 
-  if (gameWords.length === 0 && translations.length === 0) {
-    return <Loader />
-  };
+  // if (gameWords.length === 0 && translations.length === 0) {
+  //   return <Loader />
+  // };
+
+  // if (gameWords.length === 0) {
+  //   return (
+  //     <div className='minigames__result'>
+  //       <ResultsGame errorList={wrongAnswers} correctList={correctAnswers} onClickHandlerNewGame={restartGame} />
+  //     </div>
+  //   )
+  // };
 
   return (
-    <main className="minigames audio-challenge" ref={savannah}>
+    <main className="minigames audio-challenge" ref={audioChallenge}>
       <div className="minigames__wrapper">
-        {gameWords.length !== 0 ?
+        {gameWords.length !== 0 && !isWelcomeScreen ?
           <>
             <div className="minigames__panel">
               <button className="minigames__fullscreen" onClick={() => {
-                if (savannah.current !== null) {
-                  savannah.current.requestFullscreen();
+                if (audioChallenge.current !== null) {
+                  audioChallenge.current.requestFullscreen();
                 }
               }
               }>
@@ -197,8 +206,16 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
             </ul>
           </>
           :
-          <div className='minigames__result'>
-            <ResultsGame errorList={wrongAnswers} correctList={correctAnswers} onClickHandlerNewGame={restartGame} />
+          <div className="welcome-screen">
+            <p className="welcome-screen__title">
+              Выбери один верный перевод слова из пяти. Сделать это можно, кликнув на слове мышью, либо нажав одну из клавиш 1, 2, 3, 4, 5.
+            </p>
+            <button className="btn welcome-screen__btn" onClick={() => {
+              setIsWelcomeScreen(false);
+              playAudio(translationWord.audio);
+            }}>
+              Начать игру
+            </button>
           </div>
         }
       </div>
