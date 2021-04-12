@@ -1,4 +1,4 @@
-import {WordsProps} from "../ts/interfaces";
+import { WordsProps } from "../ts/interfaces";
 
 interface InitialState {
   words: [];
@@ -44,7 +44,9 @@ const reducer = (state: InitialState = initialState, action: any) => {
         hardWords: [...state.hardWords, action.payload],
       };
     case `REMOVE_HARD_WORD`:
-      const updatedHardWords = state.hardWords.filter((word: WordsProps) => word.id !== action.payload);
+      const updatedHardWords = state.hardWords.filter(
+        (word: WordsProps) => word.id !== action.payload
+      );
 
       return {
         ...state,
@@ -67,4 +69,4 @@ const reducer = (state: InitialState = initialState, action: any) => {
   }
 };
 
-export {reducer};
+export { reducer };

@@ -25,7 +25,9 @@ const ResultsGame: React.FC<ResultsGameProps> = ({correctList, errorList, onClic
   <React.Fragment>
     <div className='game-results'>
       <p className='game-results__title'>Твой результат {gameScore} очков</p>
-      <p className='game-results__series-length'>Длина серии: {gameSeriesLength}</p>
+      {
+        seriesLength ? <p className='game-results__series-length'>Длина серии: {gameSeriesLength}</p> : null
+      }
         { listResultsNumber === 0 ?
           <ResultPercent  error = {errorList.length} correct = {correctList.length}/> :
           <ResultWordsList  errorList = {errorList} correctList ={correctList} />
