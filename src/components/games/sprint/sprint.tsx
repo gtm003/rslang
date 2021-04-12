@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
-import { useLocation } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { WordsProps } from '../../../common/ts/interfaces';
 import { getRandomOderArr, getRandomBoolean, getRandomInteger, playAnswer } from '../../../data/utils';
 import { Loader } from '../../loader';
@@ -228,7 +228,9 @@ const SprintRedax: React.FC<GameSprintProps> = ({words, hardWords, group, page, 
                 onClick={() => onToggleHandlerMute()}>{mute ? 'notifications_off' : 'notifications'}</i>
               <i className="material-icons sprint-header__icons sprint-header__icons--fullscreen"
                 onClick={() => onToggleHandlerFullScreen()}>{fullscreen ? 'fullscreen_exit' : 'fullscreen'}</i>
-              <i className="material-icons sprint-header__icons sprint-header__icons--close">close</i>
+              <NavLink to='/games'>
+                <i className="material-icons sprint-header__icons sprint-header__icons--close">close</i>
+              </NavLink>
             </div>
               {gameStatus && (
                 <React.Fragment>
