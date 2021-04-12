@@ -37,6 +37,23 @@ const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isTranslate, a
     getDataPage(group - 1, page).then((res: WordsProps[]) => getWordsWithoutDeleted(res));
   }, [page, group, isDelete]);
 
+
+  useEffect(() => {
+    const setWordsToBack = async (wordsArr: WordsProps[]) => {
+      const response = await fetch(`${urlBackend}words`, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({words: wordsArr})
+        //body: ({words: wordsArr})
+      });
+    };
+    console.log(getWords);
+   if (getWords) setWordsToBack(getWords);
+  }, [hardWords]);
+
   const getWordsWithoutDeleted: (words: any) => any = (words: any) => {
     const wordsWithoutDeleted = words.filter((word: WordsProps) => deletedWords.findIndex((deletedWord: WordsProps) => deletedWord.id === word.id) === -1);
     if (!wordsWithoutDeleted.length) {
@@ -66,13 +83,14 @@ const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isTranslate, a
 
   const pathImg: string = `/images/group/${group - 1}.png`;
 
+
   return (
     <div className="word-slider">
       {
 
         ((page < 0) && <img src={pathImg} alt='level english'/>) ||
         (isMessage && <p className="message">The page is deleted</p>) ||
-        ((words.length && wordsRedux.length) ?
+        ((words.length ) ?
           <Carousel dynamicHeight={false}>
             {words.map((item: WordsProps) => {
               const isHard: boolean = Boolean(hardWords.length) && hardWords.some((word: any) => word.id === item.id);
