@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
-import {NavLink, useLocation} from 'react-router-dom';
-import {levelsEnglish} from '../../data';
-import {titleGames} from "../../data";
-import {Crumbs} from "../../common/navigation/crumbs";
+import React, { useState } from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
+import { levelsEnglish } from '../../data';
+import { titleGames } from "../../data";
+import { Crumbs } from "../../common/navigation/crumbs";
 
 const Games: React.FC = () => {
   const [level, setLevel] = useState<number>(0);
@@ -15,7 +15,7 @@ const Games: React.FC = () => {
 
   return (
     <>
-      <Crumbs path={location.pathname}/>
+      <Crumbs path={location.pathname} />
       <div className='games'>
         <div className='games__select'>
           {
@@ -24,14 +24,14 @@ const Games: React.FC = () => {
                 <div key={index} className={`game game--${index + 1}`}>
                   <div className='game__head'>
                     <div className='game__title'>{item.name}</div>
-                    <NavLink to={`/games/${item.id}${level+1}`} key = {item.id}>
+                    <NavLink to={`/games/${item.id}${level + 1}`} key = {item.id}>
                       <div className='game__icon'>
-                        <img src={item.iconUrl} alt={item.iconUrl} width='80%'/>
+                        <img src={item.iconUrl} alt={item.iconUrl} width='80%' />
                       </div>
                     </NavLink>
                   </div>
                   <div className='game__img'>
-                    <img src={item.imgUrl} alt={item.imgUrl} height='100%' width='100%'/>
+                    <img src={item.imgUrl} alt={item.imgUrl} height='100%' width='100%' />
                   </div>
                 </div>
               )
@@ -43,8 +43,8 @@ const Games: React.FC = () => {
                 return (
                   <div key={index} className={`level__item level__item--${index + 1}`}>
                     <input type='radio' id={`${item.title}`} name='game' value={`${item.id}`}
-                           className='level-item__input'
-                           checked={index === level} onChange={(e) => onChangeHandlerSelectLevel(+e.target.value)}/>
+                      className='level-item__input'
+                      checked={index === level} onChange={(e) => onChangeHandlerSelectLevel(+e.target.value)} />
                     <label className='level-item__label' htmlFor={`${item.title}`}>
                       <span className='label__item label__title'>{item.title}</span>
                       <span className='label__item label__name'>{item.name}</span>
@@ -60,4 +60,4 @@ const Games: React.FC = () => {
   )
 };
 
-export {Games};
+export { Games };

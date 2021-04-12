@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 import { useLocation } from 'react-router-dom';
 import { urlBackend } from '../../../data';
-import { WordsProps } from '../../../common/ts/interfaces';
+import { WordsProps, GameProps } from '../../../common/ts/interfaces';
 import { getRandomOderArr, getRandomBoolean, getRandomInteger, playAnswer } from '../../../data/utils';
 import { Loader } from '../../loader';
 import { AudioWord } from '../audioWords/audioWords';
@@ -28,15 +28,12 @@ let indexWord = indexesWord.pop();
 let indexTranslate = getRandomBoolean() ? indexWord : getRandomInteger(19);
 let round: number = 0;
 
-let correctList: WordsProps[]= [];
-let errorList: WordsProps[]= [];
+let correctList: WordsProps[] = [];
+let errorList: WordsProps[] = [];
 
-interface GameSprintProps {
-  group: number,
-  page?: number,
-}
+const GameSprint: React.FC<GameProps> = ({ group, page }) => {
+  console.log(page);
 
-const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
   //const [score, setScore] = useState<number>(0);
   const [gameStatus, setGameStatus] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(true);
@@ -57,6 +54,7 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
         .then(() => getData(url))
         .then((res: WordsProps[]) => {
           WORDS_GROUP.push(res);
+
           if (WORDS_GROUP.length === 30) {
             if (page !== undefined) {
               WORDS_GAME = WORDS_GROUP[page];
@@ -89,14 +87,14 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
   })
   const onKeyPressHandler = (event: KeyboardEvent) => {
     event.preventDefault();
-    if(gameStatus) {
+    if (gameStatus) {
       if (event.key === 'ArrowRight') onClickHandlerGame(true);
       else if (event.key === 'ArrowLeft') onClickHandlerGame(false);
     }
   }
 
-  const onClickHandlerGame = (answer : boolean) => {
-    const correctAnswer : boolean = (indexWord === indexTranslate);
+  const onClickHandlerGame = (answer: boolean) => {
+    const correctAnswer: boolean = (indexWord === indexTranslate);
     playAnswer(answer === correctAnswer, mute);
     if (answer === correctAnswer) {
       //setScore(score + 10);
@@ -146,25 +144,25 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
 
   return (
     <>
-      <Crumbs path={location.pathname}/>
+      <Crumbs path={location.pathname} />
       <div className='game-sprint'>
         {
 
           !loading ?
             <React.Fragment>
 
-              <Timer gameStatus={gameStatus}/>
+              <Timer gameStatus={gameStatus} />
 
               <div className='game-sprint__body'>
                 {gameStatus && (
                   <div className='game-sprint__body game-sprint__body--game'>
                     <div className='sprint-body-game__header'>
-                      <AudioWord src={WORDS_GAME[indexWord!].audio}/>
+                      <AudioWord src={WORDS_GAME[indexWord!].audio} />
                       <h3>{correctList.length * 10}</h3>
                       <span className='icon-container' onClick={() => onToggleHandlerMute()}>
-                {mute ? <i className="material-icons">notifications_off</i> :
-                  <i className="material-icons">notifications</i>}
-              </span>
+                        {mute ? <i className="material-icons">notifications_off</i> :
+                          <i className="material-icons">notifications</i>}
+                      </span>
                     </div>
                     <div className='sprint-body-game__words'>
                       <h2>{word}</h2>
@@ -173,41 +171,41 @@ const GameSprint: React.FC<GameSprintProps> = ({group, page}) => {
                     <div className='sprint-body__answer'>
                       <div className='sprint-body-answer__item'>
                         <button className='sprint-body-answer__button button--false'
-                                onClick={onClickHandlerGame.bind(null, false)}>Неверно
+                          onClick={onClickHandlerGame.bind(null, false)}>Неверно
                         </button>
                         <span><i className="material-icons">arrow_back</i></span>
                       </div>
                       <div className='sprint-body-answer__item'>
                         <button className='sprint-body-answer__button button--true'
-                                onClick={onClickHandlerGame.bind(null, true)}>Верно
+                          onClick={onClickHandlerGame.bind(null, true)}>Верно
                         </button>
                         <span><i className="material-icons">arrow_forward</i></span>
                       </div>
-                      </div>
-                </div>)}
-              {!gameStatus  && (
-              <ResultsGame correctList={correctList} errorList={errorList} onClickHandlerNewGame={onClickHandlerNewGame}/>
-              )}
-            </div>
-            <button className='game-sprint__button-close'>
-              <i className="material-icons sprint-body-game__icon">close</i>
-            </button>
-          </React.Fragment>:
+                    </div>
+                  </div>)}
+                {!gameStatus && (
+                  <ResultsGame correctList={correctList} errorList={errorList} onClickHandlerNewGame={onClickHandlerNewGame} />
+                )}
+              </div>
+              <button className='game-sprint__button-close'>
+                <i className="material-icons sprint-body-game__icon">close</i>
+              </button>
+            </React.Fragment> :
 
-          <Loader />
-      }
-    </div>
+            <Loader />
+        }
+      </div>
     </>
   )
 };
 
-export {GameSprint};
+export { GameSprint };
 
 interface TimerProps {
   gameStatus: boolean,
 }
 
-const Timer: React.FC<TimerProps> = ({gameStatus}) => {
+const Timer: React.FC<TimerProps> = ({ gameStatus }) => {
   const timerProps = {
     isPlaying: gameStatus,
     size: 100,
@@ -240,7 +238,7 @@ const Timer: React.FC<TimerProps> = ({gameStatus}) => {
           true, 0
         ]}
       >
-        {({elapsedTime}) =>
+        {({ elapsedTime }) =>
           renderTime("sec", getTimeSeconds(elapsedTime))
         }
       </CountdownCircleTimer>)}
