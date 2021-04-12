@@ -8,20 +8,6 @@ import { Crumbs } from "../../../common/navigation/crumbs";
 import { ResultsGame } from '../resultsGame';
 import { connect } from 'react-redux';
 
-/*
-const getData = async (url: string): Promise<WordsProps[]> => {
-  const res = await fetch(url);
-
-  if (!res.ok) {
-    throw new Error(`Could not fetch ${url}, received ${res.status}`);
-  }
-
-  return await res.json();
-};*/
-
-//const urls: Array<string> = [];
-//const WORDS_GROUP: WordsProps[][] = [];
-//let WORDS_GAME: WordsProps[] = [];
 let WORDS_GROUP_NEW : WordsProps[];
 let WORDS_GAME_NEW : WordsProps[];
 
@@ -32,8 +18,8 @@ let round: number = 0;
 let series: number = 0;
 let seriesMax: number = 0;
 
-let correctList: WordsProps[]= [];
-let errorList: WordsProps[]= [];
+let correctList: WordsProps[] = [];
+let errorList: WordsProps[] = [];
 
 interface GameSprintProps {
   words: WordsProps[],
@@ -82,35 +68,6 @@ const SprintRedax: React.FC<GameSprintProps> = ({words, hardWords, group, page, 
     }
   }, [words])
 
-  /*
-  useEffect(() => {
-    console.log(WORDS_GROUP_NEW);
-    WORDS_GROUP.length = 0;
-    urls.length = 0;
-    for (let j = 0; j < 30; j += 1) {
-      urls.push(`${urlBackend}words?group=${group}&page=${j}`)
-    }
-    let chain = Promise.resolve();
-    urls.forEach((url) => {
-      chain = chain
-        .then(() => getData(url))
-        .then((res: WordsProps[]) => {
-          WORDS_GROUP.push(res);
-          if (WORDS_GROUP.length === 30) {
-            if (page !== undefined) {
-              WORDS_GAME = WORDS_GROUP[page];
-              setLoading(false)
-            } else {
-              WORDS_GAME = WORDS_GROUP.flat();
-              setLoading(false)
-            }
-            setWord(WORDS_GAME[indexWord!].word);
-            setWordTranslate(WORDS_GAME[indexTranslate!].wordTranslate);
-          }
-        });
-    });
-  }, [group, page]);*/
-
   useEffect(() => {
     const timerId = setInterval(() => {
       setGameStatus(false)
@@ -128,7 +85,7 @@ const SprintRedax: React.FC<GameSprintProps> = ({words, hardWords, group, page, 
   })
   const onKeyPressHandler = (event: KeyboardEvent) => {
     event.preventDefault();
-    if(gameStatus) {
+    if (gameStatus) {
       if (event.key === 'ArrowRight') onClickHandlerGame(true);
       else if (event.key === 'ArrowLeft') onClickHandlerGame(false);
     }
@@ -271,7 +228,7 @@ interface TimerProps {
   gameStatus: boolean,
 }
 
-const Timer: React.FC<TimerProps> = ({gameStatus}) => {
+const Timer: React.FC<TimerProps> = ({ gameStatus }) => {
   const timerProps = {
     isPlaying: gameStatus,
     size: 95,
