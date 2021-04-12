@@ -10,4 +10,13 @@
   background: url("../../../data/images/savannah-bg.jpg") no-repeat;
   background-position-y: bottom;
   background-position-x: center;
+
+  &__word {
+    position: absolute;
+    left: 50%;
+    top: 20%;
+    transform: translateX(-50%);
+    fill: #fff;
+    cursor: pointer;
+  }
 }
