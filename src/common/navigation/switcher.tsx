@@ -9,7 +9,7 @@ import {Team} from "../../components/team";
 import {Tutorial} from "../../components/tutorial";
 import {WordList} from "../../components/word-list";
 import { Games } from '../../components/games';
-import { GameSprint } from '../../components/games/sprint';
+import { Sprint } from '../../components/games/sprint';
 import { GameConstructor } from '../../components/games/constructor';
 
 
@@ -17,7 +17,6 @@ const Switcher: React.FC = () => {
 
   const isGroupExists: React.FC<any> = ({match}) => {
     const idGroup: number = Number(match.params.id);
-
     if (
       idGroup < 0
       || idGroup > 6
@@ -32,7 +31,6 @@ const Switcher: React.FC = () => {
   const isGroupPageExists: React.FC<any> = ({match}) => {
     const idGroup: number = Number(match.params.group);
     const idPage: number = Number(match.params.page);
-
     if (
       idGroup < 0
       || idGroup > 6
@@ -49,7 +47,6 @@ const Switcher: React.FC = () => {
       const path = `/tutorial/group${idGroup}`;
       return <Redirect to={path}/>
     }
-
     return <WordList group={idGroup} pageInitial={idPage}/>
   };
 
@@ -62,10 +59,14 @@ const Switcher: React.FC = () => {
 
       <Route path='/dictionary' component={Tutorial}/>
       <Route path='/statistics' component={Tutorial}/>
-      <Route path='/games/sprint:group/:page(page/\d+)?' render={({match}) => {
-        const group = Number(match.params.group) || 0;
-        const page = Number(match.params.page) || undefined;
-        return <GameSprint group={group} page={page}/>
+      <Route path='/games/sprint:group/page:page' render={({match}) => {
+        const group: number = Number(match.params.group);
+        const page: number = Number(match.params.page);
+        return <Sprint group={group-1} page={page-1}/>
+      } }/>
+      <Route path='/games/sprint:group' render={({match}) => {
+        const group: number = Number(match.params.group) || 0;
+        return <Sprint group={group-1}/>
       } }/>
       <Route path='/games/constructor:level' render={({match}) => {
         const group = match.params.level || 0;

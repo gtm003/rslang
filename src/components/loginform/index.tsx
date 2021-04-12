@@ -1,3 +1,3 @@
-import {LoginFormRedux} from "./loginform";
+import {LoginForm} from "./loginform";
 
-export {LoginFormRedux};
+export {LoginForm};

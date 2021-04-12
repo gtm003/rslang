@@ -1,3 +1,3 @@
-import {GameSprint} from "./sprint";
+import {Sprint} from "./sprint";
 
-export {GameSprint};
+export {Sprint};

@@ -23,7 +23,7 @@ interface SignUpProps {
 //     password: string,
 // }
 
-const SignUpForm: React.FC<SignUpProps> = ({ isSignUpOpen, handleSubmit, reset, error, toggleSignUpOpen, signUpUser, loginUser, setSignUpError }) => {
+const SignUpFormRedux: React.FC<SignUpProps> = ({ isSignUpOpen, handleSubmit, reset, error, toggleSignUpOpen, signUpUser, loginUser, setSignUpError }) => {
     const fetchData = async (values: any) => {
         const response = await fetch(`${urlBackend}users`, {
             method: 'POST',
@@ -109,10 +109,10 @@ const mapDispatchToProps = (dispatch: any) => ({
     }
 });
 
-const SignUpFormConnect = connect(mapStateToProps, mapDispatchToProps)(SignUpForm);
+const SignUpFormConnect = connect(mapStateToProps, mapDispatchToProps)(SignUpFormRedux);
 
-const SignUpFormRedux = reduxForm({
+const SignUpForm = reduxForm({
     form: 'signup'
 })(SignUpFormConnect);
 
-export {SignUpFormRedux};
+export {SignUpForm};
