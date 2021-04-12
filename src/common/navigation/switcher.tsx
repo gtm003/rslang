@@ -12,6 +12,7 @@ import { Games } from '../../components/games';
 import { GameSprint } from '../../components/games/sprint';
 import { GameConstructor } from '../../components/games/constructor';
 import { Savannah } from '../../components/games/savannah';
+import { AudioChallenge } from '../../components/games/audio-challenge';
 
 const Switcher: React.FC = () => {
 
@@ -47,7 +48,7 @@ const Switcher: React.FC = () => {
       const path = `/tutorial/group${idGroup}`;
       return <Redirect to={path} />
     }
-    return <WordList group={idGroup} pageInitial={idPage}/>
+    return <WordList group={idGroup} pageInitial={idPage} />
   };
 
   return (
@@ -57,18 +58,18 @@ const Switcher: React.FC = () => {
       <Route exact path='/tutorial' component={Tutorial} />
       <Route exact path='/games' component={Games} />
 
-      <Route path='/dictionary' component={Tutorial}/>
-      <Route path='/statistics' component={Tutorial}/>
-      <Route path='/games/sprint:group/page:page' render={({match}) => {
+      <Route path='/dictionary' component={Tutorial} />
+      <Route path='/statistics' component={Tutorial} />
+      <Route path='/games/sprint:group/page:page' render={({ match }) => {
         const group: number = Number(match.params.group);
         const page: number = Number(match.params.page);
-        return <GameSprint group={group-1} page={page-1}/>
-      } }/>
-      <Route path='/games/sprint:group' render={({match}) => {
+        return <GameSprint group={group - 1} page={page - 1} />
+      }} />
+      <Route path='/games/sprint:group' render={({ match }) => {
         const group: number = Number(match.params.group) || 0;
-        return <GameSprint group={group-1}/>
-      } }/>
-      <Route path='/games/constructor:level' render={({match}) => {
+        return <GameSprint group={group - 1} />
+      }} />
+      <Route path='/games/constructor:level' render={({ match }) => {
         const group = match.params.level || 0;
         return <GameConstructor group={group} page={5} />
       }} />
@@ -80,6 +81,15 @@ const Switcher: React.FC = () => {
       <Route path='/games/savannah:group' render={({ match }) => {
         const group = Number(match.params.group) || 0;
         return <Savannah group={group - 1} />
+      }} />
+      <Route path='/games/audio:group/page:page' render={({ match }) => {
+        const group = Number(match.params.group);
+        const page = Number(match.params.page);
+        return <AudioChallenge group={group - 1} page={page - 1} />
+      }} />
+      <Route path='/games/audio:group' render={({ match }) => {
+        const group = Number(match.params.group) || 0;
+        return <AudioChallenge group={group - 1} />
       }} />
       <Route path='/tutorial/group:group/page:page'
         component={(...props: Array<object>) => isGroupPageExists(props[0])} />
