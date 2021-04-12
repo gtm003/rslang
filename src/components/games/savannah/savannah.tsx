@@ -7,6 +7,7 @@ import { ResultsGame } from '../resultsGame/resultsGame';
 
 const savannahHeight = window.innerHeight;
 const BG_IMAGE_HEIGHT = 4500;
+const MAX_BG_POSITION = 3550;
 let necessaryWords: WordsProps[];
 let correctAnswers: WordsProps[] = [];
 let wrongAnswers: WordsProps[] = [];
@@ -27,9 +28,9 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
 
   useEffect(() => {
     page > -1 ?
-    necessaryWords = words.slice((Number(group) * 600), ((Number(group)) * 600) + ((page + 1) * 20)) :
-    necessaryWords = words.slice((Number(group) * 600), ((Number(group) + 1) * 600));
-    
+      necessaryWords = words.slice((Number(group) * 600), ((Number(group)) * 600) + ((page + 1) * 20)) :
+      necessaryWords = words.slice((Number(group) * 600), ((Number(group) + 1) * 600));
+
     setGameWords(necessaryWords);
     setTranslations(necessaryWords);
 
@@ -57,8 +58,8 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
 
   const restartGame = () => {
     page > -1 ?
-    necessaryWords = words.slice((Number(group) * 600), ((Number(group)) * 600) + ((page + 1) * 20)) :
-    necessaryWords = words.slice((Number(group) * 600), ((Number(group) + 1) * 600));
+      necessaryWords = words.slice((Number(group) * 600), ((Number(group)) * 600) + ((page + 1) * 20)) :
+      necessaryWords = words.slice((Number(group) * 600), ((Number(group) + 1) * 600));
     moveBackground(0, 300);
     bgPosition = 0;
     setGameWords(necessaryWords);
@@ -72,12 +73,12 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
   };
 
   const moveBackground = (bgPosition: number, duration: number): void => {
-      savannah.current?.animate([
-        { backgroundPosition: `left 0 bottom ${bgPosition}px` }
-      ], {
-        duration: duration,
-        fill: "forwards"
-      });
+    savannah.current?.animate([
+      { backgroundPosition: `left 0 bottom ${bgPosition}px` }
+    ], {
+      duration: duration,
+      fill: "forwards"
+    });
   };
 
   const moveWord = (): void => {
@@ -97,15 +98,15 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
 
   const highlightWords = (wordTranslations: NodeListOf<HTMLLIElement>, wordTranslation: WordsProps): void => {
     wordTranslations?.forEach((translation: HTMLLIElement) => {
-      translation.textContent?.match(/[а-я-]/gi)?.join('') === wordTranslation.wordTranslate.replace(/\s/g, '') ?
+      translation.textContent?.match(/[а-я-,]/gi)?.join('') === wordTranslation.wordTranslate.replace(/\s/g, '') ?
         translation.classList.add("word-correct") :
         translation.classList.add("word-wrong");
     });
   };
 
-  const removeWordsHighliting = (wordTranslations: NodeListOf<HTMLLIElement>, wordTranslation: WordsProps): void => {
+  const removeWordsHighlighting = (wordTranslations: NodeListOf<HTMLLIElement>, wordTranslation: WordsProps): void => {
     wordTranslations?.forEach((translation) => {
-      translation.textContent?.match(/[а-я]/gi)?.join('') === wordTranslation.wordTranslate ?
+      translation.textContent?.match(/[а-я-,]/gi)?.join('') === wordTranslation.wordTranslate.replace(/\s/g, '') ?
         translation.classList.remove("word-correct") :
         translation.classList.remove("word-wrong");
     })
@@ -127,14 +128,13 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
         wrongAnswer = translate !== wordTranslation.wordTranslate;
       } else {
         const evtTarget = translate?.target as HTMLElement;
-
-        wrongAnswer = translate === undefined || evtTarget.innerText.match(/[а-я-]/gi)?.join('') !== wordTranslation.wordTranslate;
+        wrongAnswer = translate === undefined || evtTarget.innerText.match(/[а-я-,]/gi)?.join('') !== wordTranslation.wordTranslate.replace(/\s/g, '');
       };
 
       if (!wrongAnswer) {
         bgPosition += bgShift;
 
-        if (bgPosition <= BG_IMAGE_HEIGHT - savannahHeight) {
+        if (bgPosition <= BG_IMAGE_HEIGHT - savannahHeight && bgPosition <= MAX_BG_POSITION) {
           moveBackground(-bgPosition, 800);
         }
 
@@ -156,7 +156,7 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
         const updatedWords = gameWords.filter((word) => word.word !== wordTranslation.word);
 
         setGameWords(updatedWords);
-        removeWordsHighliting(wordTranslations, wordTranslation);
+        removeWordsHighlighting(wordTranslations, wordTranslation);
         addFlowAnimation();
       }, 800);
     };
