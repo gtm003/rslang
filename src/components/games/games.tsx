@@ -21,19 +21,17 @@ const Games: React.FC = () => {
           {
             titleGames.map((item, index) => {
               return (
-                <div key={index} className={`game game--${index + 1}`}>
-                  <div className='game__head'>
+                <NavLink to={`/games/${item.id}${level + 1}`} key = {item.id} className={`game game--${index + 1}`}>
+                  <div className='game__head' >
                     <div className='game__title'>{item.name}</div>
-                    <NavLink to={`/games/${item.id}${level + 1}`} key = {item.id}>
                       <div className='game__icon'>
                         <img src={item.iconUrl} alt={item.iconUrl} width='80%' />
                       </div>
-                    </NavLink>
                   </div>
                   <div className='game__img'>
                     <img src={item.imgUrl} alt={item.imgUrl} height='100%' width='100%' />
                   </div>
-                </div>
+                </NavLink>
               )
             })
           }

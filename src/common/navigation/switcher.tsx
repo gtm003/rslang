@@ -9,7 +9,7 @@ import { Team } from "../../components/team";
 import { Tutorial } from "../../components/tutorial";
 import { WordList } from "../../components/word-list";
 import { Games } from '../../components/games';
-import { GameSprint } from '../../components/games/sprint';
+import { Sprint } from '../../components/games/sprint';
 import { GameConstructor } from '../../components/games/constructor';
 import { Savannah } from '../../components/games/savannah';
 import { AudioChallenge } from '../../components/games/audio-challenge';
@@ -63,13 +63,13 @@ const Switcher: React.FC = () => {
       <Route path='/games/sprint:group/page:page' render={({ match }) => {
         const group: number = Number(match.params.group);
         const page: number = Number(match.params.page);
-        return <GameSprint group={group - 1} page={page - 1} />
-      }} />
-      <Route path='/games/sprint:group' render={({ match }) => {
+        return <Sprint group={group-1} page={page-1}/>
+      } }/>
+      <Route path='/games/sprint:group' render={({match}) => {
         const group: number = Number(match.params.group) || 0;
-        return <GameSprint group={group - 1} />
-      }} />
-      <Route path='/games/constructor:level' render={({ match }) => {
+        return <Sprint group={group-1}/>
+      } }/>
+      <Route path='/games/constructor:level' render={({match}) => {
         const group = match.params.level || 0;
         return <GameConstructor group={group} page={5} />
       }} />
