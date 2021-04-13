@@ -120,6 +120,8 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
         wrongAnswer = translate === undefined || evtTarget.innerText.match(/[а-я-,]/gi)?.join('') !== wordTranslation.wordTranslate.replace(/\s/g, '');
       };
 
+      setIsAnswered(true);
+
       const wordTranslations = document.querySelectorAll<HTMLLIElement>(".minigames__translation-item");
       highlightWords(wordTranslations, wordTranslation);
 
@@ -215,6 +217,7 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
               </div>
             </div>
             <div className="audio-challenge__word no-opacity" onClick={() => playAudio(translationWord.audio)} ref={word}>
+              {!isAnswered ? 
               <svg className="audio-challenge__sound-waves vawes-resizing" width="107" height="107" viewBox="0 0 107 107" fill="none" ref={soundWaves} xmlns="http://www.w3.org/2000/svg">
                 <g clipPath="url(#clip0)">
                   <path d="M2.05813 45.3298C0.920743 45.3298 0 46.2506 0 47.3868V57.6751C0 58.8125 0.920743 59.7332 2.05813 59.7332C3.19434 59.7332 4.11509 58.8125 4.11509 57.6751V47.3868C4.11509 46.2506 3.19434 45.3298 2.05813 45.3298V45.3298Z" fill="#E3E3E3" fillOpacity="0.9" />
@@ -235,7 +238,9 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
                   </clipPath>
                 </defs>
               </svg>
-
+              :
+              <img src={urlBackend + translationWord.image} alt="word illustration"/>
+            }
             </div>
             <ul className="minigames__translation-list">
               {
