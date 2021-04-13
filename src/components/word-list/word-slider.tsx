@@ -102,7 +102,7 @@ const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isTranslate, a
 
         ((page < 0) && <img src={pathImg} alt='level english'/>) ||
         (isMessage && <p className="message">The page is deleted</p>) ||
-        ((words.length) ?
+        ((words.length && getWords.length) ?
           <Carousel dynamicHeight={false}>
             {words.map((item: WordsProps) => {
               const isHard: boolean = Boolean(hardWords.length) && hardWords.some((word: any) => word.id === item.id);
