@@ -2,23 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { urlBackend } from '../../../data';
 import { WordsProps, GameProps } from '../../../common/ts/interfaces';
 import { getRandomOderArr, playAnswer } from '../../../data/utils';
-import { AudioWord } from '../audioWords/audioWords';
 import { Loader } from '../../loader';
 import { ResultsGame } from '../resultsGame';
-import { FullScreen } from '../fullScreen/fullScreen';
+import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { Lives } from '../savannah/lives/lives';
 
-const getData = async (url: string): Promise<WordsProps[]> => {
-  const res = await fetch(url);
-
-  if (!res.ok) {
-    throw new Error(`Could not fetch ${url}, received ${res.status}`);
-  }
-
-  return await res.json();
-};
-
-const urls: Array<string> = [];
 const WORDS_GROUP: WordsProps[][] = [];
 let round: number = 0;
 
@@ -31,7 +20,7 @@ const CONTROL_TEXT = [
     icon: 'sentiment_satisfied'
   }
 ];
-const quantityStars: number = 5;
+const quantityLifes: number = 5;
 
 let WORDS_GAME: WordsProps[] = [];
 let indexesWord = getRandomOderArr(20);
@@ -66,10 +55,10 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
   const [word, setWord] = useState<WordsProps>();
   const [solved, setSolved] = useState<boolean>(false);
   const [mute, setMute] = useState<boolean>(false);
-  const [stars, setStars] = useState<boolean[]>(new Array(quantityStars).fill(true));
   const [letters, setLetters] = useState<string[]>([]);
   const [indexLetter, setIndexLetter] = useState<number>(0);
   const [mixedOder, setMixedOder] = useState<number[]>([]);
+  const [fullscreen, setFullscreen] = useState<boolean>(false);
 
     // WORDS_GROUP - массив со словами, используемый в игре (или сложные слова и группа слов)
     const getWordsGroup = () => {
@@ -90,43 +79,11 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
       WORDS_GAME_NEW = getWordsGame();
       indexesWord = getRandomOderArr(WORDS_GAME_NEW.length);
       indexWord = indexesWord.pop();
-      //indexTranslate = getRandomBoolean() ? indexWord : getRandomInteger(WORDS_GAME_NEW.length);
       setWord(WORDS_GAME_NEW[indexWord!]);
       setLetters(getLetters(WORDS_GAME_NEW[indexWord!]));
       setMixedOder(getRandomOderArr(WORDS_GAME_NEW[indexWord!].word.length));
-      //setWord(WORDS_GAME_NEW[indexWord!].word);
-      //setWordTranslate(WORDS_GAME_NEW[indexTranslate!].wordTranslate);
     }
   }, [words]);
-  /*
-  useEffect(() => {
-    WORDS_GROUP.length = 0;
-    urls.length = 0;
-    for (let j = 0; j < 30; j += 1) {
-      urls.push(`${urlBackend}words?group=${group}&page=${j}`)
-    }
-    let chain = Promise.resolve();
-    urls.forEach((url) => {
-      chain = chain
-        .then(() => getData(url))
-        .then((res: WordsProps[]) => {
-          WORDS_GROUP.push(res);
-          if (WORDS_GROUP.length === 30) {
-            if (page !== undefined) {
-              WORDS_GAME = WORDS_GROUP[page];
-              //setLoading(false)
-            } else {
-              WORDS_GAME = WORDS_GROUP.flat();
-              console.log(WORDS_GAME);
-              //setLoading(false);
-            }
-            setWord(WORDS_GAME[indexWord!]);
-            setLetters(getLetters(WORDS_GAME[indexWord!]));
-            setMixedOder(getRandomOderArr(WORDS_GAME[indexWord!].word.length));
-          }
-        });
-    });
-  }, []);*/
 
   const getLetters = (word: WordsProps): (string[]) => {
     return word.word.split('');
@@ -149,7 +106,8 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
         }
       }
     } else {
-
+      setSolved(true);
+      setIndexLetter(letters.length);
     }
   }
 
@@ -170,26 +128,24 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
     setMute(!mute);
   }
 
-  const onClickHandlerGame = (letter: string) => {
+  const onClickHandlerGame = (elem: any, letter: string) => {
     const letters = getLetters(word!);
     if (letters[indexLetter] === letter) {
+      elem.classList.add('letter--solved');
       playAnswer(true, mute);
       setIndexLetter(indexLetter + 1);
       if (indexLetter === letters.length - 1) {
-        correctList.push(word!);
+        if (error.currentWord ) errorList.push(word!)
+        else correctList.push(word!)
         playWord(word!.audio)
         setSolved(true);
       }
     }
     else {
       playAnswer(false, mute);
+      elem.classList.add('letter--error');
       error.totalErrors += 1;
-      const newStars = new Array(quantityStars).fill(true);
-      newStars.fill(false, quantityStars - error.totalErrors);
-      setStars(newStars);
-      if (error.totalErrors >= quantityStars) {
-        setGameStatus(false);
-      }
+      error.currentWord = true;
     }
   }
 
@@ -198,7 +154,6 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
     indexWord = indexesWord.pop();
     setGameStatus(true);
     getNewWord(indexWord!);
-    setStars(new Array(quantityStars).fill(true));
     error.totalErrors = 0;
     correctList = [];
     errorList = [];
@@ -218,6 +173,18 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
     audio.play();
   };
 
+  const onToggleHandlerFullScreen = () => {
+    const sprint = document.querySelector('.constructor');
+    setFullscreen(!fullscreen);
+    if (!document.fullscreenElement) {
+      sprint!.requestFullscreen().catch(err => {
+        alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+      });
+    } else {
+      document.exitFullscreen();
+    }
+  }
+
   /*
 
 
@@ -231,27 +198,21 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
   };*/
 
   return (
-    <div className='game-constructor'>
-      {word ?
-        <React.Fragment>
-          <div className='game-constructor__stars'>
-            {stars.map((item, index) => {
-              return item ?
-                <i className="material-icons star star--yellow" key={index}>star</i> :
-                <i className="material-icons star star--pink" key={index}>star</i>
-            })
-            }
-          </div>
-          <div className='game-constructor__body'>
+    <div className='constructor'>
+      { word ? (<React.Fragment>
+        <div className='constructor__header'>
+          <i className="material-icons constructor-header__icons constructor-header__icons--sound"
+            onClick={() => onToggleHandlerMute()}>{mute ? 'notifications_off' : 'notifications'}</i>
+          <i className="material-icons constructor-header__icons constructor-header__icons--fullscreen"
+            onClick={() => onToggleHandlerFullScreen()}>{fullscreen ? 'fullscreen_exit' : 'fullscreen'}</i>
+          <Lives lives = {quantityLifes - error.totalErrors} />
+          <NavLink to='/games'>
+            <i className="material-icons constructor-header__icons constructor-header__icons--close">close</i>
+          </NavLink>
+        </div>
+          <div className='constructor__body'>
             {gameStatus ?
               (<React.Fragment>
-                <div className='constructor-body-game__header'>
-                  <AudioWord src={word.audio} />
-                  <h3>{correctList.length * 10}</h3>
-                  <span className='icon-container' onClick={() => onToggleHandlerMute()}>
-                    {mute ? <i className="material-icons">notifications_off</i> : <i className="material-icons">notifications</i>}
-                  </span>
-                </div>
                 <p className='constructor-body-game__translate'>
                   {word.wordTranslate}
                 </p>
@@ -276,10 +237,7 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
               </React.Fragment>) :
               <ResultsGame correctList={correctList} errorList={errorList} onClickHandlerNewGame={onClickHandlerNewGame} />}
           </div>
-          <button className='game-constructor__button-close'>
-            <i className="material-icons">close</i>
-          </button>
-        </React.Fragment> :
+        </React.Fragment>) :
         <Loader />}
     </div>
   )
@@ -300,25 +258,19 @@ const WordCard: React.FC<WordCardProps> = ({ word }) => {
 interface MixedLettersProps {
   mixedOder: number[];
   letters: string[];
-  onClickHandlerGame: (letter: string) => void;
+  onClickHandlerGame: (elem: any, letter: string) => void;
   indexLetter: number;
 }
 const MixedLetters: React.FC<MixedLettersProps> = ({ mixedOder, letters, onClickHandlerGame, indexLetter }) => {
   return (
     <div className='constructor-body-game__letters  constructor-body-game__letters--question'>
-      {
-        mixedOder.map((indexMixed, index) => {
-          return indexMixed >= indexLetter ?
-            (<div className='letter letter--question' key={index}
-              onClick={() => onClickHandlerGame(letters[indexMixed])}>
-              {letters[indexMixed]}
-            </div>) :
-            (<div className='letter letter--solved' key={index}>
-              {letters[indexMixed]}
-            </div>)
+      { mixedOder.map((indexMixed, index) => {
+        return <div className='letter letter--question' key={index}
+          onClick={(event) => onClickHandlerGame(event.target, letters[indexMixed])}>{letters[indexMixed]}</div>
         })
       }
-    </div>)
+    </div>
+  )
 }
 
 interface WordInEnglishProps {

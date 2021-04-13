@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { WordsProps } from '../../../common/ts/interfaces';
 import { getRandomOderArr, getRandomBoolean, getRandomInteger, playAnswer } from '../../../data/utils';
 import { Loader } from '../../loader';
-import { Crumbs } from "../../../common/navigation/crumbs";
 import { ResultsGame } from '../resultsGame';
 import { connect } from 'react-redux';
 
@@ -48,7 +47,6 @@ const SprintRedux: React.FC<GameSprintProps> = ({words, hardWords, group, page, 
   const [word, setWord] = useState<string>();
   const [wordTranslate, setWordTranslate] = useState<string>();
   const [mute, setMute] = useState<boolean>(false);
-  const location = useLocation();
   const colorsBase: string[] = ['#51BFA6', '#184656', '#F7CC7E', '#F57359'];
   const colorsNone: string = "rgba(255,255,255,0.37)";
   const [colors, setColors] = useState<string[]>(new Array(4).fill(colorsNone));
