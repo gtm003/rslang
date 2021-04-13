@@ -10,7 +10,7 @@ import { Tutorial } from "../../components/tutorial";
 import { WordList } from "../../components/word-list";
 import { Games } from '../../components/games';
 import { Sprint } from '../../components/games/sprint';
-import { GameConstructor } from '../../components/games/constructor';
+import { Constructor } from '../../components/games/constructor';
 import { Savannah } from '../../components/games/savannah';
 
 const Switcher: React.FC = () => {
@@ -68,10 +68,15 @@ const Switcher: React.FC = () => {
         const group: number = Number(match.params.group) || 0;
         return <Sprint group={group-1}/>
       } }/>
-      <Route path='/games/constructor:level' render={({match}) => {
-        const group = match.params.level || 0;
-        return <GameConstructor group={group} page={5} />
-      }} />
+      <Route path='/games/constructor:group/page:page' render={({match}) => {
+        const group: number = Number(match.params.group);
+        const page: number = Number(match.params.page);
+        return <Constructor group={group-1} page={page-1}/>
+      } }/>
+      <Route path='/games/constructor:group' render={({match}) => {
+        const group: number = Number(match.params.group) || 0;
+        return <Constructor group={group-1}/>
+      } }/>
       <Route path='/games/savannah:group/page:page' render={({ match }) => {
         const group = Number(match.params.group);
         const page = Number(match.params.page);

@@ -6,6 +6,7 @@ import { AudioWord } from '../audioWords/audioWords';
 import { Loader } from '../../loader';
 import { ResultsGame } from '../resultsGame';
 import { FullScreen } from '../fullScreen/fullScreen';
+import { connect } from 'react-redux';
 
 const getData = async (url: string): Promise<WordsProps[]> => {
   const res = await fetch(url);
@@ -40,15 +41,25 @@ let errorList: WordsProps[] = [];
 let error = {
   currentWord: false,
   totalErrors: 0,
-}
+};
+
+let WORDS_GROUP_NEW : WordsProps[];
+let WORDS_GAME_NEW : WordsProps[];
 //let indexLetter: number = 0;
 
 
 /*
 let round: number = 0;
 */
+interface GameConstructorProps {
+  words: WordsProps[],
+  hardWords: WordsProps[],
+  group?: number,
+  page?: number,
+  hard?: string | undefined,
+}
 
-const GameConstructor: React.FC<GameProps> = ({ group, page }) => {
+const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, group, page, hard}) => {
   //const [score, setScore] = useState<number>(0);
   const [gameStatus, setGameStatus] = useState<boolean>(true);
   //const [loading, setLoading] = useState<boolean>(true);
@@ -60,6 +71,34 @@ const GameConstructor: React.FC<GameProps> = ({ group, page }) => {
   const [indexLetter, setIndexLetter] = useState<number>(0);
   const [mixedOder, setMixedOder] = useState<number[]>([]);
 
+    // WORDS_GROUP - массив со словами, используемый в игре (или сложные слова и группа слов)
+    const getWordsGroup = () => {
+      if (hard) return hardWords;
+      return words.filter(item => item.group === group);
+    }
+  
+    // WORDS_GAME - массив со словами, используемый в игре с учетом номера страницы (сложные слова или игра из меню 
+    // соответствует массиву WORDS_GROUP - иначе конкретная страница)
+    const getWordsGame = () => {
+      if (page) return words.filter(item => item.page === page - round);
+      return WORDS_GROUP_NEW;
+    }
+
+  useEffect(() => {
+    if(words.length) {
+      WORDS_GROUP_NEW = getWordsGroup();
+      WORDS_GAME_NEW = getWordsGame();
+      indexesWord = getRandomOderArr(WORDS_GAME_NEW.length);
+      indexWord = indexesWord.pop();
+      //indexTranslate = getRandomBoolean() ? indexWord : getRandomInteger(WORDS_GAME_NEW.length);
+      setWord(WORDS_GAME_NEW[indexWord!]);
+      setLetters(getLetters(WORDS_GAME_NEW[indexWord!]));
+      setMixedOder(getRandomOderArr(WORDS_GAME_NEW[indexWord!].word.length));
+      //setWord(WORDS_GAME_NEW[indexWord!].word);
+      //setWordTranslate(WORDS_GAME_NEW[indexTranslate!].wordTranslate);
+    }
+  }, [words]);
+  /*
   useEffect(() => {
     WORDS_GROUP.length = 0;
     urls.length = 0;
@@ -87,7 +126,7 @@ const GameConstructor: React.FC<GameProps> = ({ group, page }) => {
           }
         });
     });
-  }, []);
+  }, []);*/
 
   const getLetters = (word: WordsProps): (string[]) => {
     return word.word.split('');
@@ -102,7 +141,7 @@ const GameConstructor: React.FC<GameProps> = ({ group, page }) => {
         indexesWord = getRandomOderArr(20);
         if (page! > round) {
           round += 1;
-          WORDS_GAME = WORDS_GROUP[page! - round];
+          WORDS_GAME_NEW = getWordsGame();
           indexWord = indexesWord.pop();
           getNewWord(indexWord!);
         } else {
@@ -166,9 +205,9 @@ const GameConstructor: React.FC<GameProps> = ({ group, page }) => {
   }
 
   const getNewWord = (index: number) => {
-    setWord(WORDS_GAME[index]);
-    setLetters(getLetters(WORDS_GAME[index]));
-    setMixedOder(getRandomOderArr(WORDS_GAME[index].word.length));
+    setWord(WORDS_GAME_NEW[index]);
+    setLetters(getLetters(WORDS_GAME_NEW[index]));
+    setMixedOder(getRandomOderArr(WORDS_GAME_NEW[index].word.length));
     setIndexLetter(0);
     setSolved(false);
   }
@@ -246,7 +285,6 @@ const GameConstructor: React.FC<GameProps> = ({ group, page }) => {
   )
 };
 
-export { GameConstructor };
 interface WordCardProps {
   word: WordsProps;
 }
@@ -300,3 +338,11 @@ const WordInEnglish: React.FC<WordInEnglishProps> = ({ letters, indexLetter }) =
     </div>)
 }
 
+const mapStateToProps = (state: any) => ({
+  words: state.data.words,
+  hardWords: state.data.hardWords,
+});
+
+const Constructor = connect(mapStateToProps)(ConstructorRedux);
+
+export { Constructor };

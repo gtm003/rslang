@@ -1,11 +1,11 @@
 .game-constructor {
-  background: $green-color;
+  background: url('../../../data/images/bg-ownGame.png') 100%/cover no-repeat;
+  min-height: calc(100vh - 224px);
   position: relative;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   padding: 1rem;
-  margin-bottom: 2rem;
   &__stars {
     margin-left: 1rem;
 
