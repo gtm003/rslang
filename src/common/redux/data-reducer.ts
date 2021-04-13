@@ -1,5 +1,5 @@
 import {WordsProps} from "../ts/interfaces";
-import {urlBackend} from "../../data";
+import {setData} from "../../data";
 
 interface InitialState {
   words: [];
@@ -40,20 +40,24 @@ const reducer = (state: InitialState = initialState, action: any) => {
         // learningWords: learningWords,
       };
     case `ADD_HADR_WORD`:
-
+      setData(action.payload, 'hardWord', true);
       return {
         ...state,
         hardWords: [...state.hardWords, action.payload],
       };
     case `REMOVE_HARD_WORD`:
-      const updatedHardWords = state.hardWords.filter((word: WordsProps) => word.id !== action.payload);
+      const updatedHardWords = state.hardWords.filter((word: WordsProps) => {
+        if (word.id === action.payload) setData(word, 'hardWord', false);
+         return word.id !== action.payload
+      });
 
       return {
         ...state,
         hardWords: updatedHardWords,
       };
     case `ADD_DELETED_WORD`:
-      console.log(action.payload);
+      setData(action.payload, 'deletedWord', true);
+
       return {
         ...state,
         deletedWords: [...state.deletedWords, action.payload],
