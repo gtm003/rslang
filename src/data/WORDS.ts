@@ -2,8 +2,8 @@ import { WordsProps } from "../common/ts/interfaces";
 import {urlBackend} from "./index";
 
 const getDataPage = async (
-  group: number,
-  page: number
+  group: string | number,
+  page?: number
 ): Promise<WordsProps[]> => {
   const url = `${urlBackend}words?group=${group}&page=${page}`;
 

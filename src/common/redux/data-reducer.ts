@@ -73,4 +73,4 @@ const reducer = (state: InitialState = initialState, action: any) => {
   }
 };
 
-export {reducer};
+export { reducer };
