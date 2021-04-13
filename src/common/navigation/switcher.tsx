@@ -12,8 +12,7 @@ import { Games } from '../../components/games';
 import { GameSprint } from '../../components/games/sprint';
 import { GameConstructor } from '../../components/games/constructor';
 import { Dictionary } from '../../components/dictionary';
-import { HardWords } from '../../components/hard-words';
-import { HardWordsList } from '../../components/hard-words-list';
+import { DictionarySection } from '../../components/dictionary-section';
 
 
 const Switcher: React.FC = () => {
@@ -61,8 +60,12 @@ const Switcher: React.FC = () => {
       <Route exact path='/games' component={Games}/>
 
       <Route exact path='/dictionary' component={Dictionary}/>
-      <Route exact path='/dictionary/hard' component={HardWords}/>
-      <Route path='/dictionary/hard/group1' component={() => <HardWordsList group={1}/>}/>
+      <Route exact path='/dictionary/hard' component={() => <DictionarySection wordsType={'hard'}/>}/>
+      <Route path='/dictionary/hard/group1' component={() => <WordList group={1} pageInitial={0} isDictionary wordsType='hard'/>}/>
+
+      <Route exact path='/dictionary/deleted' component={() => <DictionarySection wordsType={'deleted'}/>}/>
+      <Route path='/dictionary/deleted/group1' component={() => <WordList group={1} pageInitial={0} isDictionary wordsType='deleted'/>}/>
+      
 
       <Route path='/statistics' component={Tutorial}/>
       <Route path='/games/sprint:group/page:page' render={({match}) => {
@@ -78,9 +81,11 @@ const Switcher: React.FC = () => {
         const group = match.params.level || 0;
         return <GameConstructor group={group} page={5}/>
       } }/>
+
       <Route path='/tutorial/group:group/page:page'
              component={(...props: Array<object>) => isGroupPageExists(props[0])}/>
       <Route path='/tutorial/group:id' component={(...props: Array<object>) => isGroupExists(props[0])}/>
+
       <Route />
       <Redirect path='*' to='/'/>
     </Switch>

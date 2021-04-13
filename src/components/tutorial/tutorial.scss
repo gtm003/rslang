@@ -75,7 +75,6 @@
 }
 
 .group {
-
   &__title {
     font-size: 70px;
     line-height: 85px;
@@ -85,6 +84,13 @@
   &__description {
     font-size: 25px;
     font-weight: bold;
+  }
+
+  &__word-count {
+    margin-left: auto;
+    font-size: 40px;
+    line-height: 50px;
+    color: red;
   }
 
   &--0 {
@@ -113,6 +119,8 @@
 }
 
 .group-btn {
+  display: flex;
+  align-items: baseline;
   width: 420px;
   padding: 0 28px;
   margin: 10px;

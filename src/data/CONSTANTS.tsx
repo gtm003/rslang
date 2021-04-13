@@ -107,5 +107,12 @@ const namesPath: any = {
   team: 'О команде'
 }
 
+const DICTIONARY_TITLES: any = {
+  'hard': 'Сложные',
+  'deleted': 'Удаленные',
+  'learning': 'Изучаемые'
+};
 
-export {githubMembers, githubSrc, urlBackend, navLink, titleGroup, descriptionGroup, menuLinks, dictionaryLinks, titleGames, namesPath};
+const WORDS_ON_PAGE = 20;
+
+export {githubMembers, githubSrc, urlBackend, navLink, titleGroup, descriptionGroup, menuLinks, dictionaryLinks, titleGames, namesPath, DICTIONARY_TITLES, WORDS_ON_PAGE};
