@@ -18,7 +18,6 @@ const setData = (word: any, prop: any, value: boolean) => {
   word[prop] = value;
   const {id: newId, ...rest} = word;
   const newWord = {_id: newId, ...rest};
-
   if (newWord) {
     const setWordsToBack = async (newWord: any) => {
       console.log(newWord);
@@ -28,7 +27,7 @@ const setData = (word: any, prop: any, value: boolean) => {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({words: newWord})
+        body: JSON.stringify(newWord)
       });
     };
     setWordsToBack(newWord);
