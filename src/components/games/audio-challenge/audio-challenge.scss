@@ -19,11 +19,20 @@
 
   &__word {
     position: absolute;
+    top: 26.1%;
     left: 50%;
-    top: 27.1%;
     transform: translateX(-50%);
     fill: #fff;
     cursor: pointer;
+  }
+
+  &__button {
+    position: absolute;
+    top: 58.9%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 1px solid #846686;
+    color: #846686;
   }
 }
 

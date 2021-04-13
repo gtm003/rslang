@@ -1,3 +1,11 @@
+.word-correct {
+  background-color: rgba(0, 191, 151, 0.55);
+}
+
+.word-wrong {
+  background-color: rgba(207, 35, 0, 0.55);
+}
+
 .minigames {
   background: url("../../data/images/savannah-bg.jpg") no-repeat;
   background-position-y: bottom;
@@ -62,6 +70,10 @@
     vertical-align: top;
     color: #fff;
 
+    &:hover {
+      outline: 1px solid rgba(196, 196, 196, 0.5);
+    }
+
     & > * {
       cursor: pointer;
     }
@@ -76,6 +88,7 @@
 
     & > div {
       width: 370px;
+      height: 442px;
       background-color: #fff;
       border-radius: 5px;
     }
