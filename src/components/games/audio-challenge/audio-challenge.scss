@@ -7,14 +7,20 @@
 }
 
 .audio-challenge {
-  background: url("../../../data/images/savannah-bg.jpg") no-repeat;
-  background-position-y: bottom;
-  background-position-x: center;
+  &.minigames {
+    background: url("../../../data/images/audiochallenge-bg.jpg") no-repeat;
+    background-position-y: center;
+    background-position-x: center;
+  }
+
+  &.minigames__translation-list {
+    top: 47.5%;
+  }
 
   &__word {
     position: absolute;
     left: 50%;
-    top: 20%;
+    top: 27.1%;
     transform: translateX(-50%);
     fill: #fff;
     cursor: pointer;
@@ -34,7 +40,7 @@
   font-weight: 400;
   color: #fff;
 
-  &__btn{
+  &__btn {
     margin-top: 60px;
     background-color: $yellow-color;
   }

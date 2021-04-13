@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { WordsProps, GameProps } from "../../../common/ts/interfaces";
 import { connect } from "react-redux";
 import { Loader } from "../../loader";
-import { Lives } from "./lives/lives";
+import { Lives } from "../lives/lives";
 import { ResultsGame } from '../resultsGame/resultsGame';
 
 const savannahHeight = window.innerHeight;
@@ -189,7 +189,7 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
   };
 
   return (
-    <main className="minigames savannah" ref={savannah}>
+    <main className="savannah minigames" ref={savannah}>
       <div className="minigames__wrapper">
         {lives > 0 && gameWords.length !== 0 ?
           <>
@@ -207,7 +207,7 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
                   <path d="M6.50001 18H0V19.8572H5.57143V25.4286H7.42859V18.9286C7.42859 18.4153 7.01328 18 6.50001 18V18Z" fill="white" />
                 </svg>
               </button>
-              <div className="savannah__right-panel">
+              <div className="minigames__right-panel">
                 <Lives lives={lives} />
                 <button className="minigames__close" >
                   <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">

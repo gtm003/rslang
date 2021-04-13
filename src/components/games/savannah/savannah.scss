@@ -32,9 +32,11 @@
 }
 
 .savannah {
-  background: url("../../../data/images/savannah-bg.jpg") no-repeat;
-  background-position-y: bottom;
-  background-position-x: center;
+  &.minigames {
+    background: url("../../../data/images/savannah-bg.jpg") no-repeat;
+    background-position-y: bottom;
+    background-position-x: center;
+  }
 
   &__word {
     position: absolute;
@@ -45,12 +47,6 @@
     color: #fff;
     font-size: 45px;
     font-weight: 400;
-  }
-
-  &__right-panel {
-    display: flex;
-    justify-content: space-between;
-    width: 255px;
   }
 
   &__sun-wrapper {
@@ -73,10 +69,6 @@
       bottom: 3vh;
     }
   }
-
-  &__right-panel {
-    width: 220px;
-  }
 }
 
 @media (max-width: $tablet-width) {
@@ -88,9 +80,5 @@
     &__sun {
       bottom: 1vh;
     }
-  }
-
-  .savannah-panel {
-    padding-top: 30px;
   }
 }
