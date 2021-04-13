@@ -32,6 +32,14 @@
 
   &__logo {
     font-size: 44px;
+
+    &:last-child {
+      fill: $yellow-color; 
+    }
+
+    &--auth:last-child {
+      fill: $green-color;
+    }
   }
 }
 
