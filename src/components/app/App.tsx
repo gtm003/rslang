@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import { Footer } from '../footer';
-import { Header } from '../header';
-import { Switcher } from "../../common/navigation";
-import { BrowserRouter } from "react-router-dom";
-import { Settings } from "../settings";
-import { LoginForm } from '../loginform';
-import { SignUpForm } from '../signupform';
+import {Footer} from '../footer';
+import {Header} from '../header';
+import {Switcher} from "../../common/navigation";
+import {BrowserRouter} from "react-router-dom";
+import {Settings} from "../settings";
+import {LoginForm} from '../loginform';
+import {SignUpForm} from '../signupform';
 import {WordsProps} from "../../common/ts/interfaces";
 import {ActionCreator} from "../../common/redux/action-creator";
 import {connect} from "react-redux";
@@ -13,11 +13,11 @@ import {urlBackend} from "../../data";
 
 interface AppProps {
   hardWords: [],
-  //deletedWords: [],
+  deletedWords: [],
   words: WordsProps[],
 }
 
-const AppRedux: React.FC<AppProps> = ({words, hardWords}) => {
+const AppRedux: React.FC<AppProps> = ({words, hardWords, deletedWords}) => {
 
   useEffect(() => {
     console.log(hardWords);
@@ -26,37 +26,62 @@ const AppRedux: React.FC<AppProps> = ({words, hardWords}) => {
         const ind = words.findIndex((word: WordsProps) => {
           return word.id === id;
         });
+        console.log(ind);
         if (ind !== -1) words[ind].hardWord = true;
       });
     }
-  }, [words, hardWords]);
+    console.log(words);
+  }, [hardWords]);
+
+  useEffect(() => {
+    console.log(deletedWords);
+    if (deletedWords) {
+      deletedWords.forEach(({id}) => {
+        const ind = words.findIndex((word: WordsProps) => {
+          return word.id === id;
+        });
+        console.log(ind);
+        if (ind !== -1) words[ind].deletedWord = true;
+      });
+    }
+  }, [deletedWords]);
 
   window.addEventListener('unload', () => {
-    //отправка на бэк, не работает
-    // const setWordsToBack = async (words: WordsProps[]) => {
-    //   const response = await fetch(`${urlBackend}words`, {
-    //     method: 'POST',
-    //     headers: {
-    //       'Accept': 'application/json',
-    //       'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify(words)
-    //   });
-    // };
-    // console.log(words);
-    //setWordsToBack(words);
+    if (words.length) {
+      const data = words.map((item: any) => {
+          const {id: newId, ...rest} = item;
+          return {_id: newId, ...rest}
+        }
+      );
+
+      if (data.length) {
+        console.log(data);
+        //setWordsToBack(data);
+        const setWordsToBack = async (wordsArr: WordsProps[]) => {
+          await fetch(`${urlBackend}words`, {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({words: wordsArr})
+          });
+        };
+        setWordsToBack(data);
+      }
+    }
   });
 
   return (
     <BrowserRouter>
-      <Header />
+      <Header/>
       <div className="main-wrapper">
-        <Switcher />
+        <Switcher/>
       </div>
-      <Settings />
-      <LoginForm />
-      <SignUpForm />
-      <Footer />
+      <Settings/>
+      <LoginForm/>
+      <SignUpForm/>
+      <Footer/>
     </BrowserRouter>
   );
 }

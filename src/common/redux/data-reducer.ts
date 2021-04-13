@@ -17,6 +17,8 @@ const initialState: InitialState = {
 const reducer = (state: InitialState = initialState, action: any) => {
   switch (action.type) {
     case `SET_WORDS`:
+      console.log(action.payload);
+
       const hardWords = action.payload.filter(
         (word: WordsProps) => word.hardWord === true
       );

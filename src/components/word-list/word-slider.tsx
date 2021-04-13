@@ -24,34 +24,47 @@ const audio = new Audio();
 
 const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isTranslate, areButtons, hardWords, deletedWords, getWords, onHardWordClick, onDeleteHardWordClick, onDeleteWordClick}) => {
   const [words, setWords] = useState<WordsProps[]>([]);
-  const [wordsRedux, setWordsRedux] = useState<WordsProps[]>([]);
+  //const [wordsRedux, setWordsRedux] = useState<WordsProps[]>([]);
   const [isDelete, setIsDelete] = useState<number>(0);
   const [isMessage, setMessage] = useState<boolean>(false);
 
-  useEffect(() => {
-    setWordsRedux(getWords);
-  }, [getWords]);
+  // useEffect(() => {
+  //   setWordsRedux(getWords);
+  // }, [getWords]);
+
 
   useEffect(() => {
+    console.log(words)
     setWords([]);
     getDataPage(group - 1, page).then((res: WordsProps[]) => getWordsWithoutDeleted(res));
   }, [page, group, isDelete]);
 
 
   useEffect(() => {
-    const setWordsToBack = async (wordsArr: WordsProps[]) => {
-      const response = await fetch(`${urlBackend}words`, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({words: wordsArr})
-        //body: ({words: wordsArr})
-      });
-    };
-    console.log(getWords);
-   if (getWords) setWordsToBack(getWords);
+
+    // if (getWords.length) {
+    //   const data = getWords.map((item: any) => {
+    //       const {id: newId, ...rest} = item;
+    //       return {_id: {$oid: newId}, ...rest}
+    //     }
+    //   );
+    //
+    //   const setWordsToBack = async (wordsArr: WordsProps[]) => {
+    //     await fetch(`${urlBackend}words`, {
+    //       method: 'POST',
+    //       headers: {
+    //         'Accept': 'application/json',
+    //         'Content-Type': 'application/json'
+    //       },
+    //       body: JSON.stringify({words: wordsArr})
+    //     });
+    //   };
+    //
+    //   if(data.length) {
+    //     console.log(data);
+    //     //setWordsToBack(data);
+    //   }
+    // }
   }, [hardWords]);
 
   const getWordsWithoutDeleted: (words: any) => any = (words: any) => {
@@ -90,11 +103,10 @@ const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isTranslate, a
 
         ((page < 0) && <img src={pathImg} alt='level english'/>) ||
         (isMessage && <p className="message">The page is deleted</p>) ||
-        ((words.length ) ?
+        ((words.length) ?
           <Carousel dynamicHeight={false}>
             {words.map((item: WordsProps) => {
               const isHard: boolean = Boolean(hardWords.length) && hardWords.some((word: any) => word.id === item.id);
-             // console.log(words);
               return (
                 <div key={item.id}>
                   <img src={urlBackend + item.image} alt='figure of word'/>
