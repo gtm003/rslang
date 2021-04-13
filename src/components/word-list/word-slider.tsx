@@ -41,30 +41,29 @@ const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isTranslate, a
 
 
   useEffect(() => {
+    console.log(getWords);
+    if (getWords.length) {
+      const data = getWords.map((item: any) => {
+          const {id: newId, ...rest} = item;
+          return {_id: newId, ...rest}
+        }
+      );
 
-    // if (getWords.length) {
-    //   const data = getWords.map((item: any) => {
-    //       const {id: newId, ...rest} = item;
-    //       return {_id: {$oid: newId}, ...rest}
-    //     }
-    //   );
-    //
-    //   const setWordsToBack = async (wordsArr: WordsProps[]) => {
-    //     await fetch(`${urlBackend}words`, {
-    //       method: 'POST',
-    //       headers: {
-    //         'Accept': 'application/json',
-    //         'Content-Type': 'application/json'
-    //       },
-    //       body: JSON.stringify({words: wordsArr})
-    //     });
-    //   };
-    //
-    //   if(data.length) {
-    //     console.log(data);
-    //     //setWordsToBack(data);
-    //   }
-    // }
+      if (data.length) {
+        console.log(data);
+        const setWordsToBack = async (data: WordsProps[]) => {
+          const responce = await fetch(`${urlBackend}words`, {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({words: data})
+          });
+        };
+        setWordsToBack(data);
+      }
+    }
   }, [hardWords]);
 
   const getWordsWithoutDeleted: (words: any) => any = (words: any) => {

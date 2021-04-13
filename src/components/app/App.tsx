@@ -47,29 +47,29 @@ const AppRedux: React.FC<AppProps> = ({words, hardWords, deletedWords}) => {
   }, [deletedWords]);
 
   window.addEventListener('unload', () => {
-    if (words.length) {
-      const data = words.map((item: any) => {
-          const {id: newId, ...rest} = item;
-          return {_id: newId, ...rest}
-        }
-      );
-
-      if (data.length) {
-        console.log(data);
-        //setWordsToBack(data);
-        const setWordsToBack = async (wordsArr: WordsProps[]) => {
-          await fetch(`${urlBackend}words`, {
-            method: 'POST',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({words: wordsArr})
-          });
-        };
-        setWordsToBack(data);
-      }
-    }
+    // if (words.length) {
+    //   const data = words.map((item: any) => {
+    //       const {id: newId, ...rest} = item;
+    //       return {_id: newId, ...rest}
+    //     }
+    //   );
+    //
+    //   if (data.length) {
+    //     console.log(data);
+    //     //setWordsToBack(data);
+    //     const setWordsToBack = async (wordsArr: WordsProps[]) => {
+    //       await fetch(`${urlBackend}words`, {
+    //         method: 'POST',
+    //         headers: {
+    //           'Accept': 'application/json',
+    //           'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify({words: wordsArr})
+    //       });
+    //     };
+    //     setWordsToBack(data);
+    //   }
+    // }
   });
 
   return (

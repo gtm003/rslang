@@ -1,4 +1,5 @@
 import {WordsProps} from "../ts/interfaces";
+import {urlBackend} from "../../data";
 
 interface InitialState {
   words: [];
@@ -39,7 +40,6 @@ const reducer = (state: InitialState = initialState, action: any) => {
         // learningWords: learningWords,
       };
     case `ADD_HADR_WORD`:
-      console.log(action.payload);
 
       return {
         ...state,
