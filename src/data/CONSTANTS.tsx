@@ -1,4 +1,4 @@
-const githubMembers: string[] = ['Alexk08', 'Kkasya', 'Alekseishkel', 'gtm003', '11alexey11'];
+const githubMembers: string[] = ['Alexk08', 'Kkasya', 'Alekseishkel', 'gtm003', '11alexey11', 'prgskk'];
 const githubSrc: string = 'https://github.com/';
 const urlBackend: string = 'https://react-rs-lang-words.herokuapp.com/';
 
@@ -89,7 +89,8 @@ const namesPath: any = {
   page: 'Страница',
   games: 'Игры',
   sprint: 'Спринт',
-  team: 'О команде'
+  team: 'О команде',
+  statistics: 'Статистика',
 }
 
 

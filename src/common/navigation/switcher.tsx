@@ -11,6 +11,7 @@ import { WordList } from "../../components/word-list";
 import { Games } from '../../components/games';
 import { Sprint } from '../../components/games/sprint';
 import { GameConstructor } from '../../components/games/constructor';
+import {Statistics} from "../../components/statistics";
 import { Savannah } from '../../components/games/savannah';
 
 const Switcher: React.FC = () => {
@@ -58,7 +59,7 @@ const Switcher: React.FC = () => {
       <Route exact path='/games' component={Games} />
 
       <Route path='/dictionary' component={Tutorial}/>
-      <Route path='/statistics' component={Tutorial}/>
+      <Route path='/statistics' component={Statistics}/>
       <Route path='/games/sprint:group/page:page' render={({match}) => {
         const group: number = Number(match.params.group);
         const page: number = Number(match.params.page);

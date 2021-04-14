@@ -24,18 +24,12 @@ const audio = new Audio();
 
 const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isTranslate, areButtons, hardWords, deletedWords, getWords, onHardWordClick, onDeleteHardWordClick, onDeleteWordClick}) => {
   const [words, setWords] = useState<WordsProps[]>([]);
-  const [wordsRedux, setWordsRedux] = useState<WordsProps[]>([]);
-  const [isDelete, setIsDelete] = useState<number>(0);
   const [isMessage, setMessage] = useState<boolean>(false);
-
-  useEffect(() => {
-    setWordsRedux(getWords);
-  }, [getWords]);
 
   useEffect(() => {
     setWords([]);
     getDataPage(group - 1, page).then((res: WordsProps[]) => getWordsWithoutDeleted(res));
-  }, [page, group, isDelete]);
+  }, [page, group, deletedWords]);
 
   const getWordsWithoutDeleted: (words: any) => any = (words: any) => {
     const wordsWithoutDeleted = words.filter((word: WordsProps) => deletedWords.findIndex((deletedWord: WordsProps) => deletedWord.id === word.id) === -1);
@@ -66,13 +60,13 @@ const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isTranslate, a
 
   const pathImg: string = `/images/group/${group - 1}.png`;
 
+
   return (
     <div className="word-slider">
       {
-
         ((page < 0) && <img src={pathImg} alt='level english'/>) ||
         (isMessage && <p className="message">The page is deleted</p>) ||
-        ((words.length && wordsRedux.length) ?
+        ((words.length && getWords.length) ?
           <Carousel dynamicHeight={false}>
             {words.map((item: WordsProps) => {
               const isHard: boolean = Boolean(hardWords.length) && hardWords.some((word: any) => word.id === item.id);
@@ -107,7 +101,7 @@ const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isTranslate, a
                       {areButtons &&
                       <div className='btn-delete' onClick={() => {
                         onDeleteWordClick(item);
-                        setIsDelete((isDelete) => isDelete + 1);
+                      //  setIsDelete((isDelete) => isDelete + 1);
                       }}>
                         Удалить
                       </div>}
