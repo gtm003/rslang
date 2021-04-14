@@ -201,7 +201,7 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
         <div className="minigames__wrapper">
           <div className="welcome-screen">
             <p className="welcome-screen__title">
-              Выбери один верный перевод слова из пяти. Сделать это можно, кликнув на слове мышью, либо нажав одну из клавиш 1, 2, 3, 4, 5.
+              Выберите один верный перевод слова из пяти. Для управления игрой используйте клавиши 1, 2, 3, 4, 5, Space, Enter, либо просто кликайте мышкой.
             </p>
             <button className="btn welcome-screen__btn" onClick={() => {
               setIsWelcomeScreen(false);
