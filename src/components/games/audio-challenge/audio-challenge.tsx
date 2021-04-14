@@ -10,7 +10,7 @@ let necessaryWords: WordsProps[];
 let correctAnswers: WordsProps[] = [];
 let wrongAnswers: WordsProps[] = [];
 let lives: number = 5;
-let onNextQuestionClick: number = 0;
+let onNextQuestionClicks: number = 0;
 
 interface SavannahProps {
   words: WordsProps[]
@@ -19,8 +19,6 @@ interface SavannahProps {
 const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, words }) => {
   const [gameWords, setGameWords] = useState<WordsProps[]>([]);
   const [translations, setTranslations] = useState<WordsProps[]>([]);
-  // const [lives, setLives] = useState<number>(5);
-  // const [isAnswered, setIsAnswered] = useState<boolean>(false);
   const [isWelcomeScreen, setIsWelcomeScreen] = useState<boolean>(true);
   const audioChallenge = useRef<HTMLElement>(null);
   const soundWaves = useRef<HTMLImageElement>(null);
@@ -56,11 +54,11 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
     audio.src = urlBackend + audioSrc;
     audio.play();
 
-    word.current?.classList.add("no-opacity");
+    wordContainer.current?.classList.add("no-opacity");
     soundWaves.current?.classList.add("vawes-resizing");
 
     audio.onended = () => {
-      word.current?.classList.remove("no-opacity");
+      wordContainer.current?.classList.remove("no-opacity");
       soundWaves.current?.classList.remove("vawes-resizing");
     }
   };
@@ -77,6 +75,11 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
         return onAnswer(translationWord, translationsOnScreen[3].wordTranslate);
       case "5":
         return onAnswer(translationWord, translationsOnScreen[4].wordTranslate);
+      case " ":
+        return playAudio(translationWord.audio);
+      case "Enter":
+        ++onNextQuestionClicks;
+        return onNextQuestionClicks === 2 ? onNextQuestionClick(translationWord) : null;
     }
   };
 
@@ -114,6 +117,8 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
 
   const onAnswer = (wordTranslation: WordsProps, translate?: React.MouseEvent | string): void => {
     ++answers;
+    ++onNextQuestionClicks;
+
     if (answers === 1 && gameWords.length !== 0) {
       let wrongAnswer: boolean;
 
@@ -145,18 +150,8 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
       }
 
       if (button.current) {
-        button.current.classList.add("blue-btn")
-        button.current.innerHTML = `
-        <svg width="44" height="37" viewBox="0 0 44 37" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <g clipPath="url(#clip0)">
-            <path d="M2.53446 17.0547H37.47L31.6828 12.0088C31.0371 11.4457 31.0346 10.5306 31.6773 9.96485C32.32 9.39901 33.3645 9.39691 34.0103 9.95993L42.6299 17.4756C42.6305 17.476 42.6309 17.4765 42.6314 17.4769C43.2755 18.04 43.2775 18.9581 42.6315 19.5231C42.631 19.5235 42.6305 19.524 42.63 19.5244L34.0104 27.04C33.3648 27.603 32.3202 27.601 31.6775 27.0351C31.0348 26.4694 31.0372 25.5543 31.683 24.9912L37.47 19.9453H2.53446C1.62337 19.9453 0.884834 19.2982 0.884834 18.5C0.884834 17.7017 1.62337 17.0547 2.53446 17.0547Z" fill="#4B2647" />
-          </g>
-          <defs>
-            <clipPath id="clip0">
-              <rect width="42.2304" height="37" fill="white" transform="matrix(-1 0 0 1 43.1152 0)" />
-            </clipPath>
-          </defs>
-        </svg>`;
+        button.current.classList.add("blue-btn");
+        button.current.innerHTML = `<img src="/images/games/right-arrow.png" alt="" />`
       }
 
       const wordTranslations = document.querySelectorAll<HTMLLIElement>(".minigames__translation-item");
@@ -165,13 +160,10 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
   };
 
   const onNextQuestionClick = (wordTranslation: WordsProps) => {
+    onNextQuestionClicks = 0;
     if (soundWaves.current) {
       soundWaves.current.src = "/images/games/sound-waves.png";
       soundWaves.current.style.height = "auto";
-    }
-
-    if (word.current) {
-      // word.current.style.opacity = "0.7";
     }
 
     if (button.current) {
@@ -191,7 +183,6 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
     removeWordsHighlighting(wordTranslations, wordTranslation);
   }
 
-
   const translationWordIndex = useMemo(() => Math.floor(Math.random() * gameWords.length), [gameWords]);
   const translationWord: WordsProps = gameWords[translationWordIndex] || {};
   const translationsCopy = translations.slice();
@@ -206,6 +197,7 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
 
     return randomWord;
   }
+
   const bgImage = new Image().src = urlBackend + translationWord.image;
 
   const translationsOnScreen: WordsProps[] = [
@@ -287,7 +279,9 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
                   })
                 }
               </ul>
-              <button className="btn audio-challenge__button" onClick={() => onNextQuestionClick(translationWord)} ref={button}>
+              <button className="btn audio-challenge__button" ref={button} onClick={() => {
+                onNextQuestionClicks === 1 ? onAnswer(translationWord) : onNextQuestionClick(translationWord);
+              }}>
                 Не знаю
               </button>
             </div>
