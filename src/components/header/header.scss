@@ -37,7 +37,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 600px;
+  max-width: 420px;
+  flex-grow: 1;
 
   &__login-btn {
     display: flex;
@@ -87,6 +88,18 @@
     }
   }
 }
+
+@media (max-width: $middle-width) {
+  .main-nav {
+    &__list {
+      width: 360px;
+    }
+  }
+
+  .right-column-wrapper {
+      max-width: 360px;
+    }
+  }
 
 @media (max-width: $tablet-width) {
   .header {

@@ -12,6 +12,7 @@ let necessaryWords: WordsProps[];
 let correctAnswers: WordsProps[] = [];
 let wrongAnswers: WordsProps[] = [];
 let lives: number = 5;
+let answers: number = 0;
 
 interface SavannahProps {
   words: WordsProps[]
@@ -26,7 +27,6 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
   const wordContainer = useRef<HTMLDivElement>(null);
   const word = useRef<HTMLSpanElement>(null);
   const button = useRef<HTMLButtonElement>(null);
-let answers: number = 0;
 
   useEffect(() => {
     page > -1 ?
@@ -38,6 +38,7 @@ let answers: number = 0;
 
     correctAnswers = [];
     wrongAnswers = [];
+    lives = 5;
   }, [words, group, page]);
 
   useEffect(() => {
