@@ -7,6 +7,7 @@ import { ResultsGame } from '../resultsGame';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Lives } from '../savannah/lives/lives';
+import { AudioWord } from '../audioWords/audioWords';
 
 const CONTROL_TEXT = [
   {
@@ -211,8 +212,8 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
                 <p className='constructor-body-game__translate'>
                   {word.wordTranslate}
                 </p>
-                <div>
-                  {solved ? word.transcription : 'Собери слово из букв'}
+                <div className='constructor-body-game__service'>
+                  {solved ? (<><AudioWord src = {word.audio}/><span>{word.transcription}</span></>) : 'Собери слово из букв'}
                 </div>
                 <WordInEnglish letters={letters} indexLetter={indexLetter} />
                 <React.Fragment>
