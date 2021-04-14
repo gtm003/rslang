@@ -28,9 +28,9 @@ const initialState: InitialState = {
     error: null,
     isAuth: false,
 }
+let stateUser: any;
 
 const loginReducer = (state = initialState, action: Action) => {
-    console.log(state)
     switch (action.type) {
         case 'TOGGLE_LOGIN_OPEN':
             return { 
@@ -38,6 +38,16 @@ const loginReducer = (state = initialState, action: Action) => {
                 isLoginOpen: action.payload
             }
         case 'LOGIN_USER':
+            stateUser = {
+                ...state,
+                user: {
+                    name: action.payload.name,
+                    userId: action.payload.userId,
+                    photo: action.payload.photo,
+                    token: action.payload.token
+                },
+                isAuth: action.payload.isAuth,
+            };
             return {
                 ...state,
                 user: {
@@ -54,8 +64,6 @@ const loginReducer = (state = initialState, action: Action) => {
                 ...state,
                 error: action.payload
             }
-        case 'GET_STATE':
-            return state;
         default:
             return state;
     }
@@ -63,4 +71,4 @@ const loginReducer = (state = initialState, action: Action) => {
 
 }
 
-export { loginReducer };
+export { loginReducer, stateUser };
