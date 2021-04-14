@@ -24,6 +24,10 @@
     justify-content: flex-end;
   }
 
+  &:fullscreen .audio-challenge__wrapper {
+    min-height: 460px;
+  }
+
   &__panel {
     display: flex;
     justify-content: space-between;
