@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { urlBackend } from '../../../data';
-import { WordsProps, GameProps } from '../../../common/ts/interfaces';
+import { WordsProps } from '../../../common/ts/interfaces';
 import { getRandomOderArr, playAnswer } from '../../../data/utils';
 import { Loader } from '../../loader';
 import { ResultsGame } from '../resultsGame';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Lives } from '../savannah/lives/lives';
-
-const WORDS_GROUP: WordsProps[][] = [];
-let round: number = 0;
 
 const CONTROL_TEXT = [
   {
@@ -22,7 +19,6 @@ const CONTROL_TEXT = [
 ];
 const quantityLifes: number = 5;
 
-let WORDS_GAME: WordsProps[] = [];
 let indexesWord = getRandomOderArr(20);
 let indexWord = indexesWord.pop();
 let correctList: WordsProps[] = [];
@@ -31,15 +27,11 @@ let error = {
   currentWord: false,
   totalErrors: 0,
 };
-
-let WORDS_GROUP_NEW : WordsProps[];
-let WORDS_GAME_NEW : WordsProps[];
-//let indexLetter: number = 0;
-
-
-/*
 let round: number = 0;
-*/
+
+let WORDS_GROUP : WordsProps[];
+let WORDS_GAME : WordsProps[];
+
 interface GameConstructorProps {
   words: WordsProps[],
   hardWords: WordsProps[],
@@ -50,8 +42,6 @@ interface GameConstructorProps {
 
 const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, group, page, hard}) => {
   //const [score, setScore] = useState<number>(0);
-  const [gameStatus, setGameStatus] = useState<boolean>(true);
-  //const [loading, setLoading] = useState<boolean>(true);
   const [word, setWord] = useState<WordsProps>();
   const [solved, setSolved] = useState<boolean>(false);
   const [mute, setMute] = useState<boolean>(false);
@@ -59,29 +49,27 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
   const [indexLetter, setIndexLetter] = useState<number>(0);
   const [mixedOder, setMixedOder] = useState<number[]>([]);
   const [fullscreen, setFullscreen] = useState<boolean>(false);
+  const [lives, setLives] = useState<number>(5);
 
-    // WORDS_GROUP - массив со словами, используемый в игре (или сложные слова и группа слов)
     const getWordsGroup = () => {
       if (hard) return hardWords;
       return words.filter(item => item.group === group);
     }
   
-    // WORDS_GAME - массив со словами, используемый в игре с учетом номера страницы (сложные слова или игра из меню 
-    // соответствует массиву WORDS_GROUP - иначе конкретная страница)
     const getWordsGame = () => {
       if (page) return words.filter(item => item.page === page - round);
-      return WORDS_GROUP_NEW;
+      return WORDS_GROUP;
     }
 
   useEffect(() => {
     if(words.length) {
-      WORDS_GROUP_NEW = getWordsGroup();
-      WORDS_GAME_NEW = getWordsGame();
-      indexesWord = getRandomOderArr(WORDS_GAME_NEW.length);
+      WORDS_GROUP = getWordsGroup();
+      WORDS_GAME = getWordsGame();
+      indexesWord = getRandomOderArr(WORDS_GAME.length);
       indexWord = indexesWord.pop();
-      setWord(WORDS_GAME_NEW[indexWord!]);
-      setLetters(getLetters(WORDS_GAME_NEW[indexWord!]));
-      setMixedOder(getRandomOderArr(WORDS_GAME_NEW[indexWord!].word.length));
+      setWord(WORDS_GAME[indexWord!]);
+      setLetters(getLetters(WORDS_GAME[indexWord!]));
+      setMixedOder(getRandomOderArr(WORDS_GAME[indexWord!].word.length));
     }
   }, [words]);
 
@@ -98,16 +86,18 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
         indexesWord = getRandomOderArr(20);
         if (page! > round) {
           round += 1;
-          WORDS_GAME_NEW = getWordsGame();
+          WORDS_GAME = getWordsGame();
           indexWord = indexesWord.pop();
           getNewWord(indexWord!);
         } else {
-          setGameStatus(false);
+          setLives(0);
         }
       }
     } else {
       setSolved(true);
       setIndexLetter(letters.length);
+      setLives(lives - 1);
+      errorList.push(word!);
     }
   }
 
@@ -144,7 +134,7 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
     else {
       playAnswer(false, mute);
       elem.classList.add('letter--error');
-      error.totalErrors += 1;
+      setLives(lives - 1);
       error.currentWord = true;
     }
   }
@@ -152,17 +142,16 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
   const onClickHandlerNewGame = () => {
     indexesWord = getRandomOderArr(20);
     indexWord = indexesWord.pop();
-    setGameStatus(true);
+    setLives(5);
     getNewWord(indexWord!);
-    error.totalErrors = 0;
     correctList = [];
     errorList = [];
   }
 
   const getNewWord = (index: number) => {
-    setWord(WORDS_GAME_NEW[index]);
-    setLetters(getLetters(WORDS_GAME_NEW[index]));
-    setMixedOder(getRandomOderArr(WORDS_GAME_NEW[index].word.length));
+    setWord(WORDS_GAME[index]);
+    setLetters(getLetters(WORDS_GAME[index]));
+    setMixedOder(getRandomOderArr(WORDS_GAME[index].word.length));
     setIndexLetter(0);
     setSolved(false);
   }
@@ -205,13 +194,13 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
             onClick={() => onToggleHandlerMute()}>{mute ? 'notifications_off' : 'notifications'}</i>
           <i className="material-icons constructor-header__icons constructor-header__icons--fullscreen"
             onClick={() => onToggleHandlerFullScreen()}>{fullscreen ? 'fullscreen_exit' : 'fullscreen'}</i>
-          <Lives lives = {quantityLifes - error.totalErrors} />
+          {lives > 0 && <Lives lives = {lives} />}
           <NavLink to='/games'>
             <i className="material-icons constructor-header__icons constructor-header__icons--close">close</i>
           </NavLink>
         </div>
           <div className='constructor__body'>
-            {gameStatus ?
+            {lives ?
               (<React.Fragment>
                 <p className='constructor-body-game__translate'>
                   {word.wordTranslate}
