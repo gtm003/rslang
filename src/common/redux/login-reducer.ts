@@ -30,6 +30,7 @@ const initialState: InitialState = {
 }
 
 const loginReducer = (state = initialState, action: Action) => {
+    console.log(state)
     switch (action.type) {
         case 'TOGGLE_LOGIN_OPEN':
             return { 
@@ -53,9 +54,13 @@ const loginReducer = (state = initialState, action: Action) => {
                 ...state,
                 error: action.payload
             }
+        case 'GET_STATE':
+            return state;
         default:
             return state;
     }
+
+
 }
 
 export { loginReducer };

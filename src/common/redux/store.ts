@@ -16,3 +16,4 @@ const reducers = {
 const reducer = combineReducers(reducers);
 
 export { reducer };
+export type RootState = ReturnType<typeof reducer>
