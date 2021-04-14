@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { Loader } from "../../loader";
 import { ResultsGame } from '../resultsGame/resultsGame';
 import { Lives } from "../lives/lives";
+import { shuffleArray, highlightWords, removeWordsHighlighting} from "../utils/utils";
 import { urlBackend } from "../../../data";
 
 let necessaryWords: WordsProps[];
@@ -83,7 +84,6 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
         return playAudio(translationWord.audio);
       case "Enter":
         return onNextQuestionClicks === 0 ? onAnswer(translationWord) : onNextQuestionClick(translationWord);
-
     }
   };
 
@@ -96,27 +96,6 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
     correctAnswers = [];
     wrongAnswers = [];
   };
-
-  const shuffleArray = (array: WordsProps[]) => {
-    return array.sort(() => Math.random() - 0.5);
-  };
-
-  const highlightWords = (wordTranslations: NodeListOf<HTMLLIElement>, wordTranslation: WordsProps): void => {
-    wordTranslations?.forEach((translation: HTMLLIElement) => {
-      translation.textContent?.match(/[а-я-,]/gi)?.join('') === wordTranslation.wordTranslate.replace(/\s/g, '') ?
-        translation.classList.add("word-correct") :
-        translation.classList.add("word-wrong");
-    });
-  };
-
-  const removeWordsHighlighting = (wordTranslations: NodeListOf<HTMLLIElement>, wordTranslation: WordsProps): void => {
-    wordTranslations?.forEach((translation) => {
-      translation.textContent?.match(/[а-я-,]/gi)?.join('') === wordTranslation.wordTranslate.replace(/\s/g, '') ?
-        translation.classList.remove("word-correct") :
-        translation.classList.remove("word-wrong");
-    })
-  };
-
 
   const onAnswer = (wordTranslation: WordsProps, translate?: React.MouseEvent | string): void => {
     ++answers;

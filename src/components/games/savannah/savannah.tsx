@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom';
 import { connect } from "react-redux";
 import { Loader } from "../../loader";
 import { Lives } from "../lives/lives";
+import { shuffleArray, highlightWords, removeWordsHighlighting} from "../utils/utils";
 import { ResultsGame } from '../resultsGame/resultsGame';
 
 const savannahHeight = window.innerHeight;
@@ -69,10 +70,6 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
     wrongAnswers = [];
   };
 
-  const shuffleArray = (array: WordsProps[]) => {
-    return array.sort(() => Math.random() - 0.5);
-  };
-
   const moveBackground = (bgPosition: number, duration: number): void => {
     savannah.current?.animate([
       { backgroundPosition: `left 0 bottom ${bgPosition}px` }
@@ -95,22 +92,6 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
       const sunWidth = sun.current.width;
       sunWidth <= 160 ? sun.current.width = sunWidth + 3 : sun.current.width = sunWidth;
     }
-  };
-
-  const highlightWords = (wordTranslations: NodeListOf<HTMLLIElement>, wordTranslation: WordsProps): void => {
-    wordTranslations?.forEach((translation: HTMLLIElement) => {
-      translation.textContent?.match(/[а-я-,]/gi)?.join('') === wordTranslation.wordTranslate.replace(/\s/g, '') ?
-        translation.classList.add("word-correct") :
-        translation.classList.add("word-wrong");
-    });
-  };
-
-  const removeWordsHighlighting = (wordTranslations: NodeListOf<HTMLLIElement>, wordTranslation: WordsProps): void => {
-    wordTranslations?.forEach((translation) => {
-      translation.textContent?.match(/[а-я-,]/gi)?.join('') === wordTranslation.wordTranslate.replace(/\s/g, '') ?
-        translation.classList.remove("word-correct") :
-        translation.classList.remove("word-wrong");
-    })
   };
 
   const addFlowAnimation = (): void => {
