@@ -12,8 +12,6 @@ let necessaryWords: WordsProps[];
 let correctAnswers: WordsProps[] = [];
 let wrongAnswers: WordsProps[] = [];
 let lives: number = 5;
-let onNextQuestionClicks: number = 0;
-let answers: number = 0;
 
 interface SavannahProps {
   words: WordsProps[]
@@ -28,6 +26,7 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
   const wordContainer = useRef<HTMLDivElement>(null);
   const word = useRef<HTMLSpanElement>(null);
   const button = useRef<HTMLButtonElement>(null);
+let answers: number = 0;
 
   useEffect(() => {
     page > -1 ?
@@ -39,8 +38,6 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
 
     correctAnswers = [];
     wrongAnswers = [];
-    answers = 0;
-    onNextQuestionClicks = 0;
   }, [words, group, page]);
 
   useEffect(() => {
@@ -80,10 +77,10 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
         return onAnswer(translationWord, translationsOnScreen[3].wordTranslate);
       case "5":
         return onAnswer(translationWord, translationsOnScreen[4].wordTranslate);
-      case "Control":
+      case "ArrowLeft":
         return playAudio(translationWord.audio);
-      case "Enter":
-        return onNextQuestionClicks === 0 ? onAnswer(translationWord) : onNextQuestionClick(translationWord);
+      case "ArrowRight":
+        return answers === 0 ? onAnswer(translationWord) : onNextQuestionClick(translationWord);
     }
   };
 
@@ -99,8 +96,6 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
 
   const onAnswer = (wordTranslation: WordsProps, translate?: React.MouseEvent | string): void => {
     ++answers;
-    ++onNextQuestionClicks;
-
     if (answers === 1 && gameWords.length !== 0) {
       let wrongAnswer: boolean;
 
@@ -141,9 +136,9 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
     };
   };
 
-  const onNextQuestionClick = (wordTranslation: WordsProps) => {
-    onNextQuestionClicks = 0;
+  const onNextQuestionClick = (wordTranslation: WordsProps) => { 
     answers = 0;
+
     if (soundWaves.current) {
       soundWaves.current.src = "/images/games/sound-waves.png";
       soundWaves.current.style.height = "auto";
@@ -201,7 +196,7 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
         <div className="minigames__wrapper">
           <div className="welcome-screen">
             <p className="welcome-screen__title">
-              Выберите один верный перевод слова из пяти. Для управления игрой используйте клавиши 1, 2, 3, 4, 5, Space, Enter, либо просто кликайте мышкой.
+              Выберите один верный перевод слова из пяти. Для управления игрой используйте клавиши 1, 2, 3, 4, 5, ←, → либо просто кликайте мышкой.
             </p>
             <button className="btn welcome-screen__btn" onClick={() => {
               setIsWelcomeScreen(false);
@@ -265,7 +260,7 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
                 }
               </ul>
               <button className="btn audio-challenge__button" ref={button} onClick={() => {
-                onNextQuestionClicks === 0 ? onAnswer(translationWord) : onNextQuestionClick(translationWord);
+                answers === 0 ? onAnswer(translationWord) : onNextQuestionClick(translationWord);
               }}>
                 Не знаю
               </button>
