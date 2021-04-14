@@ -16,6 +16,9 @@
       //flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
+      &:hover {
+        box-shadow: 0 0 0.7em rgba(0,0,0,0.5);
+      }
       .game__head {
         display: flex;
         flex-direction: column;
@@ -319,4 +322,8 @@
       }
     }
   }
+}
+
+.hidden {
+  display: none;
 }

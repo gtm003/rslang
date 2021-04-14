@@ -1,6 +1,6 @@
 import React from "react";
-import {NavLink} from "react-router-dom";
-import {titleGames} from "../../data";
+import { NavLink } from "react-router-dom";
+import { titleGames } from "../../data";
 
 interface PaginationProps {
   page: number,
@@ -17,6 +17,7 @@ const Pagination: React.FC<PaginationProps> = ({group, page, changeSelectItem, i
   const route = isDictionary ? `dictionary/${wordsType}` : 'tutorial';
 
   const classBtn: string = `pagination__btn btn pagination__btn--${group-1}`;
+
   const classRightBtn: string = (page === maxPages) ? classBtn + ' hidden' : classBtn;
   const classLeftBtn: string = (page <= 1) ? classBtn + ' hidden' : classBtn;
   
@@ -26,6 +27,7 @@ const Pagination: React.FC<PaginationProps> = ({group, page, changeSelectItem, i
         <button className={classLeftBtn} onClick={() => changeSelectItem(page-2)}>
           <img src='/images/arrowLeft.png' alt='arrow left'/>
           {isDictionary ? `Page` : `Unit`} {page - 1}
+
         </button>
       </NavLink>
       <div className=' tutorial__icons'>
@@ -46,10 +48,11 @@ const Pagination: React.FC<PaginationProps> = ({group, page, changeSelectItem, i
         <button className={classRightBtn}  onClick={() => changeSelectItem(page)}>
           {isDictionary ? `Page` : `Unit`} {page + 1}
           <img src='/images/arrowRight.png' alt='arrow right'/>
+
         </button>
       </NavLink>
     </div>
   )
 };
 
-export {Pagination};
+export { Pagination };

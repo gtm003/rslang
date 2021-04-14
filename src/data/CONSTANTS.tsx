@@ -1,4 +1,4 @@
-const githubMembers: string[] = ['Alexk08', 'Kkasya', 'Alekseishkel', 'gtm003', '11alexey11'];
+const githubMembers: string[] = ['Alexk08', 'Kkasya', 'Alekseishkel', 'gtm003', '11alexey11', 'prgskk'];
 const githubSrc: string = 'https://github.com/';
 const urlBackend: string = 'https://react-rs-lang-words.herokuapp.com/';
 
@@ -109,6 +109,7 @@ const namesPath: any = {
   hard: 'Сложные слова',
   deleted: 'Удаленные слова',
   learning: 'Изучаемые слова',
+  statistics: 'Статистика',
 }
 
 const DICTIONARY_TITLES: any = {

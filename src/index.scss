@@ -1,4 +1,4 @@
-@import '../node_modules/normalize-scss/sass/normalize/import-now';
+@import "../node_modules/normalize-scss/sass/normalize/import-now";
 @import "./styles/vars";
 @import "./styles/mixins";
 
@@ -11,6 +11,8 @@
 @import "./components/word-list/word-list";
 @import "./components/main-page/mainPage";
 @import "./components/main-page-nav/mainPageNav";
+@import "./components/games/savannah/savannah";
+@import "./components/games/savannah/lives/lives";
 @import "./components/loginform/loginform";
 @import "./components/signupform/signupform";
 @import "./components/pagination/pagination";
@@ -25,3 +27,5 @@
 @import "./components/dictionary-section/dictionary-section";
 @import "./common/navigation/crumbs/crumbs";
 @import "./components/team/team";
+@import "./components/statistics/statistics";
+

@@ -3,4 +3,7 @@ import {getDataPage} from "./WORDS";
 import {TEAM} from './TEAM';
 import {githubMembers, githubSrc, urlBackend, navLink, descriptionGroup, titleGroup, menuLinks, dictionaryLinks, titleGames, DICTIONARY_TITLES, WORDS_ON_PAGE} from './CONSTANTS';
 
-export {levelsEnglish, githubMembers, githubSrc, urlBackend, navLink, descriptionGroup, titleGroup, menuLinks, dictionaryLinks, titleGames, TEAM, getDataPage, DICTIONARY_TITLES, WORDS_ON_PAGE};
+import {TEAM} from './TEAM';
+import {setData} from "./service";
+
+export {levelsEnglish, githubMembers, githubSrc, urlBackend, navLink, descriptionGroup, titleGroup, menuLinks,titleGames, TEAM, getDataPage, setData};

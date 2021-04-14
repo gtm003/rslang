@@ -30,6 +30,7 @@ const WordListRedux: React.FC<WordListProps> = ({
   hardWords,
   deletedWords,
 }) => {
+
   const [page, setPage] = useState(pageInitial - 1);
   const location = useLocation();
   const history = useHistory();
