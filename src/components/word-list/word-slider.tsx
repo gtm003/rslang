@@ -29,12 +29,6 @@ const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isDictionary =
   const [isMessage, setMessage] = useState<boolean>(false);
 
   useEffect(() => {
-<<<<<< dictionary
-    setWordsRedux(getWords);
-  }, [getWords]);
-
-
-  useEffect(() => {
     if (isDictionary) {
       if (page >= 0) {
         setWords(dictionaryWords[page]);
@@ -46,7 +40,7 @@ const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isDictionary =
       getDataPage(group - 1, page).then((res: WordsProps[]) => getWordsWithoutDeleted(res));
       console.log('учебник')
     }
-  }, [page, group, isDelete, isDictionary]);
+  }, [page, group, isDictionary]);
 
 
   const getWordsWithoutDeleted: any = (words: any) => {
