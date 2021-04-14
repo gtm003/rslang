@@ -104,7 +104,11 @@ const namesPath: any = {
   page: 'Страница',
   games: 'Игры',
   sprint: 'Спринт',
-  team: 'О команде'
+  team: 'О команде',
+  dictionary: 'Словарь',
+  hard: 'Сложные слова',
+  deleted: 'Удаленные слова',
+  learning: 'Изучаемые слова',
 }
 
 const DICTIONARY_TITLES: any = {
