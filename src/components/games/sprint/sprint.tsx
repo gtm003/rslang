@@ -146,6 +146,7 @@ const SprintRedux: React.FC<GameSprintProps> = ({words, hardWords, group, page, 
     correctList = [];
     errorList = [];
     series = 0;
+    seriesMax = 0;
     setColors(getColors(series));
     setScore(0);
   }

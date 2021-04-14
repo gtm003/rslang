@@ -25,11 +25,10 @@ let indexWord = indexesWord.pop();
 let correctList: WordsProps[] = [];
 let errorList: WordsProps[] = [];
 let wordAnswer = true;
-let error = {
-  currentWord: false,
-  totalErrors: 0,
-};
+let score: number = 0;
 let round: number = 0;
+let series: number = 0;
+let seriesMax: number = 0;
 
 let WORDS_GROUP : WordsProps[];
 let WORDS_GAME : WordsProps[];
@@ -43,7 +42,6 @@ interface GameConstructorProps {
 }
 
 const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, group, page, hard}) => {
-  //const [score, setScore] = useState<number>(0);
   const [word, setWord] = useState<WordsProps>();
   const [solved, setSolved] = useState<boolean>(false);
   const [mute, setMute] = useState<boolean>(false);
@@ -123,6 +121,7 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
   const onClickHandlerGame = (elem: any, letter: string) => {
     const letters = getLetters(word!);
     if (letters[indexLetter] === letter) {
+      score += 10;
       elem.classList.add('letter--solved');
       playAnswer(true, mute);
       setIndexLetter(indexLetter + 1);
@@ -134,6 +133,8 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
           errorList.push(word!);
         }
         wordAnswer = true;
+        series += 1;
+        seriesMax = (seriesMax < series) ? series : seriesMax;
         playWord(word!.audio)
         setSolved(true);
       }
@@ -143,6 +144,7 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
       elem.classList.add('letter--error');
       setLives(lives - 1);
       wordAnswer = false;
+      series = 0;
     }
   }
 
@@ -153,6 +155,9 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
     getNewWord(indexWord!);
     correctList = [];
     errorList = [];
+    series = 0;
+    seriesMax = 0;
+    score = 0;
   }
 
   const getNewWord = (index: number) => {
@@ -230,7 +235,8 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
                   </button>
                 </div>
                 </div>) :
-              <ResultsGame correctList={correctList} errorList={errorList} onClickHandlerNewGame={onClickHandlerNewGame} />}
+              <ResultsGame correctList={correctList} errorList={errorList} onClickHandlerNewGame={onClickHandlerNewGame}
+              seriesLength={seriesMax} score={score}/>}
         </React.Fragment>) :
         <Loader />}
     </div>
