@@ -94,15 +94,14 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
         }
       }
     } else {
+      playWord(word!.audio);
       setSolved(true);
       setIndexLetter(letters.length);
       setLives(lives - 1);
       errorList.push(word!);
     }
   }
-
-
-  /*
+  
     useEffect(() => {
       window.addEventListener("keyup", onKeyPressHandler);
   
@@ -111,9 +110,8 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
     })
     const onKeyPressHandler = (event: KeyboardEvent) => {
       event.preventDefault();
-      if (event.key === 'ArrowRight') onClickHandlerGame(true)
-      else if (event.key === 'ArrowLeft') onClickHandlerGame(false)
-    }*/
+      if (event.key === 'Enter') onClickHandlerControl()
+    }
   const onToggleHandlerMute = () => {
     setMute(!mute);
   }
@@ -135,7 +133,7 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
         wordAnswer = true;
         series += 1;
         seriesMax = (seriesMax < series) ? series : seriesMax;
-        playWord(word!.audio)
+        playWord(word!.audio);
         setSolved(true);
       }
     }
@@ -185,18 +183,6 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
       document.exitFullscreen();
     }
   }
-
-  /*
-
-
-  const onToggleHandlerMute = () => {
-    setMute(!mute);
-  }*/
-  /*
-  const playTimer = () => {
-    audio.src = '/audio/timer.mp3';
-    audio.play();
-  };*/
 
   return (
     <div className='constructor'>
