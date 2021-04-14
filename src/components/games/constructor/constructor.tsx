@@ -17,12 +17,13 @@ const CONTROL_TEXT = [
     icon: 'sentiment_satisfied'
   }
 ];
-const quantityLifes: number = 5;
+const quantityLives: number = 5;
 
 let indexesWord = getRandomOderArr(20);
 let indexWord = indexesWord.pop();
 let correctList: WordsProps[] = [];
 let errorList: WordsProps[] = [];
+let wordAnswer = true;
 let error = {
   currentWord: false,
   totalErrors: 0,
@@ -49,7 +50,7 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
   const [indexLetter, setIndexLetter] = useState<number>(0);
   const [mixedOder, setMixedOder] = useState<number[]>([]);
   const [fullscreen, setFullscreen] = useState<boolean>(false);
-  const [lives, setLives] = useState<number>(5);
+  const [lives, setLives] = useState<number>(quantityLives);
 
     const getWordsGroup = () => {
       if (hard) return hardWords;
@@ -57,7 +58,7 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
     }
   
     const getWordsGame = () => {
-      if (page) return words.filter(item => item.page === page - round);
+      if (page !== undefined) return WORDS_GROUP.filter(item => item.page === page - round);
       return WORDS_GROUP;
     }
 
@@ -125,8 +126,13 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
       playAnswer(true, mute);
       setIndexLetter(indexLetter + 1);
       if (indexLetter === letters.length - 1) {
-        if (error.currentWord ) errorList.push(word!)
-        else correctList.push(word!)
+        if (wordAnswer) {
+          correctList.push(word!);
+        }
+        else {
+          errorList.push(word!);
+        }
+        wordAnswer = true;
         playWord(word!.audio)
         setSolved(true);
       }
@@ -135,14 +141,14 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
       playAnswer(false, mute);
       elem.classList.add('letter--error');
       setLives(lives - 1);
-      error.currentWord = true;
+      wordAnswer = false;
     }
   }
 
   const onClickHandlerNewGame = () => {
     indexesWord = getRandomOderArr(20);
     indexWord = indexesWord.pop();
-    setLives(5);
+    setLives(quantityLives);
     getNewWord(indexWord!);
     correctList = [];
     errorList = [];

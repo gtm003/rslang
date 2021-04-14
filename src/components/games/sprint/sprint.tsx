@@ -38,7 +38,7 @@ const SprintRedux: React.FC<GameSprintProps> = ({words, hardWords, group, page, 
   // WORDS_GAME - массив со словами, используемый в игре с учетом номера страницы (сложные слова или игра из меню 
   // соответствует массиву WORDS_GROUP - иначе конкретная страница)
   const getWordsGame = () => {
-    if (page) return words.filter(item => item.page === page - round);
+    if (page !== undefined) return WORDS_GROUP.filter(item => item.page === page - round);
     return WORDS_GROUP;
   }
 
