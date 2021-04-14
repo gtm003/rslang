@@ -24,8 +24,8 @@
         margin-left: 12.5rem;
       }
       &--fullscreen {
-        margin-left: 3rem;
-        margin-right: calc(100% - 37rem);
+        margin-left: 2rem;
+        margin-right: calc(100% - 33rem);
       }
       &--close {
         margin-right: 12.5rem;
@@ -189,11 +189,20 @@
       margin-top: 5rem;
     }
     &__header {
-      height: 6rem;
+      height: 4rem;
       width: 100%;
       .sprint-header__icons {
-        color: white;
-        font-size: 3rem;
+        font-size: 2rem;
+        &--sound {
+          margin-left: 5rem;
+        }
+        &--fullscreen {
+          margin-left: 2rem;
+          margin-right: calc(100% - 18rem);
+        }
+        &--close {
+          margin-right: 5rem;
+        }
       }
     }
     .sprint-body__field {
@@ -223,14 +232,14 @@
           cursor: pointer;
         }
         &--sound {
-          margin-left: 3rem;
+          margin-left: 2rem;
         }
         &--fullscreen {
           margin-left: 2rem;
           margin-right: calc(100% - 14rem);
         }
         &--close {
-          margin-right: 3rem;
+          margin-right: 2rem;
         }
       }
     }

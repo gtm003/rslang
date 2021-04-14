@@ -206,9 +206,8 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
             <i className="material-icons constructor-header__icons constructor-header__icons--close">close</i>
           </NavLink>
         </div>
-          <div className='constructor__body'>
             {lives ?
-              (<React.Fragment>
+              (<div className='constructor__body'>
                 <p className='constructor-body-game__translate'>
                   {word.wordTranslate}
                 </p>
@@ -230,9 +229,8 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
                     <i className="material-icons control__icon">{CONTROL_TEXT[Number(solved)].icon}</i>
                   </button>
                 </div>
-              </React.Fragment>) :
+                </div>) :
               <ResultsGame correctList={correctList} errorList={errorList} onClickHandlerNewGame={onClickHandlerNewGame} />}
-          </div>
         </React.Fragment>) :
         <Loader />}
     </div>

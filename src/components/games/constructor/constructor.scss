@@ -92,9 +92,9 @@
           opacity: 0;
         }
         &--error {
-          animation: error 1s linear 0s;;
+          animation: error-constructor 1s linear 0s;;
         }
-        @keyframes error {
+        @keyframes error-constructor {
           0% {
             background: $constructor-color;
           }
@@ -218,5 +218,11 @@
     &__body {
       width: 80%;
     }
+  }
+}
+
+@media (max-height: 840px) {
+  .constructor__body {
+    margin: 1rem 0 2rem;
   }
 }
