@@ -1,32 +1,32 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { WordsProps, GameProps } from "../../../common/ts/interfaces";
 import { NavLink } from 'react-router-dom';
 import { connect } from "react-redux";
 import { Loader } from "../../loader";
+import { ResultsGame } from '../resultsGame/resultsGame';
 import { Lives } from "../lives/lives";
 import { shuffleArray, highlightWords, removeWordsHighlighting} from "../utils/utils";
-import { ResultsGame } from '../resultsGame/resultsGame';
+import { urlBackend } from "../../../data";
 
-const savannahHeight = window.innerHeight;
-const BG_IMAGE_HEIGHT = 4500;
-const MAX_BG_POSITION = 3550;
 let necessaryWords: WordsProps[];
 let correctAnswers: WordsProps[] = [];
 let wrongAnswers: WordsProps[] = [];
-let bgPosition: number = 0;
-let bgShift: number = 225;
+let lives: number = 5;
+let answers: number = 0;
 
 interface SavannahProps {
   words: WordsProps[]
-}
+};
 
-const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, words }) => {
+const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, words }) => {
   const [gameWords, setGameWords] = useState<WordsProps[]>([]);
   const [translations, setTranslations] = useState<WordsProps[]>([]);
-  const [lives, setLives] = useState<number>(5);
-  const savannah = useRef<HTMLElement>(null);
-  const word = useRef<HTMLDivElement>(null);
-  const sun = useRef<HTMLImageElement>(null);
+  const [isWelcomeScreen, setIsWelcomeScreen] = useState<boolean>(true);
+  const audioChallenge = useRef<HTMLElement>(null);
+  const soundWaves = useRef<HTMLImageElement>(null);
+  const wordContainer = useRef<HTMLDivElement>(null);
+  const word = useRef<HTMLSpanElement>(null);
+  const button = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     page > -1 ?
@@ -38,12 +38,33 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
 
     correctAnswers = [];
     wrongAnswers = [];
+    lives = 5;
   }, [words, group, page]);
 
   useEffect(() => {
     window.addEventListener("keyup", onKeyUpHandler);
     return () => (window as any).removeEventListener("keyup", onKeyUpHandler);
   }, [gameWords]);
+
+  useEffect(() => {
+    if (lives > 0 && gameWords.length > 0 && !isWelcomeScreen) {
+      playAudio(gameWords[translationWordIndex].audio);
+    }
+  }, [gameWords]);
+
+  const playAudio = async (audioSrc: string) => {
+    const audio = new Audio();
+    audio.src = urlBackend + audioSrc;
+    audio.play();
+
+    wordContainer.current?.classList.add("no-opacity");
+    soundWaves.current?.classList.add("vawes-resizing");
+
+    audio.onended = () => {
+      wordContainer.current?.classList.remove("no-opacity");
+      soundWaves.current?.classList.remove("vawes-resizing");
+    }
+  };
 
   const onKeyUpHandler = (evt: KeyboardEvent) => {
     switch (evt.key) {
@@ -55,6 +76,12 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
         return onAnswer(translationWord, translationsOnScreen[2].wordTranslate);
       case "4":
         return onAnswer(translationWord, translationsOnScreen[3].wordTranslate);
+      case "5":
+        return onAnswer(translationWord, translationsOnScreen[4].wordTranslate);
+      case "ArrowLeft":
+        return playAudio(translationWord.audio);
+      case "ArrowRight":
+        return answers === 0 ? onAnswer(translationWord) : onNextQuestionClick(translationWord);
     }
   };
 
@@ -62,48 +89,15 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
     page > -1 ?
       necessaryWords = words.slice((Number(group) * 600), ((Number(group)) * 600) + ((page + 1) * 20)) :
       necessaryWords = words.slice((Number(group) * 600), ((Number(group) + 1) * 600));
-    moveBackground(0, 300);
-    bgPosition = 0;
     setGameWords(necessaryWords);
-    setLives(5);
+    lives = 5;
     correctAnswers = [];
     wrongAnswers = [];
   };
 
-  const moveBackground = (bgPosition: number, duration: number): void => {
-    savannah.current?.animate([
-      { backgroundPosition: `left 0 bottom ${bgPosition}px` }
-    ], {
-      duration: duration,
-      fill: "forwards"
-    });
-  };
-
-  const moveWord = (): void => {
-    word.current?.animate([
-      { top: "90%" }
-    ], {
-      duration: 800,
-    });
-  };
-
-  const increaseSun = (): void => {
-    if (sun.current) {
-      const sunWidth = sun.current.width;
-      sunWidth <= 160 ? sun.current.width = sunWidth + 3 : sun.current.width = sunWidth;
-    }
-  };
-
-  const addFlowAnimation = (): void => {
-    word.current?.classList.replace("flow-animation", "hidden");
-    setTimeout(() => word.current?.classList.replace("hidden", "flow-animation"), 50);
-  };
-
-  let answers: number = 0;
-
   const onAnswer = (wordTranslation: WordsProps, translate?: React.MouseEvent | string): void => {
     ++answers;
-    if (answers === 1 && lives > 0 && gameWords.length !== 0) {
+    if (answers === 1 && gameWords.length !== 0) {
       let wrongAnswer: boolean;
 
       if (typeof translate === "string") {
@@ -113,38 +107,62 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
         wrongAnswer = translate === undefined || evtTarget.innerText.match(/[а-я-,]/gi)?.join('') !== wordTranslation.wordTranslate.replace(/\s/g, '');
       };
 
-      if (!wrongAnswer) {
-        bgPosition += bgShift;
-
-        if (bgPosition <= BG_IMAGE_HEIGHT - savannahHeight && bgPosition <= MAX_BG_POSITION) {
-          moveBackground(-bgPosition, 800);
-        }
-
-        moveWord();
-        increaseSun();
+      if (wrongAnswer) {
+        --lives;
+        wrongAnswers.push(wordTranslation);
+      } else {
+        correctAnswers.push(wordTranslation);
       };
+
+      if (soundWaves.current) {
+        soundWaves.current.src = bgImage;
+        soundWaves.current.style.height = "100%";
+      }
+
+      if (wordContainer.current) {
+        wordContainer.current.classList.add("no-opacity");
+      }
+
+      if (word.current) {
+        word.current.classList.add("show-word")
+      }
+
+      if (button.current) {
+        button.current.classList.add("blue-btn");
+        button.current.innerHTML = `<img src="/images/games/right-arrow.png" alt="" />`
+      }
 
       const wordTranslations = document.querySelectorAll<HTMLLIElement>(".minigames__translation-item");
       highlightWords(wordTranslations, wordTranslation);
-
-      setTimeout(() => {
-        if (wrongAnswer) {
-          setLives(prevLives => prevLives - 1);
-          wrongAnswers.push(wordTranslation);
-        } else {
-          correctAnswers.push(wordTranslation);
-        };
-
-        const updatedWords = gameWords.filter((word) => word.word !== wordTranslation.word);
-
-        setGameWords(updatedWords);
-        removeWordsHighlighting(wordTranslations, wordTranslation);
-        addFlowAnimation();
-      }, 800);
     };
   };
 
-  const translationWordIndex: number = Math.floor(Math.random() * gameWords.length);
+  const onNextQuestionClick = (wordTranslation: WordsProps) => { 
+    answers = 0;
+
+    if (soundWaves.current) {
+      soundWaves.current.src = "/images/games/sound-waves.png";
+      soundWaves.current.style.height = "auto";
+    }
+
+    if (button.current) {
+      button.current.innerHTML = `Не знаю`;
+      button.current.classList.remove("blue-btn");
+    }
+
+    if (word.current) {
+      word.current.classList.remove("show-word")
+    }
+
+    const wordTranslations = document.querySelectorAll<HTMLLIElement>(".minigames__translation-item");
+
+    const updatedWords = gameWords.filter((word) => word.word !== wordTranslation.word);
+
+    setGameWords(updatedWords);
+    removeWordsHighlighting(wordTranslations, wordTranslation);
+  }
+
+  const translationWordIndex = useMemo(() => Math.floor(Math.random() * gameWords.length), [gameWords]);
   const translationWord: WordsProps = gameWords[translationWordIndex] || {};
   const translationsCopy = translations.slice();
 
@@ -159,7 +177,10 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
     return randomWord;
   }
 
+  const bgImage = new Image().src = urlBackend + translationWord.image;
+
   const translationsOnScreen: WordsProps[] = [
+    getRandomWords(),
     getRandomWords(),
     getRandomWords(),
     getRandomWords(),
@@ -170,18 +191,37 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
     return <Loader />
   };
 
+  if (isWelcomeScreen) {
+    return (
+      <main className="audio-challenge minigames">
+        <div className="minigames__wrapper">
+          <div className="welcome-screen">
+            <p className="welcome-screen__title">
+              Выберите один верный перевод слова из пяти. Для управления игрой используйте клавиши 1, 2, 3, 4, 5, ←, → либо просто кликайте мышкой.
+            </p>
+            <button className="btn welcome-screen__btn" onClick={() => {
+              setIsWelcomeScreen(false);
+              playAudio(translationWord.audio);
+            }}>
+              Начать игру
+            </button>
+          </div>
+        </div>
+      </main >
+    )
+  };
+
   return (
-    <main className="savannah minigames" ref={savannah}>
+    <main className="audio-challenge minigames" ref={audioChallenge}>
       <div className="minigames__wrapper">
-        {lives > 0 && gameWords.length !== 0 ?
+        {lives > 0 && gameWords.length !== 0 && !isWelcomeScreen ?
           <>
             <div className="minigames__panel">
               <button className="minigames__fullscreen" onClick={() => {
-                if (savannah.current !== null) {
-                  savannah.current.requestFullscreen();
+                if (audioChallenge.current !== null) {
+                  audioChallenge.current.requestFullscreen();
                 }
-              }
-              }>
+              }}>
                 <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg" >
                   <path d="M5.57143 5.57143H0V7.42859H6.50001C7.01328 7.42859 7.42859 7.01328 7.42859 6.50001V0H5.57143V5.57143Z" fill="white" />
                   <path d="M19.8572 0H18V6.50001C18 7.01328 18.4153 7.42859 18.9286 7.42859H25.4286V5.57143H19.8572V0Z" fill="white" />
@@ -200,28 +240,31 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
                 </NavLink>
               </div>
             </div>
-            <div className="savannah__word flow-animation" ref={word} onAnimationEnd={() => { onAnswer(translationWord) }}>
-              {
-                translationWord.word
-              }
-            </div>
-            <ul className="minigames__translation-list">
-              {
-                shuffleArray(translationsOnScreen).map((word: WordsProps, i: number) => {
-                  return (
-                    <li
-                      key={word.wordTranslate + i}
-                      className="minigames__translation-item"
-                      onClick={evt => onAnswer(translationWord, evt)}
-                    >
-                      <span tabIndex={0}>{i + 1}. {word.wordTranslate}</span>
-                    </li>
-                  )
-                })
-              }
-            </ul>
-            <div className="savannah__sun-wrapper">
-              <img className="savannah__sun" src="/images/games/sun.png" alt="sun" width="100px" ref={sun} />
+            <div className="audio-challenge__wrapper">
+              <div className="audio-challenge__word no-opacity" onClick={() => playAudio(translationWord.audio)} ref={wordContainer}>
+                <img className="audio-challenge__sound-waves vawes-resizing" src="/images/games/sound-waves.png" alt="sound or word illustrarion" ref={soundWaves} />
+                <span className="audio-challenge__word-answer" ref={word}>{translationWord.word}</span>
+              </div>
+              <ul className="minigames__translation-list">
+                {
+                  shuffleArray(translationsOnScreen).map((word: WordsProps, i: number) => {
+                    return (
+                      <li
+                        key={word.wordTranslate + i}
+                        className="minigames__translation-item"
+                        onClick={evt => onAnswer(translationWord, evt)}
+                      >
+                        <span>{i + 1}. {word.wordTranslate}</span>
+                      </li>
+                    )
+                  })
+                }
+              </ul>
+              <button className="btn audio-challenge__button" ref={button} onClick={() => {
+                answers === 0 ? onAnswer(translationWord) : onNextQuestionClick(translationWord);
+              }}>
+                Не знаю
+              </button>
             </div>
           </>
           :
@@ -238,6 +281,6 @@ const mapStateToProps = (state: any) => ({
   words: state.data.words
 });
 
-const Savannah = connect(mapStateToProps)(SavannahRedux);
+const AudioChallenge = connect(mapStateToProps)(AudioChallengeRedux);
 
-export { Savannah };
+export { AudioChallenge };

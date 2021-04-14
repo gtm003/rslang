@@ -6,7 +6,7 @@ import { Loader } from '../../loader';
 import { ResultsGame } from '../resultsGame';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Lives } from '../savannah/lives/lives';
+import { Lives } from '../lives/lives';
 import { AudioWord } from '../audioWords/audioWords';
 import {setData} from '../../../data';
 
