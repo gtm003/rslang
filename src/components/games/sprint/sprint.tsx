@@ -6,6 +6,7 @@ import { getRandomOderArr, getRandomBoolean, getRandomInteger, playAnswer } from
 import { Loader } from '../../loader';
 import { ResultsGame } from '../resultsGame';
 import { connect } from 'react-redux';
+import {setData} from '../../../data';
 
 let WORDS_GROUP : WordsProps[];
 let WORDS_GAME : WordsProps[];
@@ -57,6 +58,7 @@ const SprintRedux: React.FC<GameSprintProps> = ({words, hardWords, group, page, 
     if(words.length) {
       WORDS_GROUP = getWordsGroup();
       WORDS_GAME = getWordsGame();
+      console.log(WORDS_GAME);
       indexesWord = getRandomOderArr(WORDS_GAME.length);
       indexWord = indexesWord.pop();
       indexTranslate = getRandomBoolean() ? indexWord : getRandomInteger(WORDS_GAME.length);
@@ -104,6 +106,8 @@ const SprintRedux: React.FC<GameSprintProps> = ({words, hardWords, group, page, 
     playAnswer(answer === correctAnswer, mute);
     changeBorder(answer === correctAnswer);
     if (answer === correctAnswer) {
+      WORDS_GAME[indexWord!].corrects += 1;
+      setData(WORDS_GAME[indexWord!], 'corrects', WORDS_GAME[indexWord!].corrects);
       correctList.push(WORDS_GAME[indexWord!]);
       series += 1;
       seriesMax = (seriesMax < series) ? series : seriesMax;
@@ -111,6 +115,8 @@ const SprintRedux: React.FC<GameSprintProps> = ({words, hardWords, group, page, 
       setIncrement(`+${Math.min(series * 20, 80)}`);
       setScore(score + Math.min(series * 20, 80));
     } else {
+      WORDS_GAME[indexWord!].errorsCount += 1;
+      setData(WORDS_GAME[indexWord!], 'errorsCount', WORDS_GAME[indexWord!].errorsCount);
       errorList.push(WORDS_GAME[indexWord!]);
       series = 0;
       setColors(getColors(series));

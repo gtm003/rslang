@@ -1,4 +1,5 @@
 import { WordsProps } from "../common/ts/interfaces";
+import {urlBackend} from "./index";
 
 const url: string = `https://react-rs-lang-words.herokuapp.com/words?all=true`;
 
@@ -12,3 +13,25 @@ export const getData = async (): Promise<Array<WordsProps>> => {
 
   return await res.json();
 };
+
+const setData = (word: any, prop: any, value: boolean | number) => {
+  word[prop] = value;
+  const {id: newId, ...rest} = word;
+  const newWord = {_id: newId, ...rest};
+  if (newWord) {
+    const setWordsToBack = async (newWord: any) => {
+      console.log(newWord);
+      const responce = await fetch(`${urlBackend}words/${newWord._id}`, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newWord)
+      });
+    };
+    setWordsToBack(newWord);
+  }
+}
+
+export {setData};

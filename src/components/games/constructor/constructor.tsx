@@ -8,6 +8,7 @@ import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Lives } from '../savannah/lives/lives';
 import { AudioWord } from '../audioWords/audioWords';
+import {setData} from '../../../data';
 
 const CONTROL_TEXT = [
   {
@@ -65,6 +66,7 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
     if(words.length) {
       WORDS_GROUP = getWordsGroup();
       WORDS_GAME = getWordsGame();
+      console.log(WORDS_GAME);
       indexesWord = getRandomOderArr(WORDS_GAME.length);
       indexWord = indexesWord.pop();
       setWord(WORDS_GAME[indexWord!]);
@@ -98,6 +100,8 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
       setSolved(true);
       setIndexLetter(letters.length);
       setLives(lives - 1);
+      word!.errorsCount += 1;
+      setData(word, 'errorsCount', word!.errorsCount);
       errorList.push(word!);
     }
   }
@@ -126,6 +130,8 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
       if (indexLetter === letters.length - 1) {
         if (wordAnswer) {
           correctList.push(word!);
+          word!.corrects += 1;
+          setData(word, 'corrects', word!.corrects);
         }
         else {
           errorList.push(word!);
