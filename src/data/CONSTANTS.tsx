@@ -1,7 +1,7 @@
 const githubMembers: string[] = ['Alexk08', 'Kkasya', 'Alekseishkel', 'gtm003', '11alexey11'];
 const githubSrc: string = 'https://github.com/';
 const urlBackend: string = 'https://react-rs-lang-words.herokuapp.com/';
-
+console.log('a')
 const navLink: any = {
   "Главная": "",
   "Учебник": "tutorial",
