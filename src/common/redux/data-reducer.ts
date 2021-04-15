@@ -1,6 +1,5 @@
 import {WordsProps} from "../ts/interfaces";
 import {setData} from "../../data";
-import {stateUser} from "./login-reducer";
 
 interface InitialState {
   words: [];
@@ -19,7 +18,6 @@ const initialState: InitialState = {
 const reducer = (state: InitialState = initialState, action: any) => {
   switch (action.type) {
     case `SET_WORDS`:
-      //console.log(loginUser());
 
       const hardWords = action.payload.filter(
         (word: WordsProps) => word.hardWord === true
@@ -41,14 +39,14 @@ const reducer = (state: InitialState = initialState, action: any) => {
         // learningWords: learningWords,
       };
     case `ADD_HADR_WORD`:
-      setData(action.payload, 'hardWord', true, stateUser);
+      setData(action.payload, 'hardWord', true);
       return {
         ...state,
         hardWords: [...state.hardWords, action.payload],
       };
     case `REMOVE_HARD_WORD`:
       const updatedHardWords = state.hardWords.filter((word: WordsProps) => {
-        if (word.id === action.payload) setData(word, 'hardWord', false, stateUser);
+        if (word.id === action.payload) setData(word, 'hardWord', false);
          return word.id !== action.payload
       });
 
@@ -57,7 +55,7 @@ const reducer = (state: InitialState = initialState, action: any) => {
         hardWords: updatedHardWords,
       };
     case `ADD_DELETED_WORD`:
-      setData(action.payload, 'deletedWord', true, stateUser);
+      setData(action.payload, 'deletedWord', true);
 
       return {
         ...state,

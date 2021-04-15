@@ -22,26 +22,48 @@ interface StatisticsProps {
 }
 
 interface StatisticsCardsProps {
-  name: string,
-  isGame: boolean
+  learnedWords?: number,
+  rightWords?: number
 }
 
-const StatisticsCards: React.FC<StatisticsCardsProps> = ({name, isGame}) => {
+const GenaralStatisticsCards: React.FC<StatisticsCardsProps> = ({}) => {
   return (
-    <div>
-      <p className='statistics__title'>{name}</p>
-      <div className='statistics__cards'>
-        <div>Изучено слов</div>
-        <div>Правильные ответы</div>
-        {isGame && <div>Лучшая серия</div>}
-      </div>
-    </div>
+    <div >
+      <p className='statistics__title' >ваш прогресс</p >
+      <div className='statistics__cards inner-wrapper' >
+        <div >
+          <p className='number-learned' >300</p >
+          <p >Слов изучено</p >
+        </div >
+        <div >
+          <p className='number-right' >89%</p >
+          <p >Правильных ответов</p >
+        </div >
+      </div >
+    </div >
+  )
+};
+
+interface GameStatisticsCardsProps {
+  item: any,
+  index: number,
+}
+
+const GameStatisticsCards: React.FC<GameStatisticsCardsProps> = ({item, index}) => {
+  return (
+    <div className='item-settings'>
+      <div className={`settings-icon game__icon game__icon--${index + 1}`} >
+        <img src={item.iconUrl} alt={item.iconUrl} title={item.name} className='tutorial__icon' />
+      </div >
+      <p >300</p >
+      <p >89%</p >
+      <p >5</p >
+    </div >
   )
 };
 
 const StatisticsRedux: React.FC<StatisticsProps> = ({isAuth}) => {
   const location = useLocation();
-  const [nameGame, setNameGame] = useState('');
   const data = [
     {name: 'Page A', uv: 400, pv: 2400},
     {name: 'Page B', uv: 300, pv: 4567},
@@ -52,49 +74,53 @@ const StatisticsRedux: React.FC<StatisticsProps> = ({isAuth}) => {
 
   return (
     <>
-      <Crumbs path={location.pathname}/>
-      <div className='statistics'>
-        <div className=''>
-          <StatisticsCards name='Ваш прогресс на сегодня' isGame={false}/>
-        </div>
-        <div className='tutorial__icons'>
+      <Crumbs path={location.pathname} />
+      <div className='statistics' >
+        <div className='' >
+          <GenaralStatisticsCards />
+        </div >
+        <div className='tutorial__icons statistics__cards inner-statistics' >
+          <div className='items'>
+            <div className='game__icon settings-icon '></div>
+            <p>Слов изучено</p>
+            <p>Правильных ответов</p>
+            <p>Лучшая серия</p>
+          </div >
           {
             titleGames.map((item, index) => {
               return (
-                <div className={`game__icon game__icon--${index + 1}`} onClick={() => setNameGame(item.name)}>
-                  <img src={item.iconUrl} alt={item.iconUrl} title={item.name} className='tutorial__icon'/>
-                </div>
+                <GameStatisticsCards item={item} index={index} />
               )
             })
           }
-        </div>
-        {nameGame && <StatisticsCards name={nameGame} isGame/>}
+        </div >
+        {/*{nameGame && <StatisticsCards name={nameGame} isGame />}*/}
         {isAuth &&
-        <div className='diagramms'>
-          <LineChart
-            width={400}
-            height={400}
-            data={data}
-            margin={{top: 20, right: 20, left: 10, bottom: 20}}
-          >
-            <XAxis dataKey="name"/>
-            <Tooltip/>
-            <CartesianGrid stroke="#f5f5f5"/>
-            <Line type="monotone" dataKey="uv" stroke="#ff7300" yAxisId={0}/>
-          </LineChart>
-          <LineChart
-            width={400}
-            height={400}
-            data={data}
-            margin={{top: 20, right: 20, left: 10, bottom: 20}}
-          >
-            <XAxis dataKey="name"/>
-            <Tooltip/>
-            <CartesianGrid stroke="#f5f5f5"/>
-            <Line type="monotone" dataKey="pv" stroke="#387908" yAxisId={1}/>
-          </LineChart>
-        </div>}
-      </div>
+				<div className='diagramms' >
+					<LineChart
+						width={400}
+						height={400}
+						data={data}
+						margin={{top: 20, right: 20, left: 10, bottom: 20}}
+					>
+						<XAxis dataKey="name" />
+						<Tooltip />
+						<CartesianGrid stroke="#f5f5f5" />
+						<Line type="monotone" dataKey="uv" stroke="#ff7300" yAxisId={0} />
+					</LineChart >
+					<LineChart
+						width={400}
+						height={400}
+						data={data}
+						margin={{top: 20, right: 20, left: 10, bottom: 20}}
+					>
+						<XAxis dataKey="name" />
+						<Tooltip />
+						<CartesianGrid stroke="#f5f5f5" />
+						<Line type="monotone" dataKey="pv" stroke="#387908" yAxisId={1} />
+					</LineChart >
+				</div >}
+      </div >
     </>
   )
 };

@@ -20,13 +20,12 @@ const store = createStore(
   )
 );
 
-store.dispatch(ActionCreator.getWords());
-
 const userData = localStorage.user ? JSON.parse(localStorage.user) : null;
 
 if (userData) {
   store.dispatch(loginUser(userData.name, userData.userId, userData.photo, userData.isAuth, userData.token));
 }
+store.dispatch(ActionCreator.getWords());
 
 ReactDOM.render(
   <Provider store={store}>
