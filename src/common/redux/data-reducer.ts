@@ -30,7 +30,7 @@ const reducer = (state: InitialState = initialState, action: any) => {
       // const learningWords = action.payload.filter(
       //   (word: WordsProps) => word.hardWord === true
       // );
-      console.log(deletedWords)
+      console.log(hardWords)
 
       return {
         ...state,

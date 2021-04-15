@@ -67,8 +67,6 @@ const loginReducer = (state = initialState, action: Action) => {
         default:
             return state;
     }
-
-
 }
 
 export { loginReducer, stateUser };

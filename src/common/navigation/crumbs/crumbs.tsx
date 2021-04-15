@@ -43,6 +43,7 @@ console.log(path)
           (isDeleted && `${namesPath['deleted']}`) ||
           (isLearning && `${namesPath['learning']}`) ||
           namesPath[path];
+        console.log(namePath)
 
         const classGroup: string = isGroup ? `crumbs__btn crumbs__btn--${numberGroup-1}` : '';
         const lastPath: boolean = (index === pathComponent.length - 1);

@@ -1,23 +1,27 @@
-import { getData } from "../../data/service";
+import { getData, setDataNewUser } from "../../data/service";
 import { WordsProps } from "../ts/interfaces";
 
 const ActionCreator = {
   getWords: () => (dispatch: any): void => {
-    getData().then((data: any) => {
-      console.log(data)
-      const words = data;
-//const words = data[0].words;
-      console.log(words)
+    setDataNewUser().then((data: any) => {
+       // getData().then((data: any) => {
+        console.log(data)
+       // const words = data;
+          //let words;
+//if (data)
+  const words = data.length ? data[0].words : data;
+        console.log(words)
 
-words.forEach((word: any) => {
-  word._id = word.id;
-})
-      console.log(words)
-      dispatch({
-        type: `SET_WORDS`,
-        payload: words,
+        words.forEach((word: any) => {
+          word._id = word.id;
+        })
+        console.log(words)
+        dispatch({
+          type: `SET_WORDS`,
+          payload: words,
+        });
       });
-    });
+   // })
   },
 
   addHardWord: (word: WordsProps) => ({
