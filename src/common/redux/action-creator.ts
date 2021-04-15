@@ -1,15 +1,21 @@
 import { getData } from "../../data/service";
 import { WordsProps } from "../ts/interfaces";
-import {stateUser} from "./login-reducer";
 
 const ActionCreator = {
   getWords: () => (dispatch: any): void => {
-    getData().then((data: WordsProps[]) => {
+    getData().then((data: any) => {
       console.log(data)
+      const words = data;
+//const words = data[0].words;
+      console.log(words)
 
+words.forEach((word: any) => {
+  word._id = word.id;
+})
+      console.log(words)
       dispatch({
         type: `SET_WORDS`,
-        payload: data,
+        payload: words,
       });
     });
   },

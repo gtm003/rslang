@@ -89,7 +89,7 @@ const StatisticsRedux: React.FC<StatisticsProps> = ({isAuth}) => {
           {
             titleGames.map((item, index) => {
               return (
-                <GameStatisticsCards item={item} index={index} />
+                <GameStatisticsCards item={item} index={index} key={item.name} />
               )
             })
           }

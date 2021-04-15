@@ -8,7 +8,7 @@ interface CrumbsProps {
 }
 
 const Crumbs: React.FC<CrumbsProps> = ({path}) => {
-  const pathComponent: RegExpMatchArray | null = path.match(/[^\/][\w]*/g);
+  const pathComponent: RegExpMatchArray | null = path.match(/[^/][\w]*/g);
   let currentPath: string = '/';
 console.log(path)
   return (

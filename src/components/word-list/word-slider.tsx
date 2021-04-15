@@ -34,17 +34,17 @@ const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isDictionary =
         setWords(dictionaryWords[page]);
         setMessage(false);
       }
-      console.log('словарь')
     } else {
       setWords([]);
       getDataPage(group - 1, page).then((res: WordsProps[]) => getWordsWithoutDeleted(res));
-      console.log('учебник')
     }
-  }, [page, group, isDictionary]);
+  }, [page, group, isDictionary, deletedWords]);
 
 
   const getWordsWithoutDeleted: any = (words: any) => {
-    const wordsWithoutDeleted = words.filter((word: WordsProps) => deletedWords.findIndex((deletedWord: WordsProps) => deletedWord.id === word.id) === -1);
+    console.log(deletedWords)
+    const wordsWithoutDeleted = words.filter((word: any) => deletedWords.findIndex((deletedWord: any) => deletedWord.id === word.id) === -1);
+    console.log(wordsWithoutDeleted)
 
     if (!wordsWithoutDeleted.length) {
       const option = document.getElementsByTagName('option')[page + 1];
@@ -52,6 +52,7 @@ const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isDictionary =
       setMessage(true);
     } else {
       setWords(wordsWithoutDeleted);
+      console.log(words)
       setMessage(false);
     }
   }
@@ -79,9 +80,10 @@ const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isDictionary =
       {
         ((page < 0) && <img src={pathImg} alt='level english'/>) ||
         (isMessage && <p className="message">The page is deleted</p>) ||
-        ((words.length) ?
+        ((words.length && getWords.length) ?
           <Carousel dynamicHeight={false}>
             {words.map((item: WordsProps) => {
+
               const isHard: boolean = Boolean(hardWords.length) && hardWords.some((word: any) => word.id === item.id);
               return (
                 <div key={item.id}>
