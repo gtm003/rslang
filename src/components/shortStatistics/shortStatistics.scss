@@ -1,0 +1,47 @@
+.short-statistic {
+
+  &__title {
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+  }
+  &__body {
+    width: 600px;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    background:  rgba(50, 50, 50, 0.87);
+    box-shadow: 2px 2px 0px 0px $yellow-color inset, -2px -2px 0px 0px $yellow-color inset;
+    &__subtitle {
+      margin-top: 1.5rem;
+      font-size: 1.5rem;
+      text-transform: uppercase;
+    }
+    &__series {
+      margin-top: 1.5rem;
+      font-size: 1.5rem;
+    }
+    &__repeat {
+      margin-top: 1.5rem;
+      font-size: 1.5rem;
+    }
+    &__control {
+      display: flex;
+      height: 100px;
+      &__item {
+        display: flex;
+        width: 120px;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 1px 2px 0px 0px $yellow-color inset, -1px -2px 0px 0px $yellow-color inset;
+        &--active {
+          box-shadow: 1px 0px 0px 0px $yellow-color inset, -1px -2px 0px 0px $yellow-color inset;
+        }
+      }
+    }
+  }
+}

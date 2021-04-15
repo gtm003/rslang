@@ -7,6 +7,7 @@ import { Loader } from '../../loader';
 import { ResultsGame } from '../resultsGame';
 import { connect } from 'react-redux';
 import {setData} from '../../../data';
+import { ShortStatistics } from '../../shortStatistics';
 
 let WORDS_GROUP : WordsProps[];
 let WORDS_GAME : WordsProps[];
@@ -58,7 +59,6 @@ const SprintRedux: React.FC<GameSprintProps> = ({words, hardWords, group, page, 
     if(words.length) {
       WORDS_GROUP = getWordsGroup();
       WORDS_GAME = getWordsGame();
-      console.log(WORDS_GAME);
       indexesWord = getRandomOderArr(WORDS_GAME.length);
       indexWord = indexesWord.pop();
       indexTranslate = getRandomBoolean() ? indexWord : getRandomInteger(WORDS_GAME.length);
@@ -187,6 +187,7 @@ const SprintRedux: React.FC<GameSprintProps> = ({words, hardWords, group, page, 
                 <i className="material-icons sprint-header__icons sprint-header__icons--close">close</i>
               </NavLink>
             </div>
+            <ShortStatistics correct = {correctList.length} error = {errorList.length} seriesLength = {seriesMax}/>
               {gameStatus && (
                 <div className='sprint-body'>
                   <div className='sprint-body__info'>
