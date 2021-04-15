@@ -52,10 +52,10 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
   const [fullscreen, setFullscreen] = useState<boolean>(false);
   const [lives, setLives] = useState<number>(quantityLives);
 
-    const getWordsGroup = () => {
-      if (hard) return hardWords;
-      return words.filter(item => item.group === group);
-    }
+    //const getWordsGroup = () => {
+    //  if (hard) return hardWords;
+    //  return words.filter(item => item.group === group);
+    //}
   
     const getWordsGame = () => {
       if (page !== undefined) return WORDS_GROUP.filter(item => item.page === page - round);
@@ -64,16 +64,15 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
 
   useEffect(() => {
     if(words.length) {
-      WORDS_GROUP = getWordsGroup();
-      WORDS_GAME = getWordsGame();
-      console.log(WORDS_GAME);
+      WORDS_GROUP = hard ? hardWords : words.filter(item => item.group === group);
+      WORDS_GAME = (page !== undefined) ? WORDS_GROUP.filter(item => item.page === page - round) : WORDS_GROUP;
       indexesWord = getRandomOderArr(WORDS_GAME.length);
       indexWord = indexesWord.pop();
       setWord(WORDS_GAME[indexWord!]);
       setLetters(getLetters(WORDS_GAME[indexWord!]));
       setMixedOder(getRandomOderArr(WORDS_GAME[indexWord!].word.length));
     }
-  }, [words]);
+  }, [words, hard, hardWords, page, group]);
 
   const getLetters = (word: WordsProps): (string[]) => {
     return word.word.split('');
@@ -200,7 +199,8 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
             onClick={() => onToggleHandlerFullScreen()}>{fullscreen ? 'fullscreen_exit' : 'fullscreen'}</i>
           {lives > 0 && <Lives lives = {lives} />}
           <NavLink to='/games'>
-            <i className="material-icons constructor-header__icons constructor-header__icons--close">close</i>
+            <i className="material-icons constructor-header__icons constructor-header__icons--close"
+                  onClick={onClickHandlerNewGame.bind(null, false)}>close</i>
           </NavLink>
         </div>
             {lives ?
