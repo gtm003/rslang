@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { Footer } from '../footer';
 import { Header } from '../header';
 import { Switcher } from "../../common/navigation";
@@ -6,8 +6,20 @@ import { BrowserRouter } from "react-router-dom";
 import { Settings } from "../settings";
 import { LoginForm } from '../loginform';
 import { SignUpForm } from '../signupform';
+import {ActionCreator} from "../../common/redux/action-creator";
+import {connect} from "react-redux";
 
-const App: React.FC = () => {
+interface AppProps {
+  isAuth: boolean,
+  getWords: () => void,
+}
+
+const AppRedux: React.FC<AppProps> = ({isAuth, getWords}) => {
+
+  useEffect(() => {
+    console.log(isAuth)
+    getWords();
+  }, [isAuth]);
 
   return (
     <BrowserRouter>
@@ -23,4 +35,16 @@ const App: React.FC = () => {
   );
 }
 
+const mapStateToProps = (state: any) => ({
+  isAuth: state.login.isAuth,
+});
+
+const mapDispatchToProps = (dispatch: any) => ({
+  getWords: () => {
+    dispatch(ActionCreator.getWords());
+  },
+});
+
+
+const App = connect(mapStateToProps, mapDispatchToProps)(AppRedux);
 export {App};

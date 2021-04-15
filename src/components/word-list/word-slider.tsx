@@ -19,12 +19,13 @@ interface WordSliderProps {
   onDeleteHardWordClick: (id: string) => void,
   onDeleteWordClick: (word: WordsProps) => void,
   isDictionary?: boolean,
-  dictionaryWords?: any
+  dictionaryWords?: any,
+  isAuth: boolean,
 }
 
 const audio = new Audio();
 
-const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isDictionary = false, dictionaryWords = [], isTranslate, areButtons, hardWords, deletedWords, getWords, onHardWordClick, onDeleteHardWordClick, onDeleteWordClick}) => {
+const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isDictionary = false, dictionaryWords = [], isTranslate, areButtons, hardWords, deletedWords, getWords, onHardWordClick, onDeleteHardWordClick, onDeleteWordClick, isAuth}) => {
   const [words, setWords] = useState<WordsProps[]>([]);
   const [isMessage, setMessage] = useState<boolean>(false);
 
@@ -42,9 +43,7 @@ const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isDictionary =
 
 
   const getWordsWithoutDeleted: any = (words: any) => {
-    console.log(deletedWords)
     const wordsWithoutDeleted = words.filter((word: any) => deletedWords.findIndex((deletedWord: any) => deletedWord.id === word.id) === -1);
-    console.log(wordsWithoutDeleted)
 
     if (!wordsWithoutDeleted.length) {
       const option = document.getElementsByTagName('option')[page + 1];
@@ -84,7 +83,10 @@ const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isDictionary =
           <Carousel dynamicHeight={false}>
             {words.map((item: WordsProps) => {
 
-              const isHard: boolean = Boolean(hardWords.length) && hardWords.some((word: any) => word.id === item.id);
+              const isHard: boolean = Boolean(hardWords.length) && hardWords.some((word: any) => {
+                //console.log(word.id, item.id)
+                return word.id === item.id
+              });
               return (
                 <div key={item.id}>
                   <img src={urlBackend + item.image} alt='figure of word'/>
@@ -138,6 +140,7 @@ const mapStateToProps = (state: any) => ({
   hardWords: state.data.hardWords,
   deletedWords: state.data.deletedWords,
   getWords: state.data.words,
+  isAuth: state.login.isAuth,
 });
 
 const mapDispatchToProps = (dispatch: any) => ({

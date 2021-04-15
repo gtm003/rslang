@@ -1,16 +1,17 @@
 import { getData, setDataNewUser } from "../../data/service";
 import { WordsProps } from "../ts/interfaces";
+import {stateUser} from "./login-reducer";
 
 const ActionCreator = {
   getWords: () => (dispatch: any): void => {
+    const auth:boolean = stateUser.isAuth;
     setDataNewUser().then((data: any) => {
        // getData().then((data: any) => {
         console.log(data)
        // const words = data;
           //let words;
 //if (data)
-  const words = data.length ? data[0].words : data;
-        console.log(words)
+  const words = auth ? data[0].words : data;
 
         words.forEach((word: any) => {
           word._id = word.id;

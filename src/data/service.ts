@@ -48,7 +48,9 @@ const getData = async (): Promise<Array<WordsProps>> => {
   let res;
   //if (stateUser) {
     const userId = stateUser.user.userId;
-    const url: string = `${urlBackend}users/${userId}/words`;
+  const auth:boolean = stateUser.isAuth;
+  const url:string = auth ? `${urlBackend}users/${userId}/words` : `${urlBackend}words?all=true`;
+
     console.log(userId)
     res = await fetch(`${url}`, {
       method: 'GET',
@@ -77,13 +79,18 @@ const getData = async (): Promise<Array<WordsProps>> => {
 
 const setData = (word:any, prop:any, value:any) => {
   word[prop] = value;
+  console.log(word)
   console.log(stateUser)
-  const userId = stateUser.user.userId;
+  const userId:string = stateUser.user.userId;
+  const auth:boolean = stateUser.isAuth;
   if (!word._id)  word._id = word.id;
+
+  const url:string = auth ? `${urlBackend}users/${userId}/words/${word._id}` : `${urlBackend}words/${word._id}`;
+  const method: string = auth ? 'PUT' : 'POST';
   if (word) {
     const setWordsToBack = async (word: any) => {
-      const responce = await fetch(`${urlBackend}users/${userId}/words/${word._id}`, {
-        method: 'PUT',
+      const responce = await fetch(url, {
+        method: method,
         headers: {
           'Authorization': `Bearer ${stateUser.user.token}`,
           'Accept': 'application/json',
@@ -96,32 +103,5 @@ const setData = (word:any, prop:any, value:any) => {
     //return responce;
   }
 }
-
-
-// const setStatistics = (word:any, prop:any, value:any) => {
-//
-//   word[prop] = value;
-//   const userId = stateUser.user.userId;
-//   if (!word._id) {
-//     const {id: newId, ...rest} = word;
-//     word = {_id: newId, ...rest};
-//   }
-//   if (word) {
-//     const setWordsToBack = async (word: any) => {
-//       const responce = await fetch(`${urlBackend}users/${userId}/words/${word._id}`, {
-//       //const responce = await fetch(`${urlBackend}words/${newWord._id}`, {
-//         method: 'POST',
-//         headers: {
-//           //'Authorization': `Bearer ${stateUser.user.token}`,
-//           'Accept': 'application/json',
-//           'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify(word)
-//       });
-//     };
-//     setWordsToBack(word);
-//   }
-// }
-
 
 export {setData, setDataNewUser, getData};
