@@ -31,10 +31,10 @@ interface GameSprintProps {
 
 const SprintRedux: React.FC<GameSprintProps> = ({words, hardWords, group, page, hard}) => {
   // WORDS_GROUP - массив со словами, используемый в игре (или сложные слова и группа слов)
-  const getWordsGroup = () => {
-    if (hard) return hardWords;
-    return words.filter(item => item.group === group);
-  }
+  //const getWordsGroup = () => {
+  //  if (hard) return hardWords;
+  //  return words.filter(item => item.group === group);
+  //}
 
   // WORDS_GAME - массив со словами, используемый в игре с учетом номера страницы (сложные слова или игра из меню 
   // соответствует массиву WORDS_GROUP - иначе конкретная страница)
@@ -56,16 +56,15 @@ const SprintRedux: React.FC<GameSprintProps> = ({words, hardWords, group, page, 
 
   useEffect(() => {
     if(words.length) {
-      WORDS_GROUP = getWordsGroup();
-      WORDS_GAME = getWordsGame();
-      console.log(WORDS_GAME);
+      WORDS_GROUP = hard ? hardWords : words.filter(item => item.group === group);
+      WORDS_GAME = (page !== undefined) ? WORDS_GROUP.filter(item => item.page === page - round) : WORDS_GROUP;
       indexesWord = getRandomOderArr(WORDS_GAME.length);
       indexWord = indexesWord.pop();
       indexTranslate = getRandomBoolean() ? indexWord : getRandomInteger(WORDS_GAME.length);
       setWord(WORDS_GAME[indexWord!].word);
       setWordTranslate(WORDS_GAME[indexTranslate!].wordTranslate);
     }
-  }, [words]);
+  }, [words, hard, hardWords, page, group]);
 
   useEffect(() => {
     const timerId = setInterval(() => {
@@ -184,7 +183,8 @@ const SprintRedux: React.FC<GameSprintProps> = ({words, hardWords, group, page, 
               <i className="material-icons sprint-header__icons sprint-header__icons--fullscreen"
                 onClick={() => onToggleHandlerFullScreen()}>{fullscreen ? 'fullscreen_exit' : 'fullscreen'}</i>
               <NavLink to='/games'>
-                <i className="material-icons sprint-header__icons sprint-header__icons--close">close</i>
+                <i className="material-icons sprint-header__icons sprint-header__icons--close"
+                  onClick={onClickHandlerNewGame.bind(null, false)}>close</i>
               </NavLink>
             </div>
               {gameStatus && (
