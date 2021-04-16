@@ -5,7 +5,10 @@ import { connect } from "react-redux";
 import { Loader } from "../../loader";
 import { ResultsGame } from '../resultsGame/resultsGame';
 import { Lives } from "../lives/lives";
-import { shuffleArray, highlightWords, removeWordsHighlighting, onFullScreenClick } from "../utils/utils";
+import {
+  shuffleArray, highlightWords, removeWordsHighlighting,
+  onFullScreenClick, changeFullscreenIcon
+} from "../utils/utils";
 import { urlBackend } from "../../../data";
 import { setData } from '../../../data';
 
@@ -44,9 +47,13 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
   }, [words, group, page]);
 
   useEffect(() => {
-
+    window.document.addEventListener("fullscreenchange", onFullScreenChange)
     window.addEventListener("keyup", onKeyUpHandler);
-    return () => (window as any).removeEventListener("keyup", onKeyUpHandler);
+
+    return () => {
+      (window as any).removeEventListener("keyup", onKeyUpHandler);
+      (window as any).removeEventListener("keyup", onFullScreenChange);
+    };
   }, [gameWords]);
 
   useEffect(() => {
@@ -54,6 +61,12 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
       playAudio(gameWords[translationWordIndex].audio);
     }
   }, [gameWords]);
+
+  const onFullScreenChange = () => {
+    if (document.fullscreenElement === null && fullscreen.current) {
+      changeFullscreenIcon(fullscreen.current)
+    }
+  };
 
   const playAudio = async (audioSrc: string) => {
     const audio = new Audio();
@@ -85,12 +98,6 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
         return playAudio(translationWord.audio);
       case "ArrowRight":
         return answers === 0 ? onAnswer(translationWord) : onNextQuestionClick(translationWord);
-      case "Escape":
-        return document.onfullscreenchange = () => {
-          if (document.fullscreenElement) {
-            onFullScreenClick(audioChallenge.current!, fullscreen.current!);
-          }
-        }
     }
   };
 

@@ -4,7 +4,8 @@ import { NavLink } from 'react-router-dom';
 import { connect } from "react-redux";
 import { Loader } from "../../loader";
 import { Lives } from "../lives/lives";
-import { shuffleArray, highlightWords, removeWordsHighlighting, onFullScreenClick } from "../utils/utils";
+import { shuffleArray, highlightWords, removeWordsHighlighting,
+         onFullScreenClick, changeFullscreenIcon } from "../utils/utils";
 import { ResultsGame } from '../resultsGame/resultsGame';
 import { setData } from '../../../data';
 
@@ -43,9 +44,20 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
   }, [words, group, page]);
 
   useEffect(() => {
+    window.document.addEventListener("fullscreenchange", onFullScreenChange)
     window.addEventListener("keyup", onKeyUpHandler);
-    return () => (window as any).removeEventListener("keyup", onKeyUpHandler);
+    
+    return () => {
+      (window as any).removeEventListener("keyup", onKeyUpHandler);
+      (window as any).removeEventListener("keyup", onFullScreenChange);
+    };
   }, [gameWords]);
+
+  const onFullScreenChange = () => {
+    if (document.fullscreenElement === null && fullscreen.current) {
+      changeFullscreenIcon(fullscreen.current)
+    }
+  };
 
   const onKeyUpHandler = (evt: KeyboardEvent) => {
     switch (evt.key) {

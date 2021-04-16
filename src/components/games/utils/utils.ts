@@ -31,9 +31,8 @@ export const removeWordsHighlighting = (
 export const onFullScreenClick = (
   game: HTMLElement,
   fullscreen: HTMLButtonElement
-) => {
-  if (document.fullscreenElement) {
-    console.log(1);
+): void => {
+  if (document.fullscreenElement === null) {
     game.requestFullscreen();
     fullscreen.innerHTML = `
     <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -44,8 +43,6 @@ export const onFullScreenClick = (
     </svg>`;
   } else {
     document.exitFullscreen();
-    console.log(2);
-
     fullscreen.innerHTML = `<svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
       <g clipPath="url(#clip0)">
         <path d="M0 0.928581V7.42859H1.85716V1.85716H7.42859V0H0.928581C0.415309 0 0 0.415309 0 0.928581H0Z" fill="white" />
@@ -61,3 +58,19 @@ export const onFullScreenClick = (
     </svg>`;
   }
 };
+
+export const changeFullscreenIcon = (fullscreen: HTMLButtonElement): void => {
+  fullscreen.innerHTML = `<svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g clipPath="url(#clip0)">
+    <path d="M0 0.928581V7.42859H1.85716V1.85716H7.42859V0H0.928581C0.415309 0 0 0.415309 0 0.928581H0Z" fill="white" />
+    <path d="M25.0713 0H18.5713V1.85716H24.1427V7.42859H25.9999V0.928581C25.9999 0.415309 25.5846 0 25.0713 0V0Z" fill="white" />
+    <path d="M24.1427 24.1428H18.5713V26H25.0713C25.5846 26 25.9999 25.5847 25.9999 25.0714V18.5714H24.1427V24.1428Z" fill="white" />
+    <path d="M1.85716 18.5714H0V25.0714C0 25.5847 0.415309 26 0.928581 26H7.42859V24.1428H1.85716V18.5714Z" fill="white" />
+  </g>
+  <defs>
+    <clipPath id="clip0">
+      <rect width="26" height="26" fill="white" />
+    </clipPath>
+  </defs>
+</svg>`;
+}
