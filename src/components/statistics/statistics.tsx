@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import {connect} from "react-redux";
 import {useLocation} from "react-router-dom";
 import {Crumbs} from "../../common/navigation/crumbs";
+/*
 import {titleGames} from "../../data";
 import {
   AreaChart,
@@ -15,7 +16,7 @@ import {
   LineChart,
   CartesianGrid,
   Line
-} from 'recharts';
+} from 'recharts';*/
 import { ShortStatistics } from "../shortStatistics";
 import { LongStatistics } from "../longStatistics";
 

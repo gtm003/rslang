@@ -23,12 +23,6 @@ const emptyStatistic: GameStatisticDailyProps = {
 let statisticBack: StatisticsProps;
 
 const LongStatisticsRedux: React.FC<ShortStatisticsProps> = ({user}) => {
-  const [gameNumber, setGameNumber] = useState<number>(4);
-  const [countLearningWords, setCountLearningWords] = useState<number>(0);
-  const [error, setError] = useState<number>(0);
-  const [correct, setCorrect] = useState<number>(0);
-  const [date, setDate] = useState<string>('');
-  const [winStreak, setWinStreak] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const titleStatistic = titleGames.concat(
     {
@@ -50,67 +44,63 @@ const LongStatisticsRedux: React.FC<ShortStatisticsProps> = ({user}) => {
   const getLastDay = (arr: GameStatisticDailyProps[]) => {
     return arr.length ? arr[arr.length -1] : emptyStatistic;
   }
-  
-  const getSummaryStatistic = () => {
-    const todaySummaryStatistics = [];
-    let countAnswer: number = 0;
-    let countRightAnswers: number = 0;
-    let winStreak: number = 0;
+
+  const getCommonWords = (set: Set<string>, arr: GameStatisticDailyProps[]) => {
+    //const summaryWords = new Set<string>();
+    const summaryWords: string[] = Array.from(set);
+    arr.forEach(dayData => summaryWords.push(...dayData.learningWords));
+    return new Set(summaryWords);
+  }
+
+  const getCountWords = (arr: GameStatisticDailyProps[]) => {
+    //const summaryWords = new Set<string>();
+    const summaryWords: string[] = [];
+    arr.forEach(dayData => summaryWords.push(...dayData.learningWords));
+    return new Set(summaryWords).size;
+  }
+
+  const getLongStatisticData = () => {
+    const data: GameStatisticDailyProps[] =[]
     for (let game in statisticBack) {
-      if (!compareDates(getLastDay(statisticBack[game as keyof StatisticsProps]).data))
-      todaySummaryStatistics.push(getLastDay(statisticBack[game as keyof StatisticsProps]))
+      statisticBack[game as keyof StatisticsProps].forEach(dayData => data.push(dayData));
     }
-    const summaryLearningWords = new Set<string>();
-    todaySummaryStatistics.forEach(game => {
-      game.learningWords.forEach(word => summaryLearningWords.add(word));
-      if (game.winStreak > winStreak) winStreak = game.winStreak;
-      countRightAnswers += game.countRightAnswers;
-      countAnswer += game.generalCountLearningWords;
-    })
-    setWinStreak(winStreak);
-    setCountLearningWords(summaryLearningWords.size);
-    setCorrect(countRightAnswers);
-    setError(countAnswer - countRightAnswers);
-  }
-
-  const getGameStatisticLastDay = (index: number) : GameStatisticDailyProps => {
-    const gameName = titleStatistic[index].id;
-    let gameStatistic; 
-      switch (gameName) {
-      case 'sprint':
-        gameStatistic = getLastDay(statisticBack!.sprint);
-        break;
-      case 'audio':
-        gameStatistic = getLastDay(statisticBack!.audioCall);
-        break;
-      case 'savannah':
-          gameStatistic = getLastDay(statisticBack!.savannah);
-        break;
-      case 'constructor':
-        gameStatistic = getLastDay(statisticBack!.constructorWords);
-        break;
-      default:
-        gameStatistic = emptyStatistic;
+    const dates = new Set<string>();
+    data.forEach(dayData => dates.add(dayData.data));
+    const datesArr: string[] = Array.from(dates);
+    datesArr.sort();
+    let wordsCommon = new Set<string>();
+    const countWordsCommon: number[] = [];
+    datesArr.forEach((date) => {
+      wordsCommon = getCommonWords(wordsCommon, data.filter(dayData => date === dayData.data));
+      countWordsCommon.push(wordsCommon.size);
+    });
+    //const dataChart = datesArr;
+    const countWordsDaily: number[] = [];
+    for (let i = 0; i < countWordsCommon.length; i += 1) {
+      const daily = i ? countWordsCommon[i] - countWordsCommon[i - 1] : countWordsCommon[i];
+      countWordsDaily.push(daily);
     }
-    return gameStatistic;
-  }
+    const dataChartCommon: [string, number][] = datesArr.map(date => {
+      return [date, getCountWords(data.filter(dayData => date === dayData.data))]
+    });
 
-  const onChangeGameNumber = (index: number) => {
-    console.log(statisticBack);
-    setGameNumber(index);
-    const gameStatistic = getGameStatisticLastDay(index);
-    if (index !== 4) {
-      setDate(gameStatistic.data);
-      setWinStreak(gameStatistic.winStreak);
-      setCountLearningWords(gameStatistic.learningWords.length);
-      setCorrect(gameStatistic.countRightAnswers);
-      setError(gameStatistic.generalCountLearningWords - gameStatistic.countRightAnswers);
-    } else getSummaryStatistic();
+    const dataChart = datesArr.map((date, index) => [date, countWordsCommon[index], countWordsDaily[index]]);
+    /*
+    dataChartDaily.sort(function(a, b) {
+      return new Date(b[0].split(".").reverse().join("-")) - new Date(a[0].split(".").reverse().join("-"));
+    });*/
+    let dataChartCommonDaily = dataChartCommon;
+    const dataChartCommonCount: number[] = dataChartCommon.map(data => data[1]);
+    for (let i = 0; i < dataChartCommonCount.length; i += 1) {
+      const daily = i ? dataChartCommonCount[i] - dataChartCommonCount[i - 1] : dataChartCommonCount[i];
+      dataChartCommonDaily[i].push(daily);
+    }
+    return dataChart;
   }
-
+  
   return (
   <React.Fragment>
-    <div className='long-statistic'>
+    <div className='long-statistic' onClick = {() => console.log(getLongStatisticData())}>
       <p className='long-statistic__title'>Долгосрочная статистика</p>
       <div className='long-statistic__body'>
         {loading ?
@@ -122,10 +112,8 @@ const LongStatisticsRedux: React.FC<ShortStatisticsProps> = ({user}) => {
     chartType="ColumnChart"
     loader={<div>Loading Chart</div>}
     data={[
-      ['Количество изучаемых слов', 'общее', 'за день'],
-      ['15.04.2021', 20, 20],
-      ['16.04.2021', 40, 20],
-      ['17.04.2021', 70, 30],
+      ['Количество изучаемых слов', 'общее', 'новых слов'],
+    ...getLongStatisticData()
     ]}
     options={{
       //title: 'Долгосрочная статистика',

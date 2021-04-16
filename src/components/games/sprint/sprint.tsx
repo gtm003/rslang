@@ -207,7 +207,6 @@ const SprintRedux: React.FC<GameSprintProps> = ({user, words, hardWords, group, 
                   onClick={onClickHandlerNewGame.bind(null, false)}>close</i>
               </NavLink>
             </div>
-            <ShortStatistics />
               {gameStatus && (
                 <div className='sprint-body'>
                   <div className='sprint-body__info'>
