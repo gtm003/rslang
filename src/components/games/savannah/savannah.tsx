@@ -4,8 +4,9 @@ import { NavLink } from 'react-router-dom';
 import { connect } from "react-redux";
 import { Loader } from "../../loader";
 import { Lives } from "../lives/lives";
-import { shuffleArray, highlightWords, removeWordsHighlighting} from "../utils/utils";
+import { shuffleArray, highlightWords, removeWordsHighlighting } from "../utils/utils";
 import { ResultsGame } from '../resultsGame/resultsGame';
+import { setData } from '../../../data';
 
 const savannahHeight = window.innerHeight;
 const BG_IMAGE_HEIGHT = 4500;
@@ -130,9 +131,11 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
       setTimeout(() => {
         if (wrongAnswer) {
           setLives(prevLives => prevLives - 1);
+          setData(wordTranslation, 'errorsCount', ++wordTranslation.errorsCount);
           wrongAnswers.push(wordTranslation);
         } else {
           correctAnswers.push(wordTranslation);
+          setData(wordTranslation, 'corrects', ++wordTranslation.corrects);
         };
 
         const updatedWords = gameWords.filter((word) => word.word !== wordTranslation.word);

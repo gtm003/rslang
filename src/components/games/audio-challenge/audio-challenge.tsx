@@ -5,8 +5,9 @@ import { connect } from "react-redux";
 import { Loader } from "../../loader";
 import { ResultsGame } from '../resultsGame/resultsGame';
 import { Lives } from "../lives/lives";
-import { shuffleArray, highlightWords, removeWordsHighlighting} from "../utils/utils";
+import { shuffleArray, highlightWords, removeWordsHighlighting } from "../utils/utils";
 import { urlBackend } from "../../../data";
+import { setData } from '../../../data';
 
 let necessaryWords: WordsProps[];
 let correctAnswers: WordsProps[] = [];
@@ -110,8 +111,10 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
       if (wrongAnswer) {
         --lives;
         wrongAnswers.push(wordTranslation);
+        setData(wordTranslation, 'errorsCount', ++wordTranslation.errorsCount);
       } else {
         correctAnswers.push(wordTranslation);
+        setData(wordTranslation, 'corrects', ++wordTranslation.corrects);
       };
 
       if (soundWaves.current) {
@@ -137,7 +140,7 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
     };
   };
 
-  const onNextQuestionClick = (wordTranslation: WordsProps) => { 
+  const onNextQuestionClick = (wordTranslation: WordsProps) => {
     answers = 0;
 
     if (soundWaves.current) {
