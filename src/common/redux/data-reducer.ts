@@ -27,11 +27,6 @@ const reducer = (state: InitialState = initialState, action: any) => {
         (word: WordsProps) => word.deletedWord === true
       );
 
-      // const learningWords = action.payload.filter(
-      //   (word: WordsProps) => word.hardWord === true
-      // );
-      console.log(hardWords)
-
       return {
         ...state,
         words: action.payload,
@@ -41,7 +36,6 @@ const reducer = (state: InitialState = initialState, action: any) => {
       };
     case `ADD_HADR_WORD`:
       setData(action.payload, 'hardWord', true);
-      console.log(action.payload)
       return {
         ...state,
         hardWords: [...state.hardWords, action.payload],
@@ -49,7 +43,7 @@ const reducer = (state: InitialState = initialState, action: any) => {
     case `REMOVE_HARD_WORD`:
       const updatedHardWords = state.hardWords.filter((word: any) => {
         if (word.id === action.payload) setData(word, 'hardWord', false);
-         return word.id !== action.payload
+        return word.id !== action.payload
       });
 
       return {
@@ -74,4 +68,4 @@ const reducer = (state: InitialState = initialState, action: any) => {
   }
 };
 
-export { reducer };
+export {reducer};

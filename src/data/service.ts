@@ -1,4 +1,4 @@
-import { WordsProps } from "../common/ts/interfaces";
+import {WordsProps} from "../common/ts/interfaces";
 import {urlBackend} from "./index";
 import {stateUser} from "../common/redux/login-reducer";
 
@@ -12,6 +12,7 @@ const setDataNewUser = async () => {
     errorsCount: 0,
     group: 0,
     hardWord: false,
+    id: "5e9f5ee35eb9e72bc21af4a0",
     _id: "5e9f5ee35eb9e72bc21af4a0",
     image: "files/01_0002.jpg",
     learningWord: false,
@@ -25,67 +26,38 @@ const setDataNewUser = async () => {
     wordTranslate: "алкоголь"
   };
   await setData(temp, 'group', 0);
-  return  getData();
-  // console.log(stateUser.user.token)
-  // const userId = stateUser.user.userId;
-  //
-  // const setWordsToBack = async () => {
-  //   const responce = await fetch(`${urlBackend}users/${userId}/words`, {
-  //     method: 'PUT',
-  //     headers: {
-  //       'Authorization': `Bearer ${stateUser.user.token}`,
-  //       'Accept': 'application/json',
-  //       'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify('')
-  //   });
-  // };
-  //setWordsToBack();
-  //return getData();
+  return getData();
 }
 
 const getData = async (): Promise<Array<WordsProps>> => {
   let res;
-  //if (stateUser) {
-    const userId = stateUser.user.userId;
-  const auth:boolean = stateUser.isAuth;
-  const url:string = auth ? `${urlBackend}users/${userId}/words` : `${urlBackend}words?all=true`;
+  const userId = stateUser.user.userId;
+  const auth: boolean = stateUser.isAuth;
+  const url: string = auth ? `${urlBackend}users/${userId}/words` : `${urlBackend}words?all=true`;
 
-    console.log(userId)
-    res = await fetch(`${url}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${stateUser.user.token}`,
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-    });
-  // } else {
-  //   res = await fetch(`${urlBackend}words`, {
-  //     method: 'GET',
-  //     headers: {
-  //       'Accept': 'application/json',
-  //       'Content-Type': 'application/json'
-  //     },
-  //   });
-  // }
+  res = await fetch(`${url}`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${stateUser.user.token}`,
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+  });
 
   if (!res.ok) {
-    //throw new Error(`Could not fetch ${url}, received ${res.status}`);
+    throw new Error(`Could not fetch ${url}, received ${res.status}`);
   }
 
   return await res.json();
 };
 
-const setData = (word:any, prop:any, value:any) => {
+const setData = (word: any, prop: any, value: any) => {
   word[prop] = value;
-  console.log(word)
-  console.log(stateUser)
-  const userId:string = stateUser.user.userId;
-  const auth:boolean = stateUser.isAuth;
-  if (!word._id)  word._id = word.id;
+  const userId: string = stateUser.user.userId;
+  const auth: boolean = stateUser.isAuth;
+  if (!word._id) word._id = word.id;
 
-  const url:string = auth ? `${urlBackend}users/${userId}/words/${word._id}` : `${urlBackend}words/${word._id}`;
+  const url: string = auth ? `${urlBackend}users/${userId}/words/${word._id}` : `${urlBackend}words/${word._id}`;
   const method: string = auth ? 'PUT' : 'POST';
   if (word) {
     const setWordsToBack = async (word: any) => {
@@ -100,7 +72,6 @@ const setData = (word:any, prop:any, value:any) => {
       });
     };
     return setWordsToBack(word);
-    //return responce;
   }
 }
 

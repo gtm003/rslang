@@ -17,7 +17,6 @@ interface AppProps {
 const AppRedux: React.FC<AppProps> = ({isAuth, getWords}) => {
 
   useEffect(() => {
-    console.log(isAuth)
     getWords();
   }, [isAuth]);
 

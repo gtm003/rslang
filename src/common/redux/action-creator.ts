@@ -1,28 +1,22 @@
-import { getData, setDataNewUser } from "../../data/service";
-import { WordsProps } from "../ts/interfaces";
+import {setDataNewUser} from "../../data/service";
+import {WordsProps} from "../ts/interfaces";
 import {stateUser} from "./login-reducer";
 
 const ActionCreator = {
   getWords: () => (dispatch: any): void => {
-    const auth:boolean = stateUser.isAuth;
     setDataNewUser().then((data: any) => {
-       // getData().then((data: any) => {
-        console.log(data)
-       // const words = data;
-          //let words;
-//if (data)
-  const words = auth ? data[0].words : data;
+      const auth: boolean = stateUser.isAuth;
+      const words = auth ? data[0].words : data;
 
-        words.forEach((word: any) => {
-          word._id = word.id;
-        })
-        console.log(words)
-        dispatch({
-          type: `SET_WORDS`,
-          payload: words,
-        });
+      words.forEach((word: any) => {
+        word._id = word.id;
+      })
+
+      dispatch({
+        type: `SET_WORDS`,
+        payload: words,
       });
-   // })
+    });
   },
 
   addHardWord: (word: WordsProps) => ({
@@ -46,4 +40,4 @@ const ActionCreator = {
   }),
 };
 
-export { ActionCreator };
+export {ActionCreator};
