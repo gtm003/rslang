@@ -16,11 +16,13 @@ import {
   CartesianGrid,
   Line
 } from 'recharts';
+import { ShortStatistics } from "../shortStatistics";
+import { LongStatistics } from "../longStatistics";
 
 interface StatisticsProps {
   isAuth: boolean,
 }
-
+/*
 interface StatisticsCardsProps {
   name: string,
   isGame: boolean
@@ -95,6 +97,20 @@ const StatisticsRedux: React.FC<StatisticsProps> = ({isAuth}) => {
           </LineChart>
         </div>}
       </div>
+    </>
+  )
+};*/
+
+const StatisticsRedux: React.FC<StatisticsProps> = ({isAuth}) => {
+  const location = useLocation();
+  return (
+    <>
+      <Crumbs path={location.pathname}/>
+        {isAuth &&
+        <div className='statistic'>
+          <ShortStatistics />
+          <LongStatistics />
+        </div>}
     </>
   )
 };
