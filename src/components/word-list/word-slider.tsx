@@ -39,7 +39,7 @@ const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isDictionary =
       setWords([]);
       getDataPage(group - 1, page).then((res: WordsProps[]) => getWordsWithoutDeleted(res));
     }
-  }, [page, group, isDictionary, deletedWords]);
+  }, [page, isDictionary, deletedWords]);
 
 
   const getWordsWithoutDeleted: any = (words: any) => {
