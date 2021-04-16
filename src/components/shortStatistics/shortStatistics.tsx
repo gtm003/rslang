@@ -3,78 +3,29 @@ import { connect } from 'react-redux';
 import { StatisticsProps, GameStatisticDailyProps } from '../../common/ts/interfaces';
 import { titleGames, getStatistics, setStatistics } from '../../data';
 import { ResultPercent } from '../games/resultPercent/resultPercent';
+import { formatDate, compareDates} from '../../data/utils'
 
+const NAMES_GAMES_BACK: string[] = ['savannah', 'audioCall', 'sprint', 'constructorWords'];
 
 interface ShortStatisticsProps {
   user: any;
-  correct: number;
-  error: number;
+  correct?: number;
+  error?: number;
   seriesLength?: number;
 }
 
-const STATISTICS = {
-  "statistics": {
-        "constructorWord": [
-          {
-              "data": "14.04.2021",
-              "countLearningWords": 15,
-              "winStreak": 24,
-              "generalCountLearningWords": 25,
-              "countRightAnswers": 30
-          },
-          {
-              "data": "15.04.2021",
-              "countLearningWords": 20,
-              "winStreak": 19,
-              "generalCountLearningWords": 40,
-              "countRightAnswers": 10
-          }
-      ],
-      "savannah": [
-          {
-              "data": "14.04.2021",
-              "countLearningWords": 15,
-              "winStreak": 24,
-              "generalCountLearningWords": 25,
-              "countRightAnswers": 30
-          },
-          {
-              "data": "15.04.2021",
-              "countLearningWords": 20,
-              "winStreak": 19,
-              "generalCountLearningWords": 40,
-              "countRightAnswers": 10
-          }
-      ],
-      "audioCall": [
-        {
-            "data": "14.04.2021",
-            "countLearningWords": 15,
-            "winStreak": 24,
-            "generalCountLearningWords": 25,
-            "countRightAnswers": 30
-        },
-        {
-            "data": "15.04.2021",
-            "countLearningWords": 20,
-            "winStreak": 19,
-            "generalCountLearningWords": 40,
-            "countRightAnswers": 10
-        }
-    ],
-      "sprint": [
-          {
-              "data": "11.04.2021",
-              "countLearningWords": 15,
-              "winStreak": 24,
-              "generalCountLearningWords": 25,
-              "countRightAnswers": 30
-          }
-      ]
-  }
+let error: number = 0;
+let correct: number = 0;
+
+const emptyStatistic: GameStatisticDailyProps = {
+  data: '',
+  learningWords: [],
+  winStreak: 0,
+  generalCountLearningWords: 0,
+  countRightAnswers: 0,
 }
 
-const ShortStatisticsRedux: React.FC<ShortStatisticsProps> = ({user, correct, error, seriesLength}) => {
+const ShortStatisticsRedux: React.FC<ShortStatisticsProps> = ({user}) => {
   //const gameScore = score ? score : correctList.length * 10;
   const [gameNumber, setGameNumber] = useState<number>(4);
   const [statisticCurrent, setStatisticCurrent] = useState<StatisticsProps>();
@@ -88,52 +39,73 @@ const ShortStatisticsRedux: React.FC<ShortStatisticsProps> = ({user, correct, er
       description: '',
     }
   );
-    setStatistics(user);
+
   useEffect(() => {
     getStatistics(user).then((res: any) => setStatisticCurrent(res.statistics));
-    console.log(statisticCurrent?.constructorWords[0]);
   }, []);
-  getStatistics(user);
 
-  const onChangeGameNumber = (index: number) => {
-    setGameNumber(index);
+  const getLastDay = (arr: GameStatisticDailyProps[]) => {
+    return arr.length ? arr[arr.length -1] : emptyStatistic
+  }
+  
+  const getSummaryStatistic = () => {
+    const today = formatDate(new Date());
+    const todaySummaryStatistics = [];
+    if (compareDates(getLastDay(statisticCurrent!.sprint).data)) todaySummaryStatistics.push(statisticCurrent!.sprint);
+    if (compareDates(getLastDay(statisticCurrent!.audioCall).data)) todaySummaryStatistics.push(statisticCurrent!.audioCall);
+    if (compareDates(getLastDay(statisticCurrent!.savannah).data)) todaySummaryStatistics.push(statisticCurrent!.savannah);
+    if (compareDates(getLastDay(statisticCurrent!.constructorWords).data)) todaySummaryStatistics.push(statisticCurrent!.constructorWords);
+    /*
+    for (let game:string in statisticCurrent) {
+      console.log(statisticCurrent[game]);
+    }*/
+    console.log(todaySummaryStatistics);
+  }
+
+  const getGameStatisticLastDay = (index: number) : GameStatisticDailyProps => {
     const gameName = titleStatistic[index].id;
-    //setGameStatistic(statistic[index]);
-    
+    getSummaryStatistic();
     let gameStatistic; 
       switch (gameName) {
       case 'sprint':
-        gameStatistic = statisticCurrent?.sprint[statisticCurrent?.sprint.length - 1];
+        gameStatistic = getLastDay(statisticCurrent!.sprint);
         break;
       case 'audio':
-        gameStatistic = statisticCurrent?.audioCall[statisticCurrent?.audioCall.length - 1];
+        gameStatistic = getLastDay(statisticCurrent!.audioCall);
         break;
       case 'savannah':
-          gameStatistic = statisticCurrent?.savannah[statisticCurrent?.savannah.length - 1];
+          gameStatistic = getLastDay(statisticCurrent!.savannah);
         break;
-      case 'constractor':
-        gameStatistic = statisticCurrent?.constructorWords[statisticCurrent?.constructorWords.length - 1];
+      case 'constructor':
+        gameStatistic = getLastDay(statisticCurrent!.constructorWords);
         break;
       case 'summary':
-        //gameStatistic = statisticCurrent?.constructor[statisticCurrent?.constructor.length - 1];
+        gameStatistic = emptyStatistic;
         break;
+      default:
+        gameStatistic = emptyStatistic;
     }
-    setGameStatistic(gameStatistic);
+    console.log(gameName);
+    return gameStatistic;
+  }
+
+  const onChangeGameNumber = (index: number) => {
+    setGameNumber(index);
+    setGameStatistic(getGameStatisticLastDay(index));
     console.log(gameStatistic);
+    correct = gameStatistic?.countRightAnswers!;
+    error = (gameStatistic?.learningWords.length!) - correct;
   }
 
   return (
   <React.Fragment>
     <div className='short-statistic'>
-      <p className='short-statistic__title'>Последняя тренровка: {gameStatistic?.data}</p>
+      <p className='short-statistic__title'>{titleStatistic[gameNumber].name}</p>
       <div className='short-statistic__body'>
-        <p className='short-statistic__body__subtitle'>{titleStatistic[gameNumber].name}</p>
-        {
-          (seriesLength !== undefined) ? <p className='short-statistic__body__series'>
-            Самая длинная серия: {gameStatistic?.winStreak}</p> : null
-        }
-        <p className='short-statistic__body__repeat'>Повторено слов: {gameStatistic ? gameStatistic.countLearningWords : 0}</p>
-        <ResultPercent  error = {gameStatistic ? gameStatistic.countLearningWords - gameStatistic.countRightAnswers : 0} correct = {gameStatistic ? gameStatistic.countRightAnswers : 0}/>
+        <p className='short-statistic__body__subtitle'>Последняя тренровка: {gameStatistic?.data}</p>
+        <p className='short-statistic__body__series'>Самая длинная серия: {gameStatistic?.winStreak}</p>
+        <p className='short-statistic__body__repeat'>Повторено слов: {gameStatistic?.learningWords.length}</p>
+        <ResultPercent  error = {error} correct = {correct}/>
         <div className='short-statistic__body__control'>
           {
             titleStatistic.map((item, index) => {
@@ -162,4 +134,3 @@ const mapStateToProps = (state: any) => ({
 const ShortStatistics = connect(mapStateToProps)(ShortStatisticsRedux);
 
 export { ShortStatistics };
-

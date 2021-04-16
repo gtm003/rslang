@@ -187,7 +187,7 @@ const SprintRedux: React.FC<GameSprintProps> = ({words, hardWords, group, page, 
                 <i className="material-icons sprint-header__icons sprint-header__icons--close">close</i>
               </NavLink>
             </div>
-            <ShortStatistics correct = {correctList.length} error = {errorList.length} seriesLength = {seriesMax}/>
+            <ShortStatistics />
               {gameStatus && (
                 <div className='sprint-body'>
                   <div className='sprint-body__info'>

@@ -28,3 +28,18 @@ export const playAnswer = (answer: boolean, mute: boolean) => {
     audio.play();
   }
 };
+
+export const formatDate = (date: Date) => {
+  return date.toLocaleDateString('ru-RU', {
+    day: "numeric",
+    month: "numeric",
+    year: "numeric",
+  })
+}
+
+export const compareDates = (lastData: string): boolean => {
+  //переводим прошлую и текущую даты в формат ИСО
+  const lastDateInISO = lastData.split(".").reverse().join("-");
+  const todayDateInISO = formatDate(new Date()).split(".").reverse().join("-");
+  return new Date(lastDateInISO) < new Date(todayDateInISO);
+}

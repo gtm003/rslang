@@ -26,7 +26,7 @@ export interface GameProps {
 
 export interface GameStatisticDailyProps {
   data: string;
-  countLearningWords: number;
+  learningWords: string[];
   winStreak: number;
   generalCountLearningWords: number;
   countRightAnswers: number

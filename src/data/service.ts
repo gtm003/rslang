@@ -46,9 +46,13 @@ const getStatistics = async (user: any): Promise<StatisticsProps> => {
       'Accept': 'application/json',
     }
   });
-  const content = await rawResponse.json();
-
-  return await content;
+  if (rawResponse.ok) {
+    const content = await rawResponse.json();
+    return await content;
+  } else {
+    setStatistics(user);
+    return STATISTICS.statistics;
+  }
 };
 
 export {getStatistics};
@@ -76,58 +80,37 @@ const STATISTICS = {
         "constructorWords": [
           {
               "data": "14.04.2021",
-              "countLearningWords": 40,
-              "winStreak": 24,
-              "generalCountLearningWords": 25,
-              "countRightAnswers": 30
-          },
-          {
-              "data": "15.04.2021",
-              "countLearningWords": 20,
-              "winStreak": 19,
-              "generalCountLearningWords": 40,
-              "countRightAnswers": 10
+              "learningWords": ['dog', 'cat'],
+              "winStreak": 2,
+              "generalCountLearningWords": 0,
+              "countRightAnswers": 2
           }
       ],
       "savannah": [
           {
-              "data": "14.04.2021",
-              "countLearningWords": 50,
-              "winStreak": 24,
-              "generalCountLearningWords": 25,
-              "countRightAnswers": 30
-          },
-          {
-              "data": "15.04.2021",
-              "countLearningWords": 60,
-              "winStreak": 19,
-              "generalCountLearningWords": 40,
-              "countRightAnswers": 30
+              "data": "16.04.2021",
+              "learningWords": ['dog', 'cat', 'pig'],
+              "winStreak": 3,
+              "generalCountLearningWords": 0,
+              "countRightAnswers": 3
           }
       ],
       "audioCall": [
         {
-            "data": "14.04.2021",
-            "countLearningWords": 50,
-            "winStreak": 24,
-            "generalCountLearningWords": 25,
-            "countRightAnswers": 30
-        },
-        {
             "data": "15.04.2021",
-            "countLearningWords": 40,
-            "winStreak": 15,
-            "generalCountLearningWords": 40,
-            "countRightAnswers": 10
+            "learningWords": ['dog', 'cat', 'clock', 'revert'],
+            "winStreak": 4,
+            "generalCountLearningWords": 0,
+            "countRightAnswers": 4
         }
     ],
       "sprint": [
           {
-              "data": "11.04.2021",
-              "countLearningWords": 45,
-              "winStreak": 24,
-              "generalCountLearningWords": 25,
-              "countRightAnswers": 30
+              "data": "16.04.2021",
+              "learningWords": ['dog', 'cat', 'strong', 'base'],
+              "winStreak": 4,
+              "generalCountLearningWords": 0,
+              "countRightAnswers": 4
           }
       ]
   }
