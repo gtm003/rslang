@@ -6,7 +6,7 @@ import { getRandomOderArr, getRandomBoolean, getRandomInteger, playAnswer } from
 import { Loader } from '../../loader';
 import { ResultsGame } from '../resultsGame';
 import { connect } from 'react-redux';
-import {setData} from '../../../data';
+import {setData, setStatistics} from '../../../data';
 import { ShortStatistics } from '../../shortStatistics';
 
 let WORDS_GROUP : WordsProps[];
@@ -23,6 +23,7 @@ let correctList: WordsProps[] = [];
 let errorList: WordsProps[] = [];
 
 interface GameSprintProps {
+  user: any,
   words: WordsProps[],
   hardWords: WordsProps[],
   group?: number,
@@ -30,7 +31,7 @@ interface GameSprintProps {
   hard?: string | undefined,
 }
 
-const SprintRedux: React.FC<GameSprintProps> = ({words, hardWords, group, page, hard}) => {
+const SprintRedux: React.FC<GameSprintProps> = ({user, words, hardWords, group, page, hard}) => {
   // WORDS_GROUP - массив со словами, используемый в игре (или сложные слова и группа слов)
   const getWordsGroup = () => {
     if (hard) return hardWords;
@@ -43,7 +44,7 @@ const SprintRedux: React.FC<GameSprintProps> = ({words, hardWords, group, page, 
     if (page !== undefined) return WORDS_GROUP.filter(item => item.page === page - round);
     return WORDS_GROUP;
   }
-
+  //setStatistics(user);
   const [score, setScore] = useState<number>(0);
   const [gameStatus, setGameStatus] = useState<boolean>(true);
   const [word, setWord] = useState<string>();
@@ -308,6 +309,7 @@ const SprintAnswer: React.FC<SprintAnswerProps> = ({onClickHandlerGame}) => {
 const mapStateToProps = (state: any) => ({
   words: state.data.words,
   hardWords: state.data.hardWords,
+  user: state.login.user,
 });
 
 const Sprint = connect(mapStateToProps)(SprintRedux);

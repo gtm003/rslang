@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { StatisticsProps, GameStatisticDailyProps } from '../../common/ts/interfaces';
-import { titleGames, getStatistics, setStatistics } from '../../data';
+import { titleGames, getStatistics } from '../../data';
 import { ResultPercent } from '../games/resultPercent/resultPercent';
-import { formatDate, compareDates} from '../../data/utils'
-
-const NAMES_GAMES_BACK: string[] = ['savannah', 'audioCall', 'sprint', 'constructorWords'];
+import { compareDates} from '../../data/utils'
 
 interface ShortStatisticsProps {
   user: any;
@@ -13,9 +11,6 @@ interface ShortStatisticsProps {
   error?: number;
   seriesLength?: number;
 }
-
-let error: number = 0;
-let correct: number = 0;
 
 const emptyStatistic: GameStatisticDailyProps = {
   data: '',
@@ -25,11 +20,16 @@ const emptyStatistic: GameStatisticDailyProps = {
   countRightAnswers: 0,
 }
 
+let statisticBack: StatisticsProps;
+
 const ShortStatisticsRedux: React.FC<ShortStatisticsProps> = ({user}) => {
-  //const gameScore = score ? score : correctList.length * 10;
   const [gameNumber, setGameNumber] = useState<number>(4);
-  const [statisticCurrent, setStatisticCurrent] = useState<StatisticsProps>();
-  const [gameStatistic, setGameStatistic] = useState<GameStatisticDailyProps>();
+  const [countLearningWords, setCountLearningWords] = useState<number>(0);
+  const [error, setError] = useState<number>(0);
+  const [correct, setCorrect] = useState<number>(0);
+  const [date, setDate] = useState<string>('');
+  const [winStreak, setWinStreak] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(true);
   const titleStatistic = titleGames.concat(
     {
       id: 'summary',
@@ -41,60 +41,71 @@ const ShortStatisticsRedux: React.FC<ShortStatisticsProps> = ({user}) => {
   );
 
   useEffect(() => {
-    getStatistics(user).then((res: any) => setStatisticCurrent(res.statistics));
+    getStatistics(user).then((res: any) => {
+      statisticBack = res.statistics;
+      setLoading(false);
+    });
   }, []);
 
   const getLastDay = (arr: GameStatisticDailyProps[]) => {
-    return arr.length ? arr[arr.length -1] : emptyStatistic
+    return arr.length ? arr[arr.length -1] : emptyStatistic;
   }
   
   const getSummaryStatistic = () => {
-    const today = formatDate(new Date());
     const todaySummaryStatistics = [];
-    if (compareDates(getLastDay(statisticCurrent!.sprint).data)) todaySummaryStatistics.push(statisticCurrent!.sprint);
-    if (compareDates(getLastDay(statisticCurrent!.audioCall).data)) todaySummaryStatistics.push(statisticCurrent!.audioCall);
-    if (compareDates(getLastDay(statisticCurrent!.savannah).data)) todaySummaryStatistics.push(statisticCurrent!.savannah);
-    if (compareDates(getLastDay(statisticCurrent!.constructorWords).data)) todaySummaryStatistics.push(statisticCurrent!.constructorWords);
-    /*
-    for (let game:string in statisticCurrent) {
-      console.log(statisticCurrent[game]);
-    }*/
-    console.log(todaySummaryStatistics);
+    let countAnswer: number = 0;
+    let countRightAnswers: number = 0;
+    let winStreak: number = 0;
+    for (let game in statisticBack) {
+      if (!compareDates(getLastDay(statisticBack[game as keyof StatisticsProps]).data))
+      todaySummaryStatistics.push(getLastDay(statisticBack[game as keyof StatisticsProps]))
+    }
+    const summaryLearningWords = new Set<string>();
+    todaySummaryStatistics.forEach(game => {
+      game.learningWords.forEach(word => summaryLearningWords.add(word));
+      if (game.winStreak > winStreak) winStreak = game.winStreak;
+      countRightAnswers += game.countRightAnswers;
+      countAnswer += game.learningWords.length;
+    })
+    setWinStreak(winStreak);
+    setCountLearningWords(summaryLearningWords.size);
+    setCorrect(countRightAnswers);
+    setError(countAnswer - countRightAnswers);
   }
 
   const getGameStatisticLastDay = (index: number) : GameStatisticDailyProps => {
     const gameName = titleStatistic[index].id;
-    getSummaryStatistic();
     let gameStatistic; 
       switch (gameName) {
       case 'sprint':
-        gameStatistic = getLastDay(statisticCurrent!.sprint);
+        gameStatistic = getLastDay(statisticBack!.sprint);
         break;
       case 'audio':
-        gameStatistic = getLastDay(statisticCurrent!.audioCall);
+        gameStatistic = getLastDay(statisticBack!.audioCall);
         break;
       case 'savannah':
-          gameStatistic = getLastDay(statisticCurrent!.savannah);
+          gameStatistic = getLastDay(statisticBack!.savannah);
         break;
       case 'constructor':
-        gameStatistic = getLastDay(statisticCurrent!.constructorWords);
-        break;
-      case 'summary':
-        gameStatistic = emptyStatistic;
+        gameStatistic = getLastDay(statisticBack!.constructorWords);
         break;
       default:
         gameStatistic = emptyStatistic;
     }
-    console.log(gameName);
     return gameStatistic;
   }
 
   const onChangeGameNumber = (index: number) => {
+    console.log(statisticBack);
     setGameNumber(index);
-    setGameStatistic(getGameStatisticLastDay(index));
-    console.log(gameStatistic);
-    correct = gameStatistic?.countRightAnswers!;
-    error = (gameStatistic?.learningWords.length!) - correct;
+    const gameStatistic = getGameStatisticLastDay(index);
+    if (index !== 4) {
+      setDate(gameStatistic.data);
+      setWinStreak(gameStatistic.winStreak);
+      setCountLearningWords(gameStatistic.learningWords.length);
+      setCorrect(gameStatistic.countRightAnswers);
+      setError((gameStatistic.learningWords.length) - gameStatistic.countRightAnswers);
+    } else getSummaryStatistic();
   }
 
   return (
@@ -102,27 +113,33 @@ const ShortStatisticsRedux: React.FC<ShortStatisticsProps> = ({user}) => {
     <div className='short-statistic'>
       <p className='short-statistic__title'>{titleStatistic[gameNumber].name}</p>
       <div className='short-statistic__body'>
-        <p className='short-statistic__body__subtitle'>Последняя тренровка: {gameStatistic?.data}</p>
-        <p className='short-statistic__body__series'>Самая длинная серия: {gameStatistic?.winStreak}</p>
-        <p className='short-statistic__body__repeat'>Повторено слов: {gameStatistic?.learningWords.length}</p>
-        <ResultPercent  error = {error} correct = {correct}/>
-        <div className='short-statistic__body__control'>
-          {
-            titleStatistic.map((item, index) => {
-              return (index === gameNumber ? 
-                <div className='short-statistic__body__control__item short-statistic__body__control__item--active' key = {index}>
-                  <img src={item.iconUrl} alt={item.iconUrl} height='60%'/>
-                </div> :
-                <div className='short-statistic__body__control__item' key = {index}
-                  onClick = {() => onChangeGameNumber(index)}>
-                  <img src={item.iconUrl} alt={item.iconUrl} height='60%'/>
-                </div>
-              )
-            })
+        {loading ?
+        <span>Сейчас посчитаем</span> :
+        <React.Fragment>
+          {gameNumber === 4 ?
+            <p className='short-statistic__body__subtitle'>Ваш прогресс на сегодня:</p> :
+            <p className='short-statistic__body__subtitle'>Последняя тренровка: {date}</p>
           }
-        </div>
+          <p className='short-statistic__body__series'>Самая длинная серия: {winStreak}</p>
+          <p className='short-statistic__body__repeat'>Повторено слов: {countLearningWords}</p>
+          <ResultPercent  error = {error} correct = {correct}/>
+          <div className='short-statistic__body__control'>
+            {
+              titleStatistic.map((item, index) => {
+                return (index === gameNumber ? 
+                  <div className='short-statistic__body__control__item short-statistic__body__control__item--active' key = {index}>
+                    <img src={item.iconUrl} alt={item.iconUrl} height='60%'/>
+                  </div> :
+                  <div className='short-statistic__body__control__item' key = {index}
+                    onClick = {() => onChangeGameNumber(index)}>
+                    <img src={item.iconUrl} alt={item.iconUrl} height='60%'/>
+                  </div>
+                )
+              })
+            }
+          </div>          
+        </React.Fragment>}
       </div>
-
     </div>
   </React.Fragment>)
 };
