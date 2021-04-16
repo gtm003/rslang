@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { urlBackend } from '../../../data';
-import { WordsProps } from '../../../common/ts/interfaces';
-import { getRandomOderArr, playAnswer } from '../../../data/utils';
+import { WordsProps, StatisticsProps } from '../../../common/ts/interfaces';
+import { getRandomOderArr, playAnswer, updateStatistics } from '../../../data/utils';
 import { Loader } from '../../loader';
 import { ResultsGame } from '../resultsGame';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Lives } from '../lives/lives';
 import { AudioWord } from '../audioWords/audioWords';
-import {setData} from '../../../data';
+import {setData, setStatistics, getStatistics} from '../../../data';
 
 const CONTROL_TEXT = [
   {
@@ -30,11 +30,13 @@ let score: number = 0;
 let round: number = 0;
 let series: number = 0;
 let seriesMax: number = 0;
+let statisticBack: StatisticsProps;
 
 let WORDS_GROUP : WordsProps[];
 let WORDS_GAME : WordsProps[];
 
 interface GameConstructorProps {
+  user: any,
   words: WordsProps[],
   hardWords: WordsProps[],
   group?: number,
@@ -42,7 +44,7 @@ interface GameConstructorProps {
   hard?: string | undefined,
 }
 
-const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, group, page, hard}) => {
+const ConstructorRedux: React.FC<GameConstructorProps> = ({user, words, hardWords, group, page, hard}) => {
   const [word, setWord] = useState<WordsProps>();
   const [solved, setSolved] = useState<boolean>(false);
   const [mute, setMute] = useState<boolean>(false);
@@ -51,6 +53,10 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
   const [mixedOder, setMixedOder] = useState<number[]>([]);
   const [fullscreen, setFullscreen] = useState<boolean>(false);
   const [lives, setLives] = useState<number>(quantityLives);
+  
+  useEffect(() => {
+    getStatistics(user).then((res: any) => statisticBack = res.statistics);
+  }, []);
 
     const getWordsGroup = () => {
       if (hard) return hardWords;
@@ -93,6 +99,8 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
           getNewWord(indexWord!);
         } else {
           setLives(0);
+          statisticBack = updateStatistics('constructorWords', statisticBack, errorList, correctList, seriesMax)
+          console.log(statisticBack);
         }
       }
     } else {
@@ -100,6 +108,10 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
       setSolved(true);
       setIndexLetter(letters.length);
       setLives(lives - 1);
+      if(lives === 1) {
+        statisticBack = updateStatistics('constructorWords', statisticBack, errorList, correctList, seriesMax)
+        console.log(statisticBack);
+      }
       word!.errorsCount += 1;
       setData(word, 'errorsCount', word!.errorsCount);
       errorList.push(word!);
@@ -152,7 +164,15 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
     }
   }
 
+  const setGameStatistic = () => {
+    const statisticSend = {
+      statistics: statisticBack
+    }
+    setStatistics(user, statisticSend);
+  }
+
   const onClickHandlerNewGame = () => {
+    setGameStatistic();
     indexesWord = getRandomOderArr(20);
     indexWord = indexesWord.pop();
     setLives(quantityLives);
@@ -200,7 +220,8 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({words, hardWords, gro
             onClick={() => onToggleHandlerFullScreen()}>{fullscreen ? 'fullscreen_exit' : 'fullscreen'}</i>
           {lives > 0 && <Lives lives = {lives} />}
           <NavLink to='/games'>
-            <i className="material-icons constructor-header__icons constructor-header__icons--close">close</i>
+            <i className="material-icons constructor-header__icons constructor-header__icons--close"
+              onClick={onClickHandlerNewGame.bind(null, false)}>close</i>
           </NavLink>
         </div>
             {lives ?
@@ -285,6 +306,7 @@ const WordInEnglish: React.FC<WordInEnglishProps> = ({ letters, indexLetter }) =
 const mapStateToProps = (state: any) => ({
   words: state.data.words,
   hardWords: state.data.hardWords,
+  user: state.login.user,
 });
 
 const Constructor = connect(mapStateToProps)(ConstructorRedux);

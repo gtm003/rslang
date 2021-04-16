@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 import { NavLink } from 'react-router-dom';
-import { WordsProps } from '../../../common/ts/interfaces';
-import { getRandomOderArr, getRandomBoolean, getRandomInteger, playAnswer } from '../../../data/utils';
+import { WordsProps, StatisticsProps } from '../../../common/ts/interfaces';
+import { getRandomOderArr, getRandomBoolean, getRandomInteger, playAnswer, updateStatistics } from '../../../data/utils';
 import { Loader } from '../../loader';
 import { ResultsGame } from '../resultsGame';
 import { connect } from 'react-redux';
-import {setData, setStatistics} from '../../../data';
+import {setData, setStatistics, getStatistics} from '../../../data';
 import { ShortStatistics } from '../../shortStatistics';
 
 let WORDS_GROUP : WordsProps[];
@@ -21,6 +21,7 @@ let seriesMax: number = 0;
 
 let correctList: WordsProps[] = [];
 let errorList: WordsProps[] = [];
+let statisticBack: StatisticsProps;
 
 interface GameSprintProps {
   user: any,
@@ -57,6 +58,10 @@ const SprintRedux: React.FC<GameSprintProps> = ({user, words, hardWords, group, 
   const [fullscreen, setFullscreen] = useState<boolean>(false);
 
   useEffect(() => {
+    getStatistics(user).then((res: any) => statisticBack = res.statistics);
+  }, []);
+
+  useEffect(() => {
     if(words.length) {
       WORDS_GROUP = getWordsGroup();
       WORDS_GAME = getWordsGame();
@@ -69,12 +74,15 @@ const SprintRedux: React.FC<GameSprintProps> = ({user, words, hardWords, group, 
   }, [words]);
 
   useEffect(() => {
-    const timerId = setInterval(() => {
-      setGameStatus(false)
-    }, 60000);
+    if (gameStatus) {
+      const timerId = setInterval(() => {
+        setGameStatus(false);
+        statisticBack = updateStatistics('sprint', statisticBack, errorList, correctList, seriesMax)
+        console.log(statisticBack);
+      }, 60000);
     return () => {
       clearTimeout(timerId);
-    };
+    };}
   }, [gameStatus]);
 
   useEffect(() => {
@@ -139,11 +147,21 @@ const SprintRedux: React.FC<GameSprintProps> = ({user, words, hardWords, group, 
         setWordTranslate(WORDS_GAME[indexTranslate!].wordTranslate);
       } else {
         setGameStatus(false);
+        statisticBack = updateStatistics('sprint', statisticBack, errorList, correctList, seriesMax)
+        console.log(statisticBack);
       }
     }
   }
 
+  const setGameStatistic = () => {
+    const statisticSend = {
+      statistics: statisticBack
+    }
+    setStatistics(user, statisticSend);
+  }
+
   const onClickHandlerNewGame = () => {
+    setGameStatistic();
     indexesWord = getRandomOderArr(WORDS_GAME.length);
     indexWord = indexesWord.pop();
     indexTranslate = getRandomBoolean() ? indexWord : getRandomInteger(19);
@@ -185,7 +203,8 @@ const SprintRedux: React.FC<GameSprintProps> = ({user, words, hardWords, group, 
               <i className="material-icons sprint-header__icons sprint-header__icons--fullscreen"
                 onClick={() => onToggleHandlerFullScreen()}>{fullscreen ? 'fullscreen_exit' : 'fullscreen'}</i>
               <NavLink to='/games'>
-                <i className="material-icons sprint-header__icons sprint-header__icons--close">close</i>
+                <i className="material-icons sprint-header__icons sprint-header__icons--close"
+                  onClick={onClickHandlerNewGame.bind(null, false)}>close</i>
               </NavLink>
             </div>
             <ShortStatistics />

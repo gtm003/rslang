@@ -38,3 +38,7 @@ export interface StatisticsProps {
   audioCall: GameStatisticDailyProps[];
   sprint: GameStatisticDailyProps[];
 }
+
+export interface StatisticBackProps {
+  statistics: StatisticsProps,
+}

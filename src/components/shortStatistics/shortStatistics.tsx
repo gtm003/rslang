@@ -65,7 +65,7 @@ const ShortStatisticsRedux: React.FC<ShortStatisticsProps> = ({user}) => {
       game.learningWords.forEach(word => summaryLearningWords.add(word));
       if (game.winStreak > winStreak) winStreak = game.winStreak;
       countRightAnswers += game.countRightAnswers;
-      countAnswer += game.learningWords.length;
+      countAnswer += game.generalCountLearningWords;
     })
     setWinStreak(winStreak);
     setCountLearningWords(summaryLearningWords.size);
@@ -104,7 +104,7 @@ const ShortStatisticsRedux: React.FC<ShortStatisticsProps> = ({user}) => {
       setWinStreak(gameStatistic.winStreak);
       setCountLearningWords(gameStatistic.learningWords.length);
       setCorrect(gameStatistic.countRightAnswers);
-      setError((gameStatistic.learningWords.length) - gameStatistic.countRightAnswers);
+      setError(gameStatistic.generalCountLearningWords - gameStatistic.countRightAnswers);
     } else getSummaryStatistic();
   }
 

@@ -1,4 +1,4 @@
-import { WordsProps,  StatisticsProps} from "../common/ts/interfaces";
+import { WordsProps,  StatisticsProps, StatisticBackProps} from "../common/ts/interfaces";
 import {urlBackend} from "./index";
 
 const url: string = `${urlBackend}words?all=true`;
@@ -21,7 +21,7 @@ const setData = (word: any, prop: any, value: any) => {
   const newWord = {_id: newId, ...rest};
   if (newWord) {
     const setWordsToBack = async (newWord: any) => {
-      console.log(newWord);
+      //console.log(newWord);
       const responce = await fetch(`${urlBackend}words/${newWord._id}`, {
         method: 'POST',
         headers: {
@@ -50,14 +50,14 @@ const getStatistics = async (user: any): Promise<StatisticsProps> => {
     const content = await rawResponse.json();
     return await content;
   } else {
-    setStatistics(user);
+    setStatistics(user, STATISTICS);
     return STATISTICS.statistics;
   }
 };
 
 export {getStatistics};
 
-const setStatistics = async (user: any) => {
+const setStatistics = async (user: any, statistic: StatisticBackProps) => {
   const rawResponse = await fetch(`${urlBackend}users/${user.userId}/statistics`, {
     method: 'PUT',
     //withCredentials: true,
@@ -66,7 +66,7 @@ const setStatistics = async (user: any) => {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(STATISTICS),
+    body: JSON.stringify(statistic),
   });
   const content = await rawResponse.json();
 
@@ -75,7 +75,7 @@ const setStatistics = async (user: any) => {
 
 export {setStatistics};
 
-const STATISTICS = {
+const STATISTICS: StatisticBackProps = {
   "statistics": {
         "constructorWords": [
           {
