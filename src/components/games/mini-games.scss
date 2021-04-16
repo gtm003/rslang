@@ -11,17 +11,8 @@
   background-position-y: bottom;
   background-position-x: center;
 
-  &:fullscreen .minigames__close,
-  &:fullscreen .minigames__fullscreen {
-    display: none;
-  }
-
   &:fullscreen .minigames__wrapper {
     height: 100%;
-  }
-
-  &:fullscreen .minigames__panel {
-    justify-content: flex-end;
   }
 
   &:fullscreen .audio-challenge__wrapper {
