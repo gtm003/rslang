@@ -63,7 +63,7 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
   }, [gameWords]);
 
   const onFullScreenChange = () => {
-    if (document.fullscreenElement === null && fullscreen.current) {
+    if (fullscreen.current) {
       changeFullscreenIcon(fullscreen.current)
     }
   };
