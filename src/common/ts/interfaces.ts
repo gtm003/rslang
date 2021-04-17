@@ -23,3 +23,22 @@ export interface GameProps {
   group: string | number,
   page?: number,
 }
+
+export interface GameStatisticDailyProps {
+  data: string;
+  learningWords: string[];
+  winStreak: number;
+  generalCountLearningWords: number;
+  countRightAnswers: number
+}
+
+export interface StatisticsProps {
+  constructorWords: GameStatisticDailyProps[];
+  savannah: GameStatisticDailyProps[];
+  audioCall: GameStatisticDailyProps[];
+  sprint: GameStatisticDailyProps[];
+}
+
+export interface StatisticBackProps {
+  statistics: StatisticsProps,
+}
