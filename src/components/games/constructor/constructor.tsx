@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { urlBackend } from '../../../data';
-import { WordsProps, StatisticsProps } from '../../../common/ts/interfaces';
-import { getRandomOderArr, playAnswer, updateStatistics } from '../../../data/utils';
-import { Loader } from '../../loader';
-import { ResultsGame } from '../resultsGame';
-import { NavLink } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { Lives } from '../lives/lives';
-import { AudioWord } from '../audioWords/audioWords';
+import React, {useEffect, useState} from 'react';
+import {urlBackend} from '../../../data';
+import {WordsProps, StatisticsProps} from '../../../common/ts/interfaces';
+import {getRandomOderArr, playAnswer, updateStatistics} from '../../../data/utils';
+import {Loader} from '../../loader';
+import {ResultsGame} from '../resultsGame';
+import {NavLink} from 'react-router-dom';
+import {connect} from 'react-redux';
+import {Lives} from '../lives/lives';
+import {AudioWord} from '../audioWords/audioWords';
 import {setData, setStatistics, getStatistics} from '../../../data';
 
 const CONTROL_TEXT = [
@@ -32,8 +32,8 @@ let series: number = 0;
 let seriesMax: number = 0;
 let statisticBack: StatisticsProps;
 
-let WORDS_GROUP : WordsProps[];
-let WORDS_GAME : WordsProps[];
+let WORDS_GROUP: WordsProps[];
+let WORDS_GAME: WordsProps[];
 
 interface GameConstructorProps {
   user: any,
@@ -53,23 +53,23 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({user, words, hardWord
   const [mixedOder, setMixedOder] = useState<number[]>([]);
   const [fullscreen, setFullscreen] = useState<boolean>(false);
   const [lives, setLives] = useState<number>(quantityLives);
-  
+
   useEffect(() => {
     getStatistics(user).then((res: any) => statisticBack = res.statistics);
   }, []);
 
-    const getWordsGroup = () => {
-      if (hard) return hardWords;
-      return words.filter(item => item.group === group);
-    }
-  
-    const getWordsGame = () => {
-      if (page !== undefined) return WORDS_GROUP.filter(item => item.page === page - round);
-      return WORDS_GROUP;
-    }
+  const getWordsGroup = () => {
+    if (hard) return hardWords;
+    return words.filter(item => item.group === group);
+  }
+
+  const getWordsGame = () => {
+    if (page !== undefined) return WORDS_GROUP.filter(item => item.page === page - round);
+    return WORDS_GROUP;
+  }
 
   useEffect(() => {
-    if(words.length) {
+    if (words.length) {
       WORDS_GROUP = getWordsGroup();
       WORDS_GAME = getWordsGame();
       console.log(WORDS_GAME);
@@ -108,7 +108,7 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({user, words, hardWord
       setSolved(true);
       setIndexLetter(letters.length);
       setLives(lives - 1);
-      if(lives === 1) {
+      if (lives === 1) {
         statisticBack = updateStatistics('constructorWords', statisticBack, errorList, correctList, seriesMax)
         console.log(statisticBack);
       }
@@ -117,17 +117,17 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({user, words, hardWord
       errorList.push(word!);
     }
   }
-  
-    useEffect(() => {
-      window.addEventListener("keyup", onKeyPressHandler);
-  
-      return () => (window as any).removeEventListener("keyup", onKeyPressHandler);
-  
-    })
-    const onKeyPressHandler = (event: KeyboardEvent) => {
-      event.preventDefault();
-      if (event.key === 'Enter') onClickHandlerControl()
-    }
+
+  useEffect(() => {
+    window.addEventListener("keyup", onKeyPressHandler);
+
+    return () => (window as any).removeEventListener("keyup", onKeyPressHandler);
+
+  })
+  const onKeyPressHandler = (event: KeyboardEvent) => {
+    event.preventDefault();
+    if (event.key === 'Enter') onClickHandlerControl()
+  }
   const onToggleHandlerMute = () => {
     setMute(!mute);
   }
@@ -144,8 +144,7 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({user, words, hardWord
           correctList.push(word!);
           word!.corrects += 1;
           setData(word, 'corrects', word!.corrects);
-        }
-        else {
+        } else {
           errorList.push(word!);
         }
         wordAnswer = true;
@@ -154,8 +153,7 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({user, words, hardWord
         playWord(word!.audio);
         setSolved(true);
       }
-    }
-    else {
+    } else {
       playAnswer(false, mute);
       elem.classList.add('letter--error');
       setLives(lives - 1);
@@ -172,7 +170,6 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({user, words, hardWord
   }
 
   const onClickHandlerNewGame = () => {
-    setGameStatistic();
     indexesWord = getRandomOderArr(20);
     indexWord = indexesWord.pop();
     setLives(quantityLives);
@@ -212,103 +209,106 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({user, words, hardWord
 
   return (
     <div className='constructor'>
-      { word ? (<React.Fragment>
+      {word ? (<React.Fragment>
         <div className='constructor__header'>
           <i className="material-icons constructor-header__icons constructor-header__icons--sound"
-            onClick={() => onToggleHandlerMute()}>{mute ? 'notifications_off' : 'notifications'}</i>
+             onClick={() => onToggleHandlerMute()}>{mute ? 'notifications_off' : 'notifications'}</i>
           <i className="material-icons constructor-header__icons constructor-header__icons--fullscreen"
-            onClick={() => onToggleHandlerFullScreen()}>{fullscreen ? 'fullscreen_exit' : 'fullscreen'}</i>
-          {lives > 0 && <Lives lives = {lives} />}
+             onClick={() => onToggleHandlerFullScreen()}>{fullscreen ? 'fullscreen_exit' : 'fullscreen'}</i>
+          {lives > 0 && <Lives lives={lives}/>}
           <NavLink to='/games'>
             <i className="material-icons constructor-header__icons constructor-header__icons--close"
-              onClick={onClickHandlerNewGame.bind(null, false)}>close</i>
+               onClick={onClickHandlerNewGame.bind(null, false)}>close</i>
           </NavLink>
         </div>
-            {lives ?
-              (<div className='constructor__body'>
-                <p className='constructor-body-game__translate'>
-                  {word.wordTranslate}
-                </p>
-                <div className='constructor-body-game__service'>
-                  {solved ? (<><AudioWord src = {word.audio}/><span>{word.transcription}</span></>) : 'Собери слово из букв'}
-                </div>
-                <WordInEnglish letters={letters} indexLetter={indexLetter} />
-                <React.Fragment>
-                  {solved ?
-                    <WordCard word={word} /> :
-                    <MixedLetters mixedOder={mixedOder} letters={letters} indexLetter={indexLetter}
-                      onClickHandlerGame={onClickHandlerGame} />
-                  }
-                </React.Fragment>
-                <div className='constructor-body-game__control'>
-                  <p>Enter</p>
-                  <button onClick={() => onClickHandlerControl()}>
-                    <span className="control__value">{CONTROL_TEXT[Number(solved)].value}</span>
-                    <i className="material-icons control__icon">{CONTROL_TEXT[Number(solved)].icon}</i>
-                  </button>
-                </div>
-                </div>) :
-              <ResultsGame correctList={correctList} errorList={errorList} onClickHandlerNewGame={onClickHandlerNewGame}
-              seriesLength={seriesMax} score={score}/>}
-        </React.Fragment>) :
-        <Loader />}
-    </div>
-  )
-};
+        {lives ?
+          (<div className='constructor__body'>
+            <p className='constructor-body-game__translate'>
+              {word.wordTranslate}
+            </p>
+            <div className='constructor-body-game__service'>
+              {solved ? (<><AudioWord src={word.audio}/><span>{word.transcription}</span></>) : 'Собери слово из букв'}
+            </div>
+            <WordInEnglish letters={letters} indexLetter={indexLetter}/>
+            <React.Fragment>
+              {solved ?
+                <WordCard word={word}/> :
+                <MixedLetters mixedOder={mixedOder} letters={letters} indexLetter={indexLetter}
+                              onClickHandlerGame={onClickHandlerGame}/>
+              }
+            </React.Fragment>
+            <div className='constructor-body-game__control'>
+              <p>Enter</p>
+              <button onClick={() => onClickHandlerControl()}>
+                <span className="control__value">{CONTROL_TEXT[Number(solved)].value}</span>
+                <i className="material-icons control__icon">{CONTROL_TEXT[Number(solved)].icon}</i>
+              </button>
+            </div>
+          </div>) :
+          <>
+            {setGameStatistic()}
+            <ResultsGame correctList={correctList} errorList={errorList} onClickHandlerNewGame={onClickHandlerNewGame}
+                         seriesLength={seriesMax} score={score}/>
+          </>}
+          </React.Fragment>) :
+          <Loader />}
+          </div>
+          )
+          };
 
-interface WordCardProps {
-  word: WordsProps;
-}
-const WordCard: React.FC<WordCardProps> = ({ word }) => {
-  return (
-    <div className='constructor-body-game__card'>
-      <img src={`${urlBackend}${word.image}`} alt={`${word.word}_img`} />
-      <p>Контекст:</p>
-      <p dangerouslySetInnerHTML={{ __html: word.textExample }}></p>
-    </div>)
-}
+          interface WordCardProps {
+          word: WordsProps;
+          }
+          const WordCard: React.FC<WordCardProps> = ({ word }) => {
+          return (
+          <div className='constructor-body-game__card'>
+          <img src={`${urlBackend}${word.image}`} alt={`${word.word}_img`} />
+          <p>Контекст:</p>
+          <p dangerouslySetInnerHTML={{ __html: word.textExample }}></p>
+          </div>)
+          }
 
-interface MixedLettersProps {
-  mixedOder: number[];
-  letters: string[];
-  onClickHandlerGame: (elem: any, letter: string) => void;
-  indexLetter: number;
-}
-const MixedLetters: React.FC<MixedLettersProps> = ({ mixedOder, letters, onClickHandlerGame, indexLetter }) => {
-  return (
-    <div className='constructor-body-game__letters  constructor-body-game__letters--question'>
-      { mixedOder.map((indexMixed, index) => {
-        return <div className='letter letter--question' key={index}
+          interface MixedLettersProps {
+          mixedOder: number[];
+          letters: string[];
+          onClickHandlerGame: (elem: any, letter: string) => void;
+          indexLetter: number;
+          }
+          const MixedLetters: React.FC<MixedLettersProps> = ({ mixedOder, letters, onClickHandlerGame, indexLetter }) => {
+          return (
+          <div className='constructor-body-game__letters  constructor-body-game__letters--question'>
+          { mixedOder.map((indexMixed, index) => {
+          return <div className='letter letter--question' key={index}
           onClick={(event) => onClickHandlerGame(event.target, letters[indexMixed])}>{letters[indexMixed]}</div>
-        })
-      }
-    </div>
-  )
-}
+          })
+          }
+          </div>
+          )
+          }
 
-interface WordInEnglishProps {
-  letters: string[];
-  indexLetter: number;
-}
-const WordInEnglish: React.FC<WordInEnglishProps> = ({ letters, indexLetter }) => {
-  return (
-    <div className='constructor-body-game__letters'>
-      {
-        letters.map((letter, index) => {
+          interface WordInEnglishProps {
+          letters: string[];
+          indexLetter: number;
+          }
+          const WordInEnglish: React.FC<WordInEnglishProps> = ({ letters, indexLetter }) => {
+          return (
+          <div className='constructor-body-game__letters'>
+          {
+          letters.map((letter, index) => {
           return index < indexLetter ?
-            (<div className='letter letter--open' key={index}> {letter} </div>) :
-            (<div className='letter letter--close' key={index}> {letter} </div>)
-        })
-      }
-    </div>)
-}
+          (<div className='letter letter--open' key={index}> {letter} </div>) :
+          (<div className='letter letter--close' key={index}> {letter} </div>)
+          })
+          }
+          </div>)
+          }
 
-const mapStateToProps = (state: any) => ({
-  words: state.data.words,
-  hardWords: state.data.hardWords,
-  user: state.login.user,
-});
+          const mapStateToProps = (state: any) => ({
+          words: state.data.words,
+          hardWords: state.data.hardWords,
+          user: state.login.user,
+          });
 
-const Constructor = connect(mapStateToProps)(ConstructorRedux);
+          const Constructor = connect(mapStateToProps)(ConstructorRedux);
 
-export { Constructor };
+          export { Constructor };

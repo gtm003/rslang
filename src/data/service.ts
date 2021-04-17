@@ -15,13 +15,11 @@ export const getData = async (): Promise<Array<WordsProps>> => {
 };
 
 const setData = (word: any, prop: any, value: any) => {
-// const setData = (word: any, prop: any, value: boolean) => { 
   word[prop] = value;
   const {id: newId, ...rest} = word;
   const newWord = {_id: newId, ...rest};
   if (newWord) {
     const setWordsToBack = async (newWord: any) => {
-      //console.log(newWord);
       const responce = await fetch(`${urlBackend}words/${newWord._id}`, {
         method: 'POST',
         headers: {
@@ -40,7 +38,6 @@ export {setData};
 const getStatistics = async (user: any): Promise<StatisticsProps> => {
   const rawResponse = await fetch(`${urlBackend}users/${user.userId}/statistics`, {
     method: 'GET',
-    //withCredentials: true,
     headers: {
       'Authorization': `Bearer ${user.token}`,
       'Accept': 'application/json',
@@ -58,9 +55,9 @@ const getStatistics = async (user: any): Promise<StatisticsProps> => {
 export {getStatistics};
 
 const setStatistics = async (user: any, statistic: StatisticBackProps) => {
+  console.log(statistic)
   const rawResponse = await fetch(`${urlBackend}users/${user.userId}/statistics`, {
     method: 'PUT',
-    //withCredentials: true,
     headers: {
       'Authorization': `Bearer ${user.token}`,
       'Accept': 'application/json',
@@ -79,38 +76,38 @@ const STATISTICS: StatisticBackProps = {
   "statistics": {
         "constructorWords": [
           {
-              "data": "14.04.2021",
-              "learningWords": ['dog', 'cat'],
-              "winStreak": 2,
+              "data": "",
+              "learningWords": [],
+              "winStreak": 0,
               "generalCountLearningWords": 0,
-              "countRightAnswers": 2
+              "countRightAnswers": 0
           }
       ],
       "savannah": [
           {
-              "data": "16.04.2021",
-              "learningWords": ['dog', 'cat', 'pig'],
-              "winStreak": 3,
+              "data": "",
+              "learningWords": [],
+              "winStreak": 0,
               "generalCountLearningWords": 0,
-              "countRightAnswers": 3
+              "countRightAnswers": 0
           }
       ],
       "audioCall": [
         {
-            "data": "15.04.2021",
-            "learningWords": ['dog', 'cat', 'clock', 'revert'],
-            "winStreak": 4,
+            "data": "",
+            "learningWords": [],
+            "winStreak": 0,
             "generalCountLearningWords": 0,
-            "countRightAnswers": 4
+            "countRightAnswers": 0
         }
     ],
       "sprint": [
           {
-              "data": "16.04.2021",
-              "learningWords": ['dog', 'cat', 'strong', 'base'],
-              "winStreak": 4,
+              "data": "",
+              "learningWords": [],
+              "winStreak": 0,
               "generalCountLearningWords": 0,
-              "countRightAnswers": 4
+              "countRightAnswers": 0
           }
       ]
   }

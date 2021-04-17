@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
-import { StatisticsProps, GameStatisticDailyProps } from '../../common/ts/interfaces';
-import { titleGames, getStatistics } from '../../data';
-import { ResultPercent } from '../games/resultPercent/resultPercent';
-import { compareDates} from '../../data/utils'
+import React, {useEffect, useState} from 'react';
+import {connect} from 'react-redux';
+import {StatisticsProps, GameStatisticDailyProps} from '../../common/ts/interfaces';
+import {titleGames, getStatistics} from '../../data';
+import {ResultPercent} from '../games/resultPercent/resultPercent';
+import {compareDates} from '../../data/utils'
 
 interface ShortStatisticsProps {
   user: any;
@@ -34,7 +34,7 @@ const ShortStatisticsRedux: React.FC<ShortStatisticsProps> = ({user}) => {
     {
       id: 'summary',
       name: 'Общая статистика',
-      iconUrl: '/images/games/constructor.svg',
+      iconUrl: '/images/games/stat.png',
       imgUrl: '',
       description: '',
     }
@@ -43,14 +43,15 @@ const ShortStatisticsRedux: React.FC<ShortStatisticsProps> = ({user}) => {
   useEffect(() => {
     getStatistics(user).then((res: any) => {
       statisticBack = res.statistics;
+      getSummaryStatistic();
       setLoading(false);
     });
   }, []);
 
   const getLastDay = (arr: GameStatisticDailyProps[]) => {
-    return arr.length ? arr[arr.length -1] : emptyStatistic;
+    return arr.length ? arr[arr.length - 1] : emptyStatistic;
   }
-  
+
   const getSummaryStatistic = () => {
     const todaySummaryStatistics = [];
     let countAnswer: number = 0;
@@ -58,7 +59,7 @@ const ShortStatisticsRedux: React.FC<ShortStatisticsProps> = ({user}) => {
     let winStreak: number = 0;
     for (let game in statisticBack) {
       if (!compareDates(getLastDay(statisticBack[game as keyof StatisticsProps]).data))
-      todaySummaryStatistics.push(getLastDay(statisticBack[game as keyof StatisticsProps]))
+        todaySummaryStatistics.push(getLastDay(statisticBack[game as keyof StatisticsProps]))
     }
     const summaryLearningWords = new Set<string>();
     todaySummaryStatistics.forEach(game => {
@@ -66,28 +67,29 @@ const ShortStatisticsRedux: React.FC<ShortStatisticsProps> = ({user}) => {
       if (game.winStreak > winStreak) winStreak = game.winStreak;
       countRightAnswers += game.countRightAnswers;
       countAnswer += game.generalCountLearningWords;
-    })
+    });
     setWinStreak(winStreak);
     setCountLearningWords(summaryLearningWords.size);
     setCorrect(countRightAnswers);
     setError(countAnswer - countRightAnswers);
   }
 
-  const getGameStatisticLastDay = (index: number) : GameStatisticDailyProps => {
+  const getGameStatisticLastDay = (index: number): GameStatisticDailyProps => {
     const gameName = titleStatistic[index].id;
-    let gameStatistic; 
-      switch (gameName) {
+    let gameStatistic;
+    switch (gameName) {
       case 'sprint':
-        gameStatistic = getLastDay(statisticBack!.sprint);
+        console.log(statisticBack)
+        gameStatistic = statisticBack ? getLastDay(statisticBack!.sprint) : emptyStatistic;
         break;
       case 'audio':
-        gameStatistic = getLastDay(statisticBack!.audioCall);
+        gameStatistic = statisticBack ? getLastDay(statisticBack!.audioCall) : emptyStatistic;
         break;
       case 'savannah':
-          gameStatistic = getLastDay(statisticBack!.savannah);
+        gameStatistic = statisticBack ? getLastDay(statisticBack!.savannah) : emptyStatistic;
         break;
       case 'constructor':
-        gameStatistic = getLastDay(statisticBack!.constructorWords);
+        gameStatistic = statisticBack ? getLastDay(statisticBack!.constructorWords) : emptyStatistic;
         break;
       default:
         gameStatistic = emptyStatistic;
@@ -96,7 +98,6 @@ const ShortStatisticsRedux: React.FC<ShortStatisticsProps> = ({user}) => {
   }
 
   const onChangeGameNumber = (index: number) => {
-    console.log(statisticBack);
     setGameNumber(index);
     const gameStatistic = getGameStatisticLastDay(index);
     if (index !== 4) {
@@ -109,39 +110,41 @@ const ShortStatisticsRedux: React.FC<ShortStatisticsProps> = ({user}) => {
   }
 
   return (
-  <React.Fragment>
-    <div className='short-statistic'>
-      <p className='short-statistic__title'>{titleStatistic[gameNumber].name}</p>
-      <div className='short-statistic__body'>
-        {loading ?
-        <span>Сейчас посчитаем</span> :
-        <React.Fragment>
-          {gameNumber === 4 ?
-            <p className='short-statistic__body__subtitle'>Ваш прогресс на сегодня:</p> :
-            <p className='short-statistic__body__subtitle'>Последняя тренровка: {date}</p>
-          }
-          <p className='short-statistic__body__series'>Самая длинная серия: {winStreak}</p>
-          <p className='short-statistic__body__repeat'>Повторено слов: {countLearningWords}</p>
-          <ResultPercent  error = {error} correct = {correct}/>
-          <div className='short-statistic__body__control'>
-            {
-              titleStatistic.map((item, index) => {
-                return (index === gameNumber ? 
-                  <div className='short-statistic__body__control__item short-statistic__body__control__item--active' key = {index}>
-                    <img src={item.iconUrl} alt={item.iconUrl} height='60%'/>
-                  </div> :
-                  <div className='short-statistic__body__control__item' key = {index}
-                    onClick = {() => onChangeGameNumber(index)}>
-                    <img src={item.iconUrl} alt={item.iconUrl} height='60%'/>
-                  </div>
-                )
-              })
-            }
-          </div>          
-        </React.Fragment>}
+    <React.Fragment>
+      <div className='short-statistic'>
+        <p className='short-statistic__title'>{titleStatistic[gameNumber].name}</p>
+        <div className='short-statistic__body'>
+          {loading ?
+            <span>Сейчас посчитаем</span> :
+            <React.Fragment>
+              {gameNumber === 4 ?
+                <p className='short-statistic__body__subtitle'>Ваш прогресс на сегодня:</p> :
+                <p className='short-statistic__body__subtitle'>Последняя тренровка: {date}</p>
+              }
+              <p className='short-statistic__body__series'>Самая длинная серия: {winStreak}</p>
+              <p className='short-statistic__body__repeat'>Повторено слов: {countLearningWords}</p>
+              <ResultPercent error={error} correct={correct}/>
+              <div className='short-statistic__body__control'>
+                {
+                  titleStatistic.map((item, index) => {
+                    return (index === gameNumber ?
+                        <div
+                          className='short-statistic__body__control__item short-statistic__body__control__item--active'
+                          key={index}>
+                          <img src={item.iconUrl} alt={item.iconUrl} height='60%'/>
+                        </div> :
+                        <div className='short-statistic__body__control__item' key={index}
+                             onClick={() => onChangeGameNumber(index)}>
+                          <img src={item.iconUrl} alt={item.iconUrl} height='60%'/>
+                        </div>
+                    )
+                  })
+                }
+              </div>
+            </React.Fragment>}
+        </div>
       </div>
-    </div>
-  </React.Fragment>)
+    </React.Fragment>)
 };
 
 const mapStateToProps = (state: any) => ({
@@ -150,4 +153,4 @@ const mapStateToProps = (state: any) => ({
 
 const ShortStatistics = connect(mapStateToProps)(ShortStatisticsRedux);
 
-export { ShortStatistics };
+export {ShortStatistics};

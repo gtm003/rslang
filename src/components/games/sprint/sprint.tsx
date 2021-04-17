@@ -7,7 +7,6 @@ import { Loader } from '../../loader';
 import { ResultsGame } from '../resultsGame';
 import { connect } from 'react-redux';
 import {setData, setStatistics, getStatistics} from '../../../data';
-import { ShortStatistics } from '../../shortStatistics';
 
 let WORDS_GROUP : WordsProps[];
 let WORDS_GAME : WordsProps[];
@@ -78,7 +77,6 @@ const SprintRedux: React.FC<GameSprintProps> = ({user, words, hardWords, group, 
       const timerId = setInterval(() => {
         setGameStatus(false);
         statisticBack = updateStatistics('sprint', statisticBack, errorList, correctList, seriesMax)
-        console.log(statisticBack);
       }, 60000);
     return () => {
       clearTimeout(timerId);
@@ -148,7 +146,6 @@ const SprintRedux: React.FC<GameSprintProps> = ({user, words, hardWords, group, 
       } else {
         setGameStatus(false);
         statisticBack = updateStatistics('sprint', statisticBack, errorList, correctList, seriesMax)
-        console.log(statisticBack);
       }
     }
   }
@@ -161,7 +158,7 @@ const SprintRedux: React.FC<GameSprintProps> = ({user, words, hardWords, group, 
   }
 
   const onClickHandlerNewGame = () => {
-    setGameStatistic();
+   // setGameStatistic();
     indexesWord = getRandomOderArr(WORDS_GAME.length);
     indexWord = indexesWord.pop();
     indexTranslate = getRandomBoolean() ? indexWord : getRandomInteger(19);
@@ -229,6 +226,7 @@ const SprintRedux: React.FC<GameSprintProps> = ({user, words, hardWords, group, 
                   </div>
                 </div>)}
               {!gameStatus  && ( <div className='sprint__field'>
+                {setGameStatistic()}
                 <ResultsGame correctList={correctList} errorList={errorList} onClickHandlerNewGame={onClickHandlerNewGame}
                 seriesLength={seriesMax} score={score}/>
               </div>)}

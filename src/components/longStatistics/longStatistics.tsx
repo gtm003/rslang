@@ -24,37 +24,25 @@ let statisticBack: StatisticsProps;
 
 const LongStatisticsRedux: React.FC<ShortStatisticsProps> = ({user}) => {
   const [loading, setLoading] = useState<boolean>(true);
-  const titleStatistic = titleGames.concat(
-    {
-      id: 'summary',
-      name: 'Общая статистика',
-      iconUrl: '/images/games/constructor.svg',
-      imgUrl: '',
-      description: '',
-    }
-  );
 
   useEffect(() => {
     getStatistics(user).then((res: any) => {
       statisticBack = res.statistics;
-      setLoading(false);
+      console.log(statisticBack)
+        setLoading(false);
     });
   }, []);
 
-  const getLastDay = (arr: GameStatisticDailyProps[]) => {
-    return arr.length ? arr[arr.length -1] : emptyStatistic;
-  }
-
-  const getCommonWords = (set: Set<string>, arr: GameStatisticDailyProps[]) => {
+  const getCommonWords = (set: Set<any>, arr: GameStatisticDailyProps[]) => {
     //const summaryWords = new Set<string>();
-    const summaryWords: string[] = Array.from(set);
+    const summaryWords: any[] = Array.from(set);
     arr.forEach(dayData => summaryWords.push(...dayData.learningWords));
     return new Set(summaryWords);
   }
 
   const getCountWords = (arr: GameStatisticDailyProps[]) => {
     //const summaryWords = new Set<string>();
-    const summaryWords: string[] = [];
+    const summaryWords: any[] = [];
     arr.forEach(dayData => summaryWords.push(...dayData.learningWords));
     return new Set(summaryWords).size;
   }
@@ -64,11 +52,12 @@ const LongStatisticsRedux: React.FC<ShortStatisticsProps> = ({user}) => {
     for (let game in statisticBack) {
       statisticBack[game as keyof StatisticsProps].forEach(dayData => data.push(dayData));
     }
-    const dates = new Set<string>();
+    const dates = new Set<any>();
     data.forEach(dayData => dates.add(dayData.data));
-    const datesArr: string[] = Array.from(dates);
+    console.log(data)
+    const datesArr: any[] = Array.from(dates);
     datesArr.sort();
-    let wordsCommon = new Set<string>();
+    let wordsCommon = new Set<any>();
     const countWordsCommon: number[] = [];
     datesArr.forEach((date) => {
       wordsCommon = getCommonWords(wordsCommon, data.filter(dayData => date === dayData.data));
@@ -80,7 +69,7 @@ const LongStatisticsRedux: React.FC<ShortStatisticsProps> = ({user}) => {
       const daily = i ? countWordsCommon[i] - countWordsCommon[i - 1] : countWordsCommon[i];
       countWordsDaily.push(daily);
     }
-    const dataChartCommon: [string, number][] = datesArr.map(date => {
+    const dataChartCommon: [any, number][] = datesArr.map(date => {
       return [date, getCountWords(data.filter(dayData => date === dayData.data))]
     });
 
@@ -95,6 +84,7 @@ const LongStatisticsRedux: React.FC<ShortStatisticsProps> = ({user}) => {
       const daily = i ? dataChartCommonCount[i] - dataChartCommonCount[i - 1] : dataChartCommonCount[i];
       dataChartCommonDaily[i].push(daily);
     }
+    console.log(dataChart)
     return dataChart;
   }
   
@@ -103,6 +93,7 @@ const LongStatisticsRedux: React.FC<ShortStatisticsProps> = ({user}) => {
     <div className='long-statistic' onClick = {() => console.log(getLongStatisticData())}>
       <p className='long-statistic__title'>Долгосрочная статистика</p>
       <div className='long-statistic__body'>
+        {console.log(loading)}
         {loading ?
         <span>Сейчас посчитаем</span> :
         <React.Fragment>
