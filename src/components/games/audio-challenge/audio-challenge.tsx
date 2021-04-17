@@ -119,8 +119,7 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
       if (typeof translate === "string") {
         wrongAnswer = translate !== wordTranslation.wordTranslate;
       } else {
-        const evtTarget = translate?.target as HTMLElement;
-        wrongAnswer = translate === undefined || evtTarget.innerText.match(/[а-я-,]/gi)?.join('') !== wordTranslation.wordTranslate.replace(/\s/g, '');
+        wrongAnswer = true;
       };
 
       if (wrongAnswer) {
@@ -152,6 +151,7 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
 
       const wordTranslations = document.querySelectorAll<HTMLLIElement>(".minigames__translation-item");
       highlightWords(wordTranslations, wordTranslation);
+
     };
   };
 
@@ -195,7 +195,10 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
     return randomWord;
   }
 
-  const bgImage = new Image().src = urlBackend + translationWord.image;
+  let bgImage: string;
+  if (translationWord.image !== undefined) {
+    bgImage = new Image().src = urlBackend + translationWord.image;
+  }
 
   const translationsOnScreen: WordsProps[] = [
     getRandomWords(),
@@ -277,7 +280,7 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
                       <li
                         key={word.wordTranslate + i}
                         className="minigames__translation-item"
-                        onClick={evt => onAnswer(translationWord, evt)}
+                        onClick={() => onAnswer(translationWord, word.wordTranslate)}
                       >
                         <span>{i + 1}. {word.wordTranslate}</span>
                       </li>

@@ -6,11 +6,14 @@ export const shuffleArray = (array: WordsProps[]) => {
 
 export const highlightWords = (
   wordTranslations: NodeListOf<HTMLLIElement>,
-  wordTranslation: WordsProps
+  wordTranslation: WordsProps,
+  language?: string
 ): void => {
+  let answer: string;
+  
   wordTranslations?.forEach((translation: HTMLLIElement) => {
-    translation.textContent?.match(/[а-я-,]/gi)?.join("") ===
-    wordTranslation.wordTranslate.replace(/\s/g, "")
+    language === "ru" ? answer = wordTranslation.word.replace(/\s/g, "") : answer = wordTranslation.wordTranslate.replace(/\s/g, "");
+    translation.textContent?.match(/[A-Zа-я-,]/gi)?.join("") === answer
       ? translation.classList.add("word-correct")
       : translation.classList.add("word-wrong");
   });

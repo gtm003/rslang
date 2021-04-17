@@ -4,8 +4,10 @@ import { NavLink } from 'react-router-dom';
 import { connect } from "react-redux";
 import { Loader } from "../../loader";
 import { Lives } from "../lives/lives";
-import { shuffleArray, highlightWords, removeWordsHighlighting,
-         onFullScreenClick, changeFullscreenIcon } from "../utils/utils";
+import {
+  shuffleArray, highlightWords, removeWordsHighlighting,
+  onFullScreenClick, changeFullscreenIcon
+} from "../utils/utils";
 import { ResultsGame } from '../resultsGame/resultsGame';
 import { setData } from '../../../data';
 
@@ -25,6 +27,8 @@ interface SavannahProps {
 const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, words }) => {
   const [gameWords, setGameWords] = useState<WordsProps[]>([]);
   const [translations, setTranslations] = useState<WordsProps[]>([]);
+  const [isWelcomeScreen, setIsWelcomeScreen] = useState<boolean>(true);
+  const [language, setLanguage] = useState<string>("en");
   const [lives, setLives] = useState<number>(5);
   const savannah = useRef<HTMLElement>(null);
   const word = useRef<HTMLDivElement>(null);
@@ -46,7 +50,7 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
   useEffect(() => {
     window.document.addEventListener("fullscreenchange", onFullScreenChange)
     window.addEventListener("keyup", onKeyUpHandler);
-    
+
     return () => {
       (window as any).removeEventListener("keyup", onKeyUpHandler);
       (window as any).removeEventListener("keyup", onFullScreenChange);
@@ -54,7 +58,7 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
   }, [gameWords]);
 
   const onFullScreenChange = () => {
-    if (document.fullscreenElement === null && fullscreen.current) {
+    if (fullscreen.current) {
       changeFullscreenIcon(fullscreen.current)
     }
   };
@@ -115,16 +119,15 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
 
   let answers: number = 0;
 
-  const onAnswer = (wordTranslation: WordsProps, translate?: React.MouseEvent | string): void => {
+  const onAnswer = (wordTranslation: WordsProps, translate?: string): void => {
     ++answers;
     if (answers === 1 && lives > 0 && gameWords.length !== 0) {
       let wrongAnswer: boolean;
-
+      
       if (typeof translate === "string") {
         wrongAnswer = translate !== wordTranslation.wordTranslate;
       } else {
-        const evtTarget = translate?.target as HTMLElement;
-        wrongAnswer = translate === undefined || evtTarget.innerText.match(/[а-я-,]/gi)?.join('') !== wordTranslation.wordTranslate.replace(/\s/g, '');
+        wrongAnswer = true;
       };
 
       if (!wrongAnswer) {
@@ -139,7 +142,7 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
       };
 
       const wordTranslations = document.querySelectorAll<HTMLLIElement>(".minigames__translation-item");
-      highlightWords(wordTranslations, wordTranslation);
+      highlightWords(wordTranslations, wordTranslation, language);
 
       setTimeout(() => {
         if (wrongAnswer) {
@@ -186,6 +189,35 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
     return <Loader />
   };
 
+  if (isWelcomeScreen) {
+    return (
+      <main className="savannah minigames">
+        <div className="minigames__wrapper">
+          <div className="welcome-screen">
+            <p className="welcome-screen__title">
+              Выберите один верный перевод слова из четырех. Для управления игрой используйте клавиши 1, 2, 3, 4, либо просто кликайте мышкой.
+            </p>
+            <div className="savannah__start-game">
+              <span className="savannah__choose-language">Выберите язык игры:</span>
+              <button className="btn welcome-screen__btn" onClick={() => {
+                setIsWelcomeScreen(false);
+                setLanguage("en");
+              }}>
+                En
+            </button>
+            <button className="btn welcome-screen__btn" onClick={() => {
+                setIsWelcomeScreen(false);
+                setLanguage("ru");
+              }}>
+                Ru
+            </button>
+            </div>
+          </div>
+        </div>
+      </main >
+    )
+  };
+
   return (
     <main className="savannah minigames" ref={savannah}>
       <div className="minigames__wrapper">
@@ -223,9 +255,7 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
               </div>
             </div>
             <div className="savannah__word flow-animation" ref={word} onAnimationEnd={() => { onAnswer(translationWord) }}>
-              {
-                translationWord.word
-              }
+              {language === "en" ? translationWord.word : translationWord.wordTranslate}
             </div>
             <ul className="minigames__translation-list">
               {
@@ -234,9 +264,9 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
                     <li
                       key={word.wordTranslate + i}
                       className="minigames__translation-item"
-                      onClick={evt => onAnswer(translationWord, evt)}
+                      onClick={() => onAnswer(translationWord, word.wordTranslate)}
                     >
-                      <span tabIndex={0}>{i + 1}. {word.wordTranslate}</span>
+                      <span>{i + 1}. {language === "en" ? word.wordTranslate : word.word}</span>
                     </li>
                   )
                 })
