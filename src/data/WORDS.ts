@@ -3,10 +3,9 @@ import {urlBackend} from "./index";
 
 const getDataPage = async (
   group: string | number,
-  page?: number
+  page?: number,
 ): Promise<WordsProps[]> => {
   const url = `${urlBackend}words?group=${group}&page=${page}`;
-
   const res = await fetch(`${url}`);
 
   if (!res.ok) {
