@@ -24,7 +24,10 @@ const userData = localStorage.user ? JSON.parse(localStorage.user) : null;
 
 if (userData) {
   store.dispatch(loginUser(userData.name, userData.userId, userData.photo, userData.isAuth, userData.token));
+} else {
+  store.dispatch(loginUser(null, null, null, false, null));
 }
+
 store.dispatch(ActionCreator.getWords());
 
 ReactDOM.render(

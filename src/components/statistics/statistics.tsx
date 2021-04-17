@@ -2,8 +2,8 @@ import React from "react";
 import {connect} from "react-redux";
 import {useLocation} from "react-router-dom";
 import {Crumbs} from "../../common/navigation/crumbs";
-import { ShortStatistics } from "../shortStatistics";
-import { LongStatistics } from "../longStatistics";
+import {ShortStatistics} from "../shortStatistics";
+import {LongStatistics} from "../longStatistics";
 
 interface StatisticsProps {
   isAuth: boolean,
@@ -14,11 +14,10 @@ const StatisticsRedux: React.FC<StatisticsProps> = ({isAuth}) => {
   return (
     <>
       <Crumbs path={location.pathname}/>
-        {isAuth &&
-        <div className='statistic'>
-          <ShortStatistics />
-          <LongStatistics />
-        </div>}
+      <div className='statistic'>
+        <ShortStatistics/>
+        {isAuth && <LongStatistics/>}
+      </div>
     </>
   )
 };
