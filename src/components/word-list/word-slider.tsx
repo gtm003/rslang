@@ -80,8 +80,8 @@ const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isDictionary =
         ((words.length && getWords.length) ?
           <Carousel dynamicHeight={false}>
             {words.map((item: WordsProps) => {
-              const isHard: boolean = item.hardWord;
 
+              const isHard: boolean = Boolean(hardWords.length) && hardWords.some((word: any) =>  word.id === item.id);
               return (
                 <div key={item.id}>
                   <img src={urlBackend + item.image} alt='figure of word'/>

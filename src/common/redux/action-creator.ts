@@ -7,9 +7,6 @@ const ActionCreator = {
     setDataNewUser().then((data: any) => {
       const auth: boolean = stateUser.isAuth;
       const words = auth ? data[0].words : data;
-      words.forEach((word: any) => {
-        word._id = word.id;
-      })
 
       dispatch({
         type: `SET_WORDS`,
