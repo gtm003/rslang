@@ -51,7 +51,6 @@ const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isDictionary =
       setMessage(true);
     } else {
       setWords(wordsWithoutDeleted);
-      console.log(words)
       setMessage(false);
     }
   }
@@ -73,7 +72,6 @@ const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isDictionary =
 
   const pathImg: string = `/images/group/${group - 1}.png`;
 
-
   return (
     <div className="word-slider">
       {
@@ -82,11 +80,8 @@ const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isDictionary =
         ((words.length && getWords.length) ?
           <Carousel dynamicHeight={false}>
             {words.map((item: WordsProps) => {
+              const isHard: boolean = item.hardWord;
 
-              const isHard: boolean = Boolean(hardWords.length) && hardWords.some((word: any) => {
-                //console.log(word.id, item.id)
-                return word.id === item.id
-              });
               return (
                 <div key={item.id}>
                   <img src={urlBackend + item.image} alt='figure of word'/>
