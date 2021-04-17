@@ -9,8 +9,12 @@
   top: 0;
   z-index: 1000;
   overflow: hidden;
-
+  box-shadow: 4px 4px 4px 4px $default-color;
   transition: all .5s ease;
+
+  &:hover {
+    box-shadow: 4px 4px 4px 6px $default-color;
+  }
 
   &__list {
     margin-top: 150px;
