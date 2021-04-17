@@ -10,16 +10,16 @@ export const highlightWords = (
   gameType: string
 ): void => {
   let answer: string;
-  
+
   wordTranslations?.forEach((translation: HTMLLIElement) => {
-    if (gameType === "ru" || "en") {
+    if (gameType === "ru" || gameType === "en") {
       gameType === "ru" ? answer = wordTranslation.word.replace(/\s/g, "") : answer = wordTranslation.wordTranslate.replace(/\s/g, "");
     }
 
-    if (gameType === "word" || "sentenсe") {
+    if (gameType === "word" || gameType === "sentenсe") {
       gameType === "word" ? answer = wordTranslation.wordTranslate.replace(/\s/g, "") : answer = wordTranslation.word.replace(/\s/g, "");
     }
-
+    
     translation.textContent?.match(/[A-Zа-я-,]/gi)?.join("") === answer
       ? translation.classList.add("word-correct")
       : translation.classList.add("word-wrong");
@@ -32,7 +32,7 @@ export const removeWordsHighlighting = (
 ): void => {
   wordTranslations?.forEach((translation) => {
     translation.textContent?.match(/[A-Zа-я-,]]/gi)?.join("") ===
-    wordTranslation.wordTranslate.replace(/\s/g, "")
+      wordTranslation.wordTranslate.replace(/\s/g, "")
       ? translation.classList.remove("word-correct")
       : translation.classList.remove("word-wrong");
   });

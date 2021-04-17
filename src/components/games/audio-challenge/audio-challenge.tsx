@@ -63,7 +63,7 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
   }, []);
 
   useEffect(() => {
-    if (lives > 0 || gameWords.length === 0) {
+    if (lives === 0 || gameWords.length === 0) {
       setGameStatistic();
     }
   }, [lives, gameWords]);
@@ -141,12 +141,15 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
       necessaryWords = words.slice((Number(group) * 600), ((Number(group) + 1) * 600));
     setGameWords(necessaryWords);
     lives = 5;
+    statisticBack = updateStatistics('audioCall', statisticBack, wrongAnswers, correctAnswers, seriesMax);
     correctAnswers = [];
     wrongAnswers = [];
-    statisticBack = updateStatistics('audioCall', statisticBack, wrongAnswers, correctAnswers, seriesMax);
+    seriesMax = 0;
   };
 
   const onAnswer = (wordTranslation: WordsProps, translate?: React.MouseEvent | string): void => {
+    console.log(statisticBack, 1);
+    
     ++answers;
     if (answers === 1 && gameWords.length !== 0) {
       let wrongAnswer: boolean;

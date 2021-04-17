@@ -111,9 +111,10 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
     bgPosition = 0;
     setGameWords(necessaryWords);
     setLives(5);
+    statisticBack = updateStatistics('savannah', statisticBack, wrongAnswers, correctAnswers, seriesMax);
     correctAnswers = [];
     wrongAnswers = [];
-    statisticBack = updateStatistics('savannah', statisticBack, wrongAnswers, correctAnswers, seriesMax);
+    seriesMax = 0;
   };
 
   const moveBackground = (bgPosition: number, duration: number): void => {
@@ -148,6 +149,7 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
   let answers: number = 0;
 
   const onAnswer = (wordTranslation: WordsProps, translate?: string): void => {
+
     ++answers;
     if (answers === 1 && lives > 0 && gameWords.length !== 0) {
       let wrongAnswer: boolean;
