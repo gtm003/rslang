@@ -1,4 +1,4 @@
-import { WordsProps,  StatisticsProps, StatisticBackProps} from "../common/ts/interfaces";
+import {WordsProps, StatisticsProps, StatisticBackProps} from "../common/ts/interfaces";
 import {urlBackend} from "./index";
 
 const url: string = `${urlBackend}words?all=true`;
@@ -36,6 +36,7 @@ const setData = (word: any, prop: any, value: any) => {
 export {setData};
 
 const getStatistics = async (user: any): Promise<StatisticsProps> => {
+
   const rawResponse = await fetch(`${urlBackend}users/${user.userId}/statistics`, {
     method: 'GET',
     headers: {
@@ -45,7 +46,10 @@ const getStatistics = async (user: any): Promise<StatisticsProps> => {
   });
   if (rawResponse.ok) {
     const content = await rawResponse.json();
-    return await content;
+    if (!content.statistics.audioCall && !content.statistics.constructorWords && !content.statistics.savannah && !content.statistics.sprint) {
+      setStatistics(user, STATISTICS);
+      return STATISTICS.statistics;
+    } else return await content;
   } else {
     setStatistics(user, STATISTICS);
     return STATISTICS.statistics;
@@ -55,7 +59,7 @@ const getStatistics = async (user: any): Promise<StatisticsProps> => {
 export {getStatistics};
 
 const setStatistics = async (user: any, statistic: StatisticBackProps) => {
-  console.log(statistic)
+
   const rawResponse = await fetch(`${urlBackend}users/${user.userId}/statistics`, {
     method: 'PUT',
     headers: {
@@ -65,50 +69,47 @@ const setStatistics = async (user: any, statistic: StatisticBackProps) => {
     },
     body: JSON.stringify(statistic),
   });
-  const content = await rawResponse.json();
-
-  console.log(content);
 };
 
 export {setStatistics};
 
 const STATISTICS: StatisticBackProps = {
   "statistics": {
-        "constructorWords": [
-          {
-              "data": "",
-              "learningWords": [],
-              "winStreak": 0,
-              "generalCountLearningWords": 0,
-              "countRightAnswers": 0
-          }
-      ],
-      "savannah": [
-          {
-              "data": "",
-              "learningWords": [],
-              "winStreak": 0,
-              "generalCountLearningWords": 0,
-              "countRightAnswers": 0
-          }
-      ],
-      "audioCall": [
-        {
-            "data": "",
-            "learningWords": [],
-            "winStreak": 0,
-            "generalCountLearningWords": 0,
-            "countRightAnswers": 0
-        }
+    "constructorWords": [
+      {
+        "data": "",
+        "learningWords": [],
+        "winStreak": 0,
+        "generalCountLearningWords": 0,
+        "countRightAnswers": 0
+      }
     ],
-      "sprint": [
-          {
-              "data": "",
-              "learningWords": [],
-              "winStreak": 0,
-              "generalCountLearningWords": 0,
-              "countRightAnswers": 0
-          }
-      ]
+    "savannah": [
+      {
+        "data": "",
+        "learningWords": [],
+        "winStreak": 0,
+        "generalCountLearningWords": 0,
+        "countRightAnswers": 0
+      }
+    ],
+    "audioCall": [
+      {
+        "data": "",
+        "learningWords": [],
+        "winStreak": 0,
+        "generalCountLearningWords": 0,
+        "countRightAnswers": 0
+      }
+    ],
+    "sprint": [
+      {
+        "data": "0",
+        "learningWords": [],
+        "winStreak": 0,
+        "generalCountLearningWords": 0,
+        "countRightAnswers": 0
+      }
+    ]
   }
 }

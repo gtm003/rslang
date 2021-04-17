@@ -79,7 +79,6 @@ const ShortStatisticsRedux: React.FC<ShortStatisticsProps> = ({user}) => {
     let gameStatistic;
     switch (gameName) {
       case 'sprint':
-        console.log(statisticBack)
         gameStatistic = statisticBack ? getLastDay(statisticBack!.sprint) : emptyStatistic;
         break;
       case 'audio':
