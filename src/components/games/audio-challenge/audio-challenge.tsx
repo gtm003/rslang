@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { WordsProps, GameProps } from "../../../common/ts/interfaces";
+import { WordsProps, GameProps, StatisticsProps } from "../../../common/ts/interfaces";
 import { NavLink } from 'react-router-dom';
 import { connect } from "react-redux";
 import { Loader } from "../../loader";
@@ -10,9 +10,9 @@ import {
   shuffleArray, highlightWords, removeWordsHighlighting,
   onFullScreenClick, changeFullscreenIcon
 } from "../utils/utils";
-import { playAnswer } from '../../../data/utils';
+import { playAnswer, updateStatistics } from '../../../data/utils';
 import { urlBackend } from "../../../data";
-import { setData } from '../../../data';
+import { setData, getStatistics, setStatistics } from '../../../data';
 
 let necessaryWords: WordsProps[];
 let correctAnswers: WordsProps[] = [];
@@ -21,12 +21,16 @@ let lives: number = 5;
 let answers: number = 0;
 let isMute: boolean = false;
 let audio = new Audio();
+let statisticBack: StatisticsProps;
+let series: number = 0;
+let seriesMax: number = 0;
 
 interface SavannahProps {
-  words: WordsProps[]
+  words: WordsProps[],
+  user: {},
 };
 
-const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, words }) => {
+const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, words, user }) => {
   const [gameWords, setGameWords] = useState<WordsProps[]>([]);
   const [translations, setTranslations] = useState<WordsProps[]>([]);
   const [gameType, setGameType] = useState<string>(``);
@@ -49,8 +53,20 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
     correctAnswers = [];
     wrongAnswers = [];
     answers = 0;
+    series = 0;
+    seriesMax = 0;
     lives = 5;
   }, [words, group, page]);
+
+  useEffect(() => {
+    getStatistics(user).then((res: any) => statisticBack = res.statistics);
+  }, []);
+
+  useEffect(() => {
+    if (lives > 0 || gameWords.length === 0) {
+      setGameStatistic();
+    }
+  }, [lives, gameWords]);
 
   useEffect(() => {
     window.document.addEventListener("fullscreenchange", onFullScreenChange)
@@ -67,6 +83,13 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
       playAudio(gameType === "word" ? gameWords[translationWordIndex].audio : gameWords[translationWordIndex].audioExample);
     }
   }, [gameWords]);
+
+  const setGameStatistic = () => {
+    const statisticSend = {
+      statistics: statisticBack
+    }
+    setStatistics(user, statisticSend);
+  }
 
   const onFullScreenChange = () => {
     if (fullscreen.current) {
@@ -120,11 +143,10 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
     lives = 5;
     correctAnswers = [];
     wrongAnswers = [];
+    statisticBack = updateStatistics('audioCall', statisticBack, wrongAnswers, correctAnswers, seriesMax);
   };
 
   const onAnswer = (wordTranslation: WordsProps, translate?: React.MouseEvent | string): void => {
-    console.log(1);
-    
     ++answers;
     if (answers === 1 && gameWords.length !== 0) {
       let wrongAnswer: boolean;
@@ -134,13 +156,16 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
       } else {
         wrongAnswer = true;
       };
-
+      
       if (wrongAnswer) {
         --lives;
+        seriesMax = seriesMax < series ? series : seriesMax;
+        series = 0;
         wrongAnswers.push(wordTranslation);
         setData(wordTranslation, 'errorsCount', ++wordTranslation.errorsCount);
         playAnswer(false, isMute);
       } else {
+        ++series;
         correctAnswers.push(wordTranslation);
         setData(wordTranslation, 'corrects', ++wordTranslation.corrects);
         playAnswer(true, isMute);
@@ -272,7 +297,7 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
                 </div>
                 <button className="minigames__fullscreen" ref={fullscreen} onClick={() => {
                   if (audioChallenge.current && fullscreen.current) {
-                    onFullScreenClick(audioChallenge.current, fullscreen.current);
+                    onFullScreenClick(audioChallenge.current);
                   }
                 }}>
                   <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -292,7 +317,8 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
               </div>
               <div className="minigames__right-panel">
                 <Lives lives={lives} />
-                <NavLink to='/games'>
+                <NavLink to='/games' onClick={() => 
+                  statisticBack = updateStatistics('audioCall', statisticBack, wrongAnswers, correctAnswers, seriesMax)}>
                   <button className="minigames__close" >
                     <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M11.4347 14.022L0.532091 3.11904C-0.177435 2.40985 -0.177435 1.26318 0.532091 0.55399C1.24129 -0.155204 2.38795 -0.155204 3.09715 0.55399L14.0001 11.457L24.9028 0.55399C25.6123 -0.155204 26.7587 -0.155204 27.4679 0.55399C28.1774 1.26318 28.1774 2.40985 27.4679 3.11904L16.5652 14.022L27.4679 24.925C28.1774 25.6342 28.1774 26.7808 27.4679 27.49C27.1144 27.8438 26.6497 28.0215 26.1853 28.0215C25.7209 28.0215 25.2566 27.8438 24.9028 27.49L14.0001 16.5871L3.09715 27.49C2.74338 27.8438 2.279 28.0215 1.81462 28.0215C1.35024 28.0215 0.885857 27.8438 0.532091 27.49C-0.177435 26.7808 -0.177435 25.6342 0.532091 24.925L11.4347 14.022Z" fill="#CDCDCD" />
@@ -312,7 +338,7 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
                 <span
                   className="audio-challenge__word-answer"
                   ref={word}>
-                  {gameType === "word" ? translationWord.wordTranslate : getTextExapmleWithoutText(translationWord.textExample)}
+                  {gameType === "word" ? translationWord.word : getTextExapmleWithoutText(translationWord.textExample)}
                 </span>
               </div>
               <ul className="minigames__translation-list">
@@ -324,7 +350,7 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
                         className="minigames__translation-item"
                         onClick={() => onAnswer(translationWord, word.wordTranslate)}
                       >
-                        <span>{i + 1}. {gameType === "words" ? word.wordTranslate : word.word}</span>
+                        <span>{i + 1}. {gameType === "word" ? word.wordTranslate : word.word}</span>
                       </li>
                     )
                   })
@@ -339,7 +365,7 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
           </>
           :
           <div className='minigames__result'>
-            <ResultsGame errorList={wrongAnswers} correctList={correctAnswers} onClickHandlerNewGame={restartGame} />
+            <ResultsGame errorList={wrongAnswers} correctList={correctAnswers} onClickHandlerNewGame={restartGame} seriesLength={seriesMax} />
           </div>
         }
       </div>
@@ -348,7 +374,8 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
 };
 
 const mapStateToProps = (state: any) => ({
-  words: state.data.words
+  words: state.data.words,
+  user: state.login.user
 });
 
 const AudioChallenge = connect(mapStateToProps)(AudioChallengeRedux);

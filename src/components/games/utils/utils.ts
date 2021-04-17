@@ -17,7 +17,7 @@ export const highlightWords = (
     }
 
     if (gameType === "word" || "sentenсe") {
-      answer = wordTranslation.word.replace(/\s/g, "");
+      gameType === "word" ? answer = wordTranslation.wordTranslate.replace(/\s/g, "") : answer = wordTranslation.word.replace(/\s/g, "");
     }
 
     translation.textContent?.match(/[A-Zа-я-,]/gi)?.join("") === answer
@@ -39,8 +39,7 @@ export const removeWordsHighlighting = (
 };
 
 export const onFullScreenClick = (
-  game: HTMLElement,
-  fullscreen: HTMLButtonElement
+  game: HTMLElement
 ): void => {
   if (document.fullscreenElement === null) {
     game.requestFullscreen();

@@ -48,6 +48,8 @@ export const compareDates = (lastData: string): boolean => {
 
 export const updateStatistics =
 (game:string, statistic: StatisticsProps, errorList: WordsProps[], correctList: WordsProps[], winSteak: number) => {
+  console.log(game, statistic, errorList, correctList, winSteak);
+  
   const statisticGame = statistic[game as keyof StatisticsProps];
   console.log(statisticGame);
   let learningWords: string[] = [];
