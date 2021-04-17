@@ -4,10 +4,12 @@ import { NavLink } from 'react-router-dom';
 import { connect } from "react-redux";
 import { Loader } from "../../loader";
 import { Lives } from "../lives/lives";
+import { Sound } from "../sound";
 import {
   shuffleArray, highlightWords, removeWordsHighlighting,
   onFullScreenClick, changeFullscreenIcon
 } from "../utils/utils";
+import { playAnswer } from '../../../data/utils';
 import { ResultsGame } from '../resultsGame/resultsGame';
 import { setData } from '../../../data';
 
@@ -19,9 +21,10 @@ let correctAnswers: WordsProps[] = [];
 let wrongAnswers: WordsProps[] = [];
 let bgPosition: number = 0;
 let bgShift: number = 225;
+let isMute: boolean = false;
 
 interface SavannahProps {
-  words: WordsProps[]
+  words: WordsProps[];
 }
 
 const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, words }) => {
@@ -29,6 +32,7 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
   const [translations, setTranslations] = useState<WordsProps[]>([]);
   const [isWelcomeScreen, setIsWelcomeScreen] = useState<boolean>(true);
   const [language, setLanguage] = useState<string>("en");
+
   const [lives, setLives] = useState<number>(5);
   const savannah = useRef<HTMLElement>(null);
   const word = useRef<HTMLDivElement>(null);
@@ -123,7 +127,7 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
     ++answers;
     if (answers === 1 && lives > 0 && gameWords.length !== 0) {
       let wrongAnswer: boolean;
-      
+
       if (typeof translate === "string") {
         wrongAnswer = translate !== wordTranslation.wordTranslate;
       } else {
@@ -139,7 +143,10 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
 
         moveWord();
         increaseSun();
-      };
+        playAnswer(true, isMute);
+      } else {
+        playAnswer(false, isMute);
+      }
 
       const wordTranslations = document.querySelectorAll<HTMLLIElement>(".minigames__translation-item");
       highlightWords(wordTranslations, wordTranslation, language);
@@ -205,7 +212,7 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
               }}>
                 En
             </button>
-            <button className="btn welcome-screen__btn" onClick={() => {
+              <button className="btn welcome-screen__btn" onClick={() => {
                 setIsWelcomeScreen(false);
                 setLanguage("ru");
               }}>
@@ -224,25 +231,30 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
         {lives > 0 && gameWords.length !== 0 ?
           <>
             <div className="minigames__panel">
-              <button className="minigames__fullscreen" ref={fullscreen} onClick={() => {
-                if (savannah.current && fullscreen.current) {
-                  onFullScreenClick(savannah.current, fullscreen.current);
-                }
-              }}>
-                <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <g clipPath="url(#clip0)">
-                    <path d="M0 0.928581V7.42859H1.85716V1.85716H7.42859V0H0.928581C0.415309 0 0 0.415309 0 0.928581H0Z" fill="white" />
-                    <path d="M25.0713 0H18.5713V1.85716H24.1427V7.42859H25.9999V0.928581C25.9999 0.415309 25.5846 0 25.0713 0V0Z" fill="white" />
-                    <path d="M24.1427 24.1428H18.5713V26H25.0713C25.5846 26 25.9999 25.5847 25.9999 25.0714V18.5714H24.1427V24.1428Z" fill="white" />
-                    <path d="M1.85716 18.5714H0V25.0714C0 25.5847 0.415309 26 0.928581 26H7.42859V24.1428H1.85716V18.5714Z" fill="white" />
-                  </g>
-                  <defs>
-                    <clipPath id="clip0">
-                      <rect width="26" height="26" fill="white" />
-                    </clipPath>
-                  </defs>
-                </svg>
-              </button>
+              <div className="minigames__left-panel">
+                <div onClick={() => isMute = !isMute}>
+                  <Sound />
+                </div>
+                <button className="minigames__fullscreen" ref={fullscreen} onClick={() => {
+                  if (savannah.current && fullscreen.current) {
+                    onFullScreenClick(savannah.current, fullscreen.current);
+                  }
+                }}>
+                  <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g clipPath="url(#clip0)">
+                      <path d="M0 0.928581V7.42859H1.85716V1.85716H7.42859V0H0.928581C0.415309 0 0 0.415309 0 0.928581H0Z" fill="white" />
+                      <path d="M25.0713 0H18.5713V1.85716H24.1427V7.42859H25.9999V0.928581C25.9999 0.415309 25.5846 0 25.0713 0V0Z" fill="white" />
+                      <path d="M24.1427 24.1428H18.5713V26H25.0713C25.5846 26 25.9999 25.5847 25.9999 25.0714V18.5714H24.1427V24.1428Z" fill="white" />
+                      <path d="M1.85716 18.5714H0V25.0714C0 25.5847 0.415309 26 0.928581 26H7.42859V24.1428H1.85716V18.5714Z" fill="white" />
+                    </g>
+                    <defs>
+                      <clipPath id="clip0">
+                        <rect width="26" height="26" fill="white" />
+                      </clipPath>
+                    </defs>
+                  </svg>
+                </button>
+              </div>
               <div className="minigames__right-panel">
                 <Lives lives={lives} />
                 <NavLink to='/games'>
@@ -287,7 +299,7 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
 };
 
 const mapStateToProps = (state: any) => ({
-  words: state.data.words
+  words: state.data.words,
 });
 
 const Savannah = connect(mapStateToProps)(SavannahRedux);

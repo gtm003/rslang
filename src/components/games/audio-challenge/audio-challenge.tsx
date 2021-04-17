@@ -5,10 +5,12 @@ import { connect } from "react-redux";
 import { Loader } from "../../loader";
 import { ResultsGame } from '../resultsGame/resultsGame';
 import { Lives } from "../lives/lives";
+import { Sound } from "../sound";
 import {
   shuffleArray, highlightWords, removeWordsHighlighting,
   onFullScreenClick, changeFullscreenIcon
 } from "../utils/utils";
+import { playAnswer } from '../../../data/utils';
 import { urlBackend } from "../../../data";
 import { setData } from '../../../data';
 
@@ -17,6 +19,7 @@ let correctAnswers: WordsProps[] = [];
 let wrongAnswers: WordsProps[] = [];
 let lives: number = 5;
 let answers: number = 0;
+let isMute: boolean = false;
 
 interface SavannahProps {
   words: WordsProps[]
@@ -126,9 +129,12 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
         --lives;
         wrongAnswers.push(wordTranslation);
         setData(wordTranslation, 'errorsCount', ++wordTranslation.errorsCount);
+        playAnswer(false, isMute);
       } else {
         correctAnswers.push(wordTranslation);
         setData(wordTranslation, 'corrects', ++wordTranslation.corrects);
+        playAnswer(true, isMute);
+
       };
 
       if (soundWaves.current) {
@@ -238,25 +244,30 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
         {lives > 0 && gameWords.length !== 0 && !isWelcomeScreen ?
           <>
             <div className="minigames__panel">
-              <button className="minigames__fullscreen" ref={fullscreen} onClick={() => {
-                if (audioChallenge.current && fullscreen.current) {
-                  onFullScreenClick(audioChallenge.current, fullscreen.current);
-                }
-              }}>
-                <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <g clipPath="url(#clip0)">
-                    <path d="M0 0.928581V7.42859H1.85716V1.85716H7.42859V0H0.928581C0.415309 0 0 0.415309 0 0.928581H0Z" fill="white" />
-                    <path d="M25.0713 0H18.5713V1.85716H24.1427V7.42859H25.9999V0.928581C25.9999 0.415309 25.5846 0 25.0713 0V0Z" fill="white" />
-                    <path d="M24.1427 24.1428H18.5713V26H25.0713C25.5846 26 25.9999 25.5847 25.9999 25.0714V18.5714H24.1427V24.1428Z" fill="white" />
-                    <path d="M1.85716 18.5714H0V25.0714C0 25.5847 0.415309 26 0.928581 26H7.42859V24.1428H1.85716V18.5714Z" fill="white" />
-                  </g>
-                  <defs>
-                    <clipPath id="clip0">
-                      <rect width="26" height="26" fill="white" />
-                    </clipPath>
-                  </defs>
-                </svg>
-              </button>
+              <div className="minigames__left-panel">
+                <div onClick={() => isMute = !isMute}>
+                  <Sound />
+                </div>
+                <button className="minigames__fullscreen" ref={fullscreen} onClick={() => {
+                  if (audioChallenge.current && fullscreen.current) {
+                    onFullScreenClick(audioChallenge.current, fullscreen.current);
+                  }
+                }}>
+                  <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g clipPath="url(#clip0)">
+                      <path d="M0 0.928581V7.42859H1.85716V1.85716H7.42859V0H0.928581C0.415309 0 0 0.415309 0 0.928581H0Z" fill="white" />
+                      <path d="M25.0713 0H18.5713V1.85716H24.1427V7.42859H25.9999V0.928581C25.9999 0.415309 25.5846 0 25.0713 0V0Z" fill="white" />
+                      <path d="M24.1427 24.1428H18.5713V26H25.0713C25.5846 26 25.9999 25.5847 25.9999 25.0714V18.5714H24.1427V24.1428Z" fill="white" />
+                      <path d="M1.85716 18.5714H0V25.0714C0 25.5847 0.415309 26 0.928581 26H7.42859V24.1428H1.85716V18.5714Z" fill="white" />
+                    </g>
+                    <defs>
+                      <clipPath id="clip0">
+                        <rect width="26" height="26" fill="white" />
+                      </clipPath>
+                    </defs>
+                  </svg>
+                </button>
+              </div>
               <div className="minigames__right-panel">
                 <Lives lives={lives} />
                 <NavLink to='/games'>

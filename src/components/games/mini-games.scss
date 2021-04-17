@@ -26,8 +26,19 @@
     padding-top: 50px;
   }
 
+  &__sound {
+    color: #fff;
+    font-size: 2rem;
+  }
+
   &__fullscreen > * {
     cursor: pointer;
+  }
+
+  &__left-panel {
+    display: flex;
+    justify-content: space-between;
+    width: 110px;
   }
 
   &__right-panel {

@@ -24,7 +24,7 @@ export const removeWordsHighlighting = (
   wordTranslation: WordsProps
 ): void => {
   wordTranslations?.forEach((translation) => {
-    translation.textContent?.match(/[а-я-,]/gi)?.join("") ===
+    translation.textContent?.match(/[A-Zа-я-,]]/gi)?.join("") ===
     wordTranslation.wordTranslate.replace(/\s/g, "")
       ? translation.classList.remove("word-correct")
       : translation.classList.remove("word-wrong");
