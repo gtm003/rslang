@@ -1,4 +1,4 @@
-import {WordsProps} from "../common/ts/interfaces";
+import {WordsProps, StatisticsProps, StatisticBackProps} from "../common/ts/interfaces";
 import {urlBackend} from "./index";
 import {stateUser} from "../common/redux/login-reducer";
 
@@ -75,4 +75,78 @@ const setData = (word: any, prop: any, value: any) => {
   }
 }
 
-export {setData, setDataNewUser, getData};
+const getStatistics = async (user: any): Promise<StatisticsProps> => {
+
+  const rawResponse = await fetch(`${urlBackend}users/${user.userId}/statistics`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${user.token}`,
+      'Accept': 'application/json',
+    }
+  });
+  if (rawResponse.ok) {
+    const content = await rawResponse.json();
+    if (!content.statistics.audioCall && !content.statistics.constructorWords && !content.statistics.savannah && !content.statistics.sprint) {
+      setStatistics(user, STATISTICS);
+      return STATISTICS.statistics;
+    } else return await content;
+  } else {
+    setStatistics(user, STATISTICS);
+    return STATISTICS.statistics;
+  }
+};
+
+const setStatistics = async (user: any, statistic: StatisticBackProps) => {
+
+  const rawResponse = await fetch(`${urlBackend}users/${user.userId}/statistics`, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `Bearer ${user.token}`,
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(statistic),
+  });
+};
+
+const STATISTICS: StatisticBackProps = {
+  "statistics": {
+    "constructorWords": [
+      {
+        "data": "",
+        "learningWords": [],
+        "winStreak": 0,
+        "generalCountLearningWords": 0,
+        "countRightAnswers": 0
+      }
+    ],
+    "savannah": [
+      {
+        "data": "",
+        "learningWords": [],
+        "winStreak": 0,
+        "generalCountLearningWords": 0,
+        "countRightAnswers": 0
+      }
+    ],
+    "audioCall": [
+      {
+        "data": "",
+        "learningWords": [],
+        "winStreak": 0,
+        "generalCountLearningWords": 0,
+        "countRightAnswers": 0
+      }
+    ],
+    "sprint": [
+      {
+        "data": "0",
+        "learningWords": [],
+        "winStreak": 0,
+        "generalCountLearningWords": 0,
+        "countRightAnswers": 0
+      }
+    ]
+  }
+}
+export {setData, setDataNewUser, getData, getStatistics, setStatistics};
