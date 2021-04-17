@@ -204,20 +204,20 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
             <p className="welcome-screen__title">
               Выберите один верный перевод слова из четырех. Для управления игрой используйте клавиши 1, 2, 3, 4, либо просто кликайте мышкой.
             </p>
-            <div className="savannah__start-game">
-              <span className="savannah__choose-language">Выберите язык игры:</span>
+            <div className="minigames__start-game">
+              <span className="minigames__choose-type">Выберите язык игры:</span>
               <button className="btn welcome-screen__btn" onClick={() => {
                 setIsWelcomeScreen(false);
                 setLanguage("en");
               }}>
                 En
-            </button>
-              <button className="btn welcome-screen__btn" onClick={() => {
-                setIsWelcomeScreen(false);
-                setLanguage("ru");
-              }}>
-                Ru
-            </button>
+              </button>
+                <button className="btn welcome-screen__btn" onClick={() => {
+                  setIsWelcomeScreen(false);
+                  setLanguage("ru");
+                }}>
+                  Ru
+              </button>
             </div>
           </div>
         </div>

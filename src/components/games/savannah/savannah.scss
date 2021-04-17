@@ -30,22 +30,7 @@
     background-position-x: center;
   }
 
-  & .welcome-screen__btn {
-    width: 140px;
-    margin: 20px 5px 0;
-  }
-
-  &__start-game {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    width: 50%;
-    margin-top: 5%;
-  }
-
-  &__choose-language {
-    font-size: 28px;;
-  }
+  
 
   &__word {
     position: absolute;

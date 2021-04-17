@@ -7,12 +7,19 @@ export const shuffleArray = (array: WordsProps[]) => {
 export const highlightWords = (
   wordTranslations: NodeListOf<HTMLLIElement>,
   wordTranslation: WordsProps,
-  language?: string
+  gameType: string
 ): void => {
   let answer: string;
   
   wordTranslations?.forEach((translation: HTMLLIElement) => {
-    language === "ru" ? answer = wordTranslation.word.replace(/\s/g, "") : answer = wordTranslation.wordTranslate.replace(/\s/g, "");
+    if (gameType === "ru" || "en") {
+      gameType === "ru" ? answer = wordTranslation.word.replace(/\s/g, "") : answer = wordTranslation.wordTranslate.replace(/\s/g, "");
+    }
+
+    if (gameType === "word" || "sentenсe") {
+      answer = wordTranslation.word.replace(/\s/g, "");
+    }
+
     translation.textContent?.match(/[A-Zа-я-,]/gi)?.join("") === answer
       ? translation.classList.add("word-correct")
       : translation.classList.add("word-wrong");

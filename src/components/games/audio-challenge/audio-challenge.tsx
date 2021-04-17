@@ -20,6 +20,7 @@ let wrongAnswers: WordsProps[] = [];
 let lives: number = 5;
 let answers: number = 0;
 let isMute: boolean = false;
+let audio = new Audio();
 
 interface SavannahProps {
   words: WordsProps[]
@@ -28,6 +29,7 @@ interface SavannahProps {
 const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, words }) => {
   const [gameWords, setGameWords] = useState<WordsProps[]>([]);
   const [translations, setTranslations] = useState<WordsProps[]>([]);
+  const [gameType, setGameType] = useState<string>(``);
   const [isWelcomeScreen, setIsWelcomeScreen] = useState<boolean>(true);
   const audioChallenge = useRef<HTMLElement>(null);
   const soundWaves = useRef<HTMLImageElement>(null);
@@ -46,6 +48,7 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
 
     correctAnswers = [];
     wrongAnswers = [];
+    answers = 0;
     lives = 5;
   }, [words, group, page]);
 
@@ -60,8 +63,8 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
   }, [gameWords]);
 
   useEffect(() => {
-    if (lives > 0 && gameWords.length > 0 && !isWelcomeScreen) {
-      playAudio(gameWords[translationWordIndex].audio);
+    if (lives > 0 && gameWords.length > 0 && !isWelcomeScreen && gameType !== ``) {
+      playAudio(gameType === "word" ? gameWords[translationWordIndex].audio : gameWords[translationWordIndex].audioExample);
     }
   }, [gameWords]);
 
@@ -72,7 +75,8 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
   };
 
   const playAudio = async (audioSrc: string) => {
-    const audio = new Audio();
+    audio.pause();
+    audio = new Audio();
     audio.src = urlBackend + audioSrc;
     audio.play();
 
@@ -84,6 +88,10 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
       soundWaves.current?.classList.remove("vawes-resizing");
     }
   };
+
+  const getTextExapmleWithoutText = (textExample: string): string => {
+    return textExample.replace(/<\/?[^>]+(>|$)/g, "")
+  }
 
   const onKeyUpHandler = (evt: KeyboardEvent) => {
     switch (evt.key) {
@@ -98,7 +106,7 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
       case "5":
         return onAnswer(translationWord, translationsOnScreen[4].wordTranslate);
       case "ArrowLeft":
-        return playAudio(translationWord.audio);
+        return playAudio(gameType === "word" ? translationWord.audio : translationWord.audioExample);
       case "ArrowRight":
         return answers === 0 ? onAnswer(translationWord) : onNextQuestionClick(translationWord);
     }
@@ -115,6 +123,8 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
   };
 
   const onAnswer = (wordTranslation: WordsProps, translate?: React.MouseEvent | string): void => {
+    console.log(1);
+    
     ++answers;
     if (answers === 1 && gameWords.length !== 0) {
       let wrongAnswer: boolean;
@@ -156,7 +166,7 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
       }
 
       const wordTranslations = document.querySelectorAll<HTMLLIElement>(".minigames__translation-item");
-      highlightWords(wordTranslations, wordTranslation);
+      highlightWords(wordTranslations, wordTranslation, gameType);
 
     };
   };
@@ -202,6 +212,7 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
   }
 
   let bgImage: string;
+
   if (translationWord.image !== undefined) {
     bgImage = new Image().src = urlBackend + translationWord.image;
   }
@@ -226,12 +237,23 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
             <p className="welcome-screen__title">
               Выберите один верный перевод слова из пяти. Для управления игрой используйте клавиши 1, 2, 3, 4, 5, ←, → либо просто кликайте мышкой.
             </p>
-            <button className="btn welcome-screen__btn" onClick={() => {
-              setIsWelcomeScreen(false);
-              playAudio(translationWord.audio);
-            }}>
-              Начать игру
-            </button>
+            <div className="minigames__start-game">
+              <span className="minigames__choose-type">Выберите тип игры:</span>
+              <button className="btn welcome-screen__btn" onClick={() => {
+                setIsWelcomeScreen(false);
+                setGameType("word");
+                playAudio(translationWord.audio);
+              }}>
+                Переовод слова
+              </button>
+              <button className="btn welcome-screen__btn" onClick={() => {
+                setIsWelcomeScreen(false);
+                setGameType("sentenсe");
+                playAudio(translationWord.audioExample);
+              }}>
+                Слово в предложении
+              </button>
+            </div>
           </div>
         </div>
       </main >
@@ -280,9 +302,18 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
               </div>
             </div>
             <div className="audio-challenge__wrapper">
-              <div className="audio-challenge__word no-opacity" onClick={() => playAudio(translationWord.audio)} ref={wordContainer}>
-                <img className="audio-challenge__sound-waves vawes-resizing" src="/images/games/sound-waves.png" alt="sound or word illustrarion" ref={soundWaves} />
-                <span className="audio-challenge__word-answer" ref={word}>{translationWord.word}</span>
+              <div className="audio-challenge__word-wrapper">
+                <div
+                  className="audio-challenge__word no-opacity"
+                  onClick={() => playAudio(gameType === "word" ? translationWord.audio : translationWord.audioExample)}
+                  ref={wordContainer}>
+                  <img className="audio-challenge__sound-waves vawes-resizing" src="/images/games/sound-waves.png" alt="sound or word illustrarion" ref={soundWaves} />
+                </div>
+                <span
+                  className="audio-challenge__word-answer"
+                  ref={word}>
+                  {gameType === "word" ? translationWord.wordTranslate : getTextExapmleWithoutText(translationWord.textExample)}
+                </span>
               </div>
               <ul className="minigames__translation-list">
                 {
@@ -293,7 +324,7 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
                         className="minigames__translation-item"
                         onClick={() => onAnswer(translationWord, word.wordTranslate)}
                       >
-                        <span>{i + 1}. {word.wordTranslate}</span>
+                        <span>{i + 1}. {gameType === "words" ? word.wordTranslate : word.word}</span>
                       </li>
                     )
                   })
