@@ -95,37 +95,51 @@ const setData = (word: any, prop: any, value: any) => {
 }
 
 const getStatistics = async (user: any): Promise<StatisticsProps> => {
+  if (stateUser.isAuth) {
+    const rawResponse = await fetch(`${urlBackend}users/${user.userId}/statistics`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${user.token}`,
+        'Accept': 'application/json',
+      }
+    });
 
-  const rawResponse = await fetch(`${urlBackend}users/${user.userId}/statistics`, {
-    method: 'GET',
-    headers: {
-      'Authorization': `Bearer ${user.token}`,
-      'Accept': 'application/json',
-    }
-  });
-  if (rawResponse.ok) {
-    const content = await rawResponse.json();
-    if (!content.statistics.audioCall && !content.statistics.constructorWords && !content.statistics.savannah && !content.statistics.sprint) {
+    if (rawResponse.ok) {
+      const content = await rawResponse.json();
+      if (!content.statistics.audioCall && !content.statistics.constructorWords && !content.statistics.savannah && !content.statistics.sprint) {
+        setStatistics(user, STATISTICS);
+        return STATISTICS.statistics;
+      } else return await content;
+    } else {
       setStatistics(user, STATISTICS);
       return STATISTICS.statistics;
-    } else return await content;
+    }
   } else {
-    setStatistics(user, STATISTICS);
-    return STATISTICS.statistics;
+    let stat;
+    if (localStorage.getItem('stat')) {
+      stat = JSON.parse(<string>(localStorage.getItem('stat')))
+    } else {
+      stat = STATISTICS;
+    }
+    return stat;
   }
+
 };
 
 const setStatistics = async (user: any, statistic: StatisticBackProps) => {
-
-  const rawResponse = await fetch(`${urlBackend}users/${user.userId}/statistics`, {
-    method: 'PUT',
-    headers: {
-      'Authorization': `Bearer ${user.token}`,
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(statistic),
-  });
+  if (stateUser.isAuth) {
+    const rawResponse = await fetch(`${urlBackend}users/${user.userId}/statistics`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${user.token}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(statistic),
+    });
+  } else {
+    localStorage.setItem('stat', JSON.stringify(statistic));
+  }
 };
 
 const STATISTICS: StatisticBackProps = {
