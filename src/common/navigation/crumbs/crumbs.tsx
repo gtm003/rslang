@@ -8,9 +8,8 @@ interface CrumbsProps {
 }
 
 const Crumbs: React.FC<CrumbsProps> = ({path}) => {
-  const pathComponent: RegExpMatchArray | null = path.match(/[^\/][\w]*/g);
+  const pathComponent: RegExpMatchArray | null = path.match(/[^/][\w]*/g);
   let currentPath: string = '/';
-console.log(path)
   return (
     <div className='crumbs'>
       <NavLink to={currentPath} key='main'>
@@ -35,7 +34,7 @@ console.log(path)
         const isLearning: any = path.match(/learning$/);
 
         const namePath: string =
-          (isGroup && `${levelsEnglish[numberGroup-1].title} ${levelsEnglish[numberGroup-1].name}`) ||
+          (isGroup && `${levelsEnglish[numberGroup - 1].title} ${levelsEnglish[numberGroup - 1].name}`) ||
           (isPage && `${namesPath['page']} ${numberPage}`) ||
           (isSprint && `${namesPath['sprint']} ${numberSprint}`) ||
           (isDictionary && `${namesPath['dictionary']}`) ||
@@ -44,7 +43,7 @@ console.log(path)
           (isLearning && `${namesPath['learning']}`) ||
           namesPath[path];
 
-        const classGroup: string = isGroup ? `crumbs__btn crumbs__btn--${numberGroup-1}` : '';
+        const classGroup: string = isGroup ? `crumbs__btn crumbs__btn--${numberGroup - 1}` : '';
         const lastPath: boolean = (index === pathComponent.length - 1);
 
 

@@ -7,10 +7,10 @@ import { signupReducer } from "./signup-reducer";
 
 const reducers = {
   form: formReducer,
-  data: dataReducer,
-  setting: settingsReducer,
   login: loginReducer,
   signup: signupReducer,
+  data: dataReducer,
+  setting: settingsReducer,
 };
 
 const reducer = combineReducers(reducers);

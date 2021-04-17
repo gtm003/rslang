@@ -8,7 +8,7 @@ import {NavLink} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {Lives} from '../lives/lives';
 import {AudioWord} from '../audioWords/audioWords';
-import {setData, setStatistics, getStatistics} from '../../../data';
+import {setData, setStatistics} from '../../../data';
 
 const CONTROL_TEXT = [
   {
@@ -54,32 +54,27 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({user, words, hardWord
   const [fullscreen, setFullscreen] = useState<boolean>(false);
   const [lives, setLives] = useState<number>(quantityLives);
 
-  useEffect(() => {
-    getStatistics(user).then((res: any) => statisticBack = res.statistics);
-  }, []);
-
-  const getWordsGroup = () => {
-    if (hard) return hardWords;
-    return words.filter(item => item.group === group);
-  }
-
-  const getWordsGame = () => {
-    if (page !== undefined) return WORDS_GROUP.filter(item => item.page === page - round);
-    return WORDS_GROUP;
-  }
+    //const getWordsGroup = () => {
+    //  if (hard) return hardWords;
+    //  return words.filter(item => item.group === group);
+    //}
+  
+    const getWordsGame = () => {
+      if (page !== undefined) return WORDS_GROUP.filter(item => item.page === page - round);
+      return WORDS_GROUP;
+    }
 
   useEffect(() => {
-    if (words.length) {
-      WORDS_GROUP = getWordsGroup();
-      WORDS_GAME = getWordsGame();
-      console.log(WORDS_GAME);
+    if(words.length) {
+      WORDS_GROUP = hard ? hardWords : words.filter(item => item.group === group);
+      WORDS_GAME = (page !== undefined) ? WORDS_GROUP.filter(item => item.page === page - round) : WORDS_GROUP;
       indexesWord = getRandomOderArr(WORDS_GAME.length);
       indexWord = indexesWord.pop();
       setWord(WORDS_GAME[indexWord!]);
       setLetters(getLetters(WORDS_GAME[indexWord!]));
       setMixedOder(getRandomOderArr(WORDS_GAME[indexWord!].word.length));
     }
-  }, [words]);
+  }, [words, hard, hardWords, page, group]);
 
   const getLetters = (word: WordsProps): (string[]) => {
     return word.word.split('');

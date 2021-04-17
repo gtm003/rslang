@@ -33,10 +33,10 @@ interface GameSprintProps {
 
 const SprintRedux: React.FC<GameSprintProps> = ({user, words, hardWords, group, page, hard}) => {
   // WORDS_GROUP - массив со словами, используемый в игре (или сложные слова и группа слов)
-  const getWordsGroup = () => {
-    if (hard) return hardWords;
-    return words.filter(item => item.group === group);
-  }
+  //const getWordsGroup = () => {
+  //  if (hard) return hardWords;
+  //  return words.filter(item => item.group === group);
+  //}
 
   // WORDS_GAME - массив со словами, используемый в игре с учетом номера страницы (сложные слова или игра из меню
   // соответствует массиву WORDS_GROUP - иначе конкретная страница)
@@ -61,15 +61,15 @@ const SprintRedux: React.FC<GameSprintProps> = ({user, words, hardWords, group, 
 
   useEffect(() => {
     if(words.length) {
-      WORDS_GROUP = getWordsGroup();
-      WORDS_GAME = getWordsGame();
+      WORDS_GROUP = hard ? hardWords : words.filter(item => item.group === group);
+      WORDS_GAME = (page !== undefined) ? WORDS_GROUP.filter(item => item.page === page - round) : WORDS_GROUP;
       indexesWord = getRandomOderArr(WORDS_GAME.length);
       indexWord = indexesWord.pop();
       indexTranslate = getRandomBoolean() ? indexWord : getRandomInteger(WORDS_GAME.length);
       setWord(WORDS_GAME[indexWord!].word);
       setWordTranslate(WORDS_GAME[indexTranslate!].wordTranslate);
     }
-  }, [words]);
+  }, [words, hard, hardWords, page, group]);
 
   useEffect(() => {
     if (gameStatus) {
