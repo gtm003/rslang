@@ -1,20 +1,18 @@
 import { WordsProps } from "../../common/ts/interfaces";
-
-const checkForDeletedWords = (checkedId: string, deletedWords: WordsProps[]) =>
-  deletedWords.findIndex(({ id }) => id === checkedId) !== -1;
+import { checkTypeOfWord } from "../../data/utils";
 
 const getWordsAmountInGroup = (
   wordsType: string,
   groupId: number,
   hardWords: WordsProps[],
   deletedWords: WordsProps[],
-  learningWords: WordsProps[]
+  allWords: WordsProps[]
 ) => {
   switch (wordsType) {
     case "hard":
       const hardWordsInGroup =
         hardWords.filter(({ group, id }) => {
-          const isWordDeleted = checkForDeletedWords(id, deletedWords);
+          const isWordDeleted = checkTypeOfWord(id, deletedWords);
           return group === groupId && !isWordDeleted;
         });
 
@@ -25,7 +23,18 @@ const getWordsAmountInGroup = (
       return deletedWordsInGroup.length;
 
     case "learning":
-      break;
+      const learningWordsInGroup = 
+        allWords.filter(({ corrects, errorsCount, id, group }) => {
+          const isHardWord = checkTypeOfWord(id, hardWords);
+          const isDeletedWord = checkTypeOfWord(id, deletedWords);
+          const isLearningWord = (corrects || errorsCount || isHardWord);
+          return group === groupId && isLearningWord && !isDeletedWord;
+        });
+
+      return learningWordsInGroup.length;
+
+    default:
+      return 0;
   }
 };
 

@@ -18,21 +18,22 @@ interface WordSliderProps {
   onHardWordClick: (word: WordsProps) => void,
   onDeleteHardWordClick: (id: string) => void,
   onDeleteWordClick: (word: WordsProps) => void,
+  onRecoverWordClick: (id: string) => void,
   isDictionary?: boolean,
   dictionaryWords?: any,
-  isAuth: boolean,
+  wordType?: string
 }
 
 const audio = new Audio();
 
-const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isDictionary = false, dictionaryWords = [], isTranslate, areButtons, hardWords, deletedWords, getWords, onHardWordClick, onDeleteHardWordClick, onDeleteWordClick, isAuth}) => {
+const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isDictionary = false, dictionaryWords = [], isTranslate, areButtons, hardWords, deletedWords, getWords, onHardWordClick, onDeleteHardWordClick, onDeleteWordClick, onRecoverWordClick, wordType = ''}) => {
   const [words, setWords] = useState<WordsProps[]>([]);
   const [isMessage, setMessage] = useState<boolean>(false);
 
   useEffect(() => {
     if (isDictionary) {
       if (page >= 0) {
-        setWords(dictionaryWords[page]);
+        setWords(dictionaryWords[page] || []);
         setMessage(false);
       }
     } else {
@@ -110,13 +111,26 @@ const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isDictionary =
                       }}>
                         {isHard ? 'Удалить из Сложных' : 'Добавить в Сложные'}
                       </div>}
-                      {areButtons &&
+                      {areButtons && !(isDictionary && wordType === 'deleted') &&
                       <div className='btn-delete' onClick={() => {
                         onDeleteWordClick(item);
                       //  setIsDelete((isDelete) => isDelete + 1);
                       }}>
                         Удалить
                       </div>}
+                      {isDictionary && wordType === 'deleted' && 
+                        <div className='btn-delete' onClick={() => {
+                          onRecoverWordClick(item.id);
+                        }}>
+                          Восстановить
+                        </div>}
+                      <div className="carousel__results">
+                        {isDictionary && wordType === 'learning' ? 
+                        <div className="carousel__results-wrap">
+                          <div className="carousel__corrects">{`Правильно: ${item.corrects}`}</div>
+                          <div className="carousel__errors">{`Ошибки: ${item.errorsCount}`}</div>
+                        </div> : null}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -134,8 +148,7 @@ const mapStateToProps = (state: any) => ({
   areButtons: state.setting.areButtons,
   hardWords: state.data.hardWords,
   deletedWords: state.data.deletedWords,
-  getWords: state.data.words,
-  isAuth: state.login.isAuth,
+  getWords: state.data.words
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
@@ -148,6 +161,9 @@ const mapDispatchToProps = (dispatch: any) => ({
   onDeleteWordClick: (word: WordsProps) => {
     dispatch(ActionCreator.addDeletedWord(word));
   },
+  onRecoverWordClick: (id: string) => {
+    dispatch(ActionCreator.recoverDeletedWord(id));
+  }
 });
 
 

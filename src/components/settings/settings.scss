@@ -1,14 +1,16 @@
 .over-settings {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 3;
+  z-index: 1002;
+  background-color: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
 }
 
 .settings {
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -17,7 +19,7 @@
   margin: 0 auto;
   background-color: white;
   box-shadow: 4px 4px 4px 4px $default-color;
-  z-index: 3;
+  cursor: default;
 
   &:hover {
     box-shadow: 4px 4px 4px 6px $default-color;
@@ -47,11 +49,13 @@
     label {
       padding: 15px 0;
       @include body-text-l;
+      cursor: pointer;
 
       input {
         width: 20px;
         height: 20px;
         margin: 5px;
+         cursor: pointer;
       }
     }
   }

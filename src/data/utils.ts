@@ -75,3 +75,8 @@ export const updateStatistics =
   statistic[game as keyof StatisticsProps].push(newStatistic);
   return statistic;
 }
+
+const checkTypeOfWord = (checkedId: string, groupWords: WordsProps[]) =>
+  groupWords.findIndex(({ id }) => id === checkedId) !== -1;
+
+export {checkTypeOfWord};

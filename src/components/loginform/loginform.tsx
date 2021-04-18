@@ -31,7 +31,6 @@ const LoginFormRedux: React.FC<LoginProps> = ({ isLoginOpen, handleSubmit, error
             body: JSON.stringify(values)
         });
         const content = await response.json();
-        console.log(content);
         if (content.error) {
             setLoginError(content.error.errors[0].message);
         } else {

@@ -32,7 +32,6 @@ const reducer = (state: InitialState = initialState, action: any) => {
         words: action.payload,
         hardWords: hardWords,
         deletedWords: deletedWords,
-        // learningWords: learningWords,
       };
     case `ADD_HADR_WORD`:
       setData(action.payload, 'hardWord', true);
@@ -62,6 +61,20 @@ const reducer = (state: InitialState = initialState, action: any) => {
       return {
         ...state,
         learningWords: [...state.learningWords, action.payload],
+      };
+    case `RECOVER_DELETED_WORD`:
+      const updatedDeletedWords = state.deletedWords.filter((word: any) => {
+        console.log(word.id)
+        console.log(action.payload)
+        if (word.id === action.payload) setData(word, 'detetedWord', false);
+        return word.id !== action.payload
+      });
+      console.log('pltxm')
+      console.log(updatedDeletedWords)
+
+      return {
+        ...state,
+        deletedWords: updatedDeletedWords,
       };
     default:
       return state;

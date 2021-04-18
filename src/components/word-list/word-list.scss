@@ -186,6 +186,18 @@ option {
   }
 }
 
+.carousel__results-wrap {
+  background-color: $default-color;
+  color: $correct-color;
+  font-size: 18px;
+  padding: 3px;
+  border-radius: 3px;
+}
+
+.carousel__errors {
+  color: $error-color;
+}
+
 .carousel__content__btns {
   display: flex;
   align-items: center;

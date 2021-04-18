@@ -70,7 +70,7 @@ const Switcher: React.FC = () => {
       } }/>
       <Route path='/dictionary/hard/group:group' render={({match}) => {
         const group: number = Number(match.params.group);
-        return <WordList group={group} pageInitial={-1} isDictionary wordsType='hard'/>
+        return <WordList group={group} isDictionary wordsType='hard'/>
       } }/>
 
       <Route exact path='/dictionary/deleted' component={() => <DictionarySection wordsType={'deleted'}/>}/>
@@ -81,18 +81,18 @@ const Switcher: React.FC = () => {
       } }/>
       <Route path='/dictionary/deleted/group:group' render={({match}) => {
         const group: number = Number(match.params.group);
-        return <WordList group={group} pageInitial={-1} isDictionary wordsType='deleted'/>
+        return <WordList group={group} isDictionary wordsType='deleted'/>
       } }/>
 
-      <Route exact path='/dictionary/learning' component={() => <DictionarySection wordsType={'deleted'}/>}/>
+      <Route exact path='/dictionary/learning' component={() => <DictionarySection wordsType={'learning'}/>}/>
       <Route path='/dictionary/learning/group:group/page:page' render={({match}) => {
         const group: number = Number(match.params.group);
         const page: number = Number(match.params.page) || 0;
-        return <WordList group={group} pageInitial={page} isDictionary wordsType='deleted'/>
+        return <WordList group={group} pageInitial={page} isDictionary wordsType='learning'/>
       } }/>
       <Route path='/dictionary/learning/group:group' render={({match}) => {
         const group: number = Number(match.params.group);
-        return <WordList group={group} pageInitial={-1} isDictionary wordsType='deleted'/>
+        return <WordList group={group} isDictionary wordsType='learning'/>
       } }/>
 
       <Route path='/statistics' component={Statistics}/>

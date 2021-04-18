@@ -26,7 +26,7 @@ const Pagination: React.FC<PaginationProps> = ({group, page, changeSelectItem, i
       <NavLink to={`/${route}/group${group}/page${page - 1}`}>
         <button className={classLeftBtn} onClick={() => changeSelectItem(page-2)}>
           <img src='/images/arrowLeft.png' alt='arrow left'/>
-          {isDictionary ? `Page` : `Unit`} {page - 1}
+          {isDictionary ? `Стр.` : `Unit`} {page - 1}
 
         </button>
       </NavLink>
@@ -46,7 +46,7 @@ const Pagination: React.FC<PaginationProps> = ({group, page, changeSelectItem, i
       </div>
       <NavLink to={`/${route}/group${group}/page${page + 1}`}>
         <button className={classRightBtn}  onClick={() => changeSelectItem(page)}>
-          {isDictionary ? `Page` : `Unit`} {page + 1}
+          {isDictionary ? `Стр.` : `Unit`} {page + 1}
           <img src='/images/arrowRight.png' alt='arrow right'/>
 
         </button>
