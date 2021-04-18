@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {urlBackend} from '../../../data';
+import {getStatistics, urlBackend} from '../../../data';
 import {WordsProps, StatisticsProps} from '../../../common/ts/interfaces';
 import {getRandomOderArr, playAnswer, updateStatistics} from '../../../data/utils';
 import {Loader} from '../../loader';
@@ -54,15 +54,14 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({user, words, hardWord
   const [fullscreen, setFullscreen] = useState<boolean>(false);
   const [lives, setLives] = useState<number>(quantityLives);
 
-    //const getWordsGroup = () => {
-    //  if (hard) return hardWords;
-    //  return words.filter(item => item.group === group);
-    //}
-  
-    const getWordsGame = () => {
-      if (page !== undefined) return WORDS_GROUP.filter(item => item.page === page - round);
-      return WORDS_GROUP;
-    }
+  useEffect(() => {
+    getStatistics(user).then((res: any) => statisticBack = res.statistics);
+  }, []);
+
+  const getWordsGame = () => {
+    if (page !== undefined) return WORDS_GROUP.filter(item => item.page === page - round);
+    return WORDS_GROUP;
+  }
 
   useEffect(() => {
     if(words.length) {

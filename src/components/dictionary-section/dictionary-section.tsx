@@ -9,15 +9,15 @@ import { Crumbs } from "../../common/navigation/crumbs";
 interface DictionarySectionProps {
   hardWords: [];
   deletedWords: [];
-  learningWords: [];
+  words: [];
   wordsType: string;
 }
 
 const DictionarySectionRedux: React.FC<DictionarySectionProps> = ({
   hardWords,
   deletedWords,
-  learningWords,
-  wordsType,
+  words,
+  wordsType
 }) => {
   const location = useLocation();
   return (
@@ -34,7 +34,7 @@ const DictionarySectionRedux: React.FC<DictionarySectionProps> = ({
               id,
               hardWords,
               deletedWords,
-              learningWords
+              words
             );
 
             return wordsAmount ? (
@@ -62,7 +62,7 @@ const DictionarySectionRedux: React.FC<DictionarySectionProps> = ({
 const mapStateToProps = (state: any) => ({
   hardWords: state.data.hardWords,
   deletedWords: state.data.deletedWords,
-  learningWords: state.data.learningWords,
+  words: state.data.words,
 });
 
 const DictionarySection = connect(mapStateToProps)(DictionarySectionRedux);

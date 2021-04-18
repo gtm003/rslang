@@ -15,7 +15,7 @@ const Select: React.FC<SelectProps> = ({page, changeSelectItem, isDictionary = f
     <div className="selectPages">
       <select value={page} onChange={changeSelectItem} required>
         <option key='-1'  value='' hidden>Выберите страницу</option>
-        {pages.map((id) => <option key={id} value={id}>{isDictionary ? `Page` : `Unit`} {id + 1}</option>)}
+        {pages.map((id) => <option key={id} value={id}>{isDictionary ? `Страница` : `Unit`} {id + 1}</option>)}
       </select>
     </div>
   )

@@ -18,6 +18,7 @@ interface WordListProps {
   deletedWords: [];
   isDictionary?: boolean;
   wordsType?: string;
+  words: []
 }
 
 const WordListRedux: React.FC<WordListProps> = ({
@@ -29,6 +30,7 @@ const WordListRedux: React.FC<WordListProps> = ({
   toggleButtons,
   hardWords,
   deletedWords,
+  words
 }) => {
 
   const [page, setPage] = useState(pageInitial - 1);
@@ -53,7 +55,8 @@ const WordListRedux: React.FC<WordListProps> = ({
     wordsType,
     group,
     hardWords,
-    deletedWords
+    deletedWords,
+    words
   );
 
   return (
@@ -93,6 +96,7 @@ const WordListRedux: React.FC<WordListProps> = ({
             page={page}
             isDictionary
             dictionaryWords={dictionaryWords}
+            wordType={wordsType}
           />
         ) : (
           <WordSlider group={group} page={page} />
@@ -118,6 +122,7 @@ const mapDispatchToProps = {
 const mapStateToProps = (state: any) => ({
   hardWords: state.data.hardWords,
   deletedWords: state.data.deletedWords,
+  words: state.data.words
 });
 
 const WordList = connect(mapStateToProps, mapDispatchToProps)(WordListRedux);

@@ -34,6 +34,11 @@ const ActionCreator = {
     type: `ADD_LEARNING_WORD`,
     payload: word,
   }),
+
+  recoverDeletedWord: (id: string) => ({
+    type: `RECOVER_DELETED_WORD`,
+    payload: id
+  })
 };
 
 export {ActionCreator};
