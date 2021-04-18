@@ -1,11 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { WordsProps, GameProps } from "../../../common/ts/interfaces";
+import { WordsProps, GameProps, StatisticsProps } from "../../../common/ts/interfaces";
 import { NavLink } from 'react-router-dom';
 import { connect } from "react-redux";
 import { Loader } from "../../loader";
 import { Lives } from "../lives/lives";
-import { shuffleArray, highlightWords, removeWordsHighlighting} from "../utils/utils";
+import { Sound } from "../sound";
+import {
+  shuffleArray, highlightWords, removeWordsHighlighting,
+  onFullScreenClick, changeFullscreenIcon
+} from "../utils/utils";
+import { playAnswer, updateStatistics } from '../../../data/utils';
 import { ResultsGame } from '../resultsGame/resultsGame';
+import { setData, getStatistics, setStatistics } from '../../../data';
 
 const savannahHeight = window.innerHeight;
 const BG_IMAGE_HEIGHT = 4500;
@@ -15,18 +21,27 @@ let correctAnswers: WordsProps[] = [];
 let wrongAnswers: WordsProps[] = [];
 let bgPosition: number = 0;
 let bgShift: number = 225;
+let isMute: boolean = false;
+let statisticBack: StatisticsProps;
+let series: number = 0;
+let seriesMax: number = 0;
 
 interface SavannahProps {
-  words: WordsProps[]
+  words: WordsProps[];
+  user: {};
 }
 
-const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, words }) => {
+const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, words, user }) => {
   const [gameWords, setGameWords] = useState<WordsProps[]>([]);
   const [translations, setTranslations] = useState<WordsProps[]>([]);
+  const [isWelcomeScreen, setIsWelcomeScreen] = useState<boolean>(true);
+  const [language, setLanguage] = useState<string>("en");
+
   const [lives, setLives] = useState<number>(5);
   const savannah = useRef<HTMLElement>(null);
   const word = useRef<HTMLDivElement>(null);
   const sun = useRef<HTMLImageElement>(null);
+  const fullscreen = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     page > -1 ?
@@ -38,12 +53,42 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
 
     correctAnswers = [];
     wrongAnswers = [];
+    series = 0;
+    seriesMax = 0;
   }, [words, group, page]);
 
   useEffect(() => {
+    getStatistics(user).then((res: any) => statisticBack = res.statistics);
+  }, []);
+
+  useEffect(() => {
+    if (lives > 0 || gameWords.length === 0) {
+      setGameStatistic();
+    }
+  }, [lives, gameWords]);
+
+  useEffect(() => {
+    window.document.addEventListener("fullscreenchange", onFullScreenChange)
     window.addEventListener("keyup", onKeyUpHandler);
-    return () => (window as any).removeEventListener("keyup", onKeyUpHandler);
+
+    return () => {
+      (window as any).removeEventListener("keyup", onKeyUpHandler);
+      (window as any).removeEventListener("keyup", onFullScreenChange);
+    };
   }, [gameWords]);
+
+  const setGameStatistic = () => {
+    const statisticSend = {
+      statistics: statisticBack
+    }
+    setStatistics(user, statisticSend);
+  }
+
+  const onFullScreenChange = () => {
+    if (fullscreen.current) {
+      changeFullscreenIcon(fullscreen.current)
+    }
+  };
 
   const onKeyUpHandler = (evt: KeyboardEvent) => {
     switch (evt.key) {
@@ -66,8 +111,10 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
     bgPosition = 0;
     setGameWords(necessaryWords);
     setLives(5);
+    statisticBack = updateStatistics('savannah', statisticBack, wrongAnswers, correctAnswers, seriesMax);
     correctAnswers = [];
     wrongAnswers = [];
+    seriesMax = 0;
   };
 
   const moveBackground = (bgPosition: number, duration: number): void => {
@@ -101,7 +148,8 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
 
   let answers: number = 0;
 
-  const onAnswer = (wordTranslation: WordsProps, translate?: React.MouseEvent | string): void => {
+  const onAnswer = (wordTranslation: WordsProps, translate?: string): void => {
+
     ++answers;
     if (answers === 1 && lives > 0 && gameWords.length !== 0) {
       let wrongAnswer: boolean;
@@ -109,8 +157,7 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
       if (typeof translate === "string") {
         wrongAnswer = translate !== wordTranslation.wordTranslate;
       } else {
-        const evtTarget = translate?.target as HTMLElement;
-        wrongAnswer = translate === undefined || evtTarget.innerText.match(/[а-я-,]/gi)?.join('') !== wordTranslation.wordTranslate.replace(/\s/g, '');
+        wrongAnswer = true;
       };
 
       if (!wrongAnswer) {
@@ -122,17 +169,25 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
 
         moveWord();
         increaseSun();
-      };
+        playAnswer(true, isMute);
+        ++series;
+      } else {
+        playAnswer(false, isMute);
+        seriesMax = seriesMax < series ? series : seriesMax;
+        series = 0;
+      }
 
       const wordTranslations = document.querySelectorAll<HTMLLIElement>(".minigames__translation-item");
-      highlightWords(wordTranslations, wordTranslation);
+      highlightWords(wordTranslations, wordTranslation, language);
 
       setTimeout(() => {
         if (wrongAnswer) {
           setLives(prevLives => prevLives - 1);
+          setData(wordTranslation, 'errorsCount', ++wordTranslation.errorsCount);
           wrongAnswers.push(wordTranslation);
         } else {
           correctAnswers.push(wordTranslation);
+          setData(wordTranslation, 'corrects', ++wordTranslation.corrects);
         };
 
         const updatedWords = gameWords.filter((word) => word.word !== wordTranslation.word);
@@ -170,28 +225,69 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
     return <Loader />
   };
 
+  if (isWelcomeScreen) {
+    return (
+      <main className="savannah minigames">
+        <div className="minigames__wrapper">
+          <div className="welcome-screen">
+            <p className="welcome-screen__title">
+              Выберите один верный перевод слова из четырех. Для управления игрой используйте клавиши 1, 2, 3, 4, либо просто кликайте мышкой.
+            </p>
+            <div className="minigames__start-game">
+              <span className="minigames__choose-type">Выберите язык игры:</span>
+              <button className="btn welcome-screen__btn" onClick={() => {
+                setIsWelcomeScreen(false);
+                setLanguage("en");
+              }}>
+                En
+              </button>
+                <button className="btn welcome-screen__btn" onClick={() => {
+                  setIsWelcomeScreen(false);
+                  setLanguage("ru");
+                }}>
+                  Ru
+              </button>
+            </div>
+          </div>
+        </div>
+      </main >
+    )
+  };
+
   return (
     <main className="savannah minigames" ref={savannah}>
       <div className="minigames__wrapper">
         {lives > 0 && gameWords.length !== 0 ?
           <>
             <div className="minigames__panel">
-              <button className="minigames__fullscreen" onClick={() => {
-                if (savannah.current !== null) {
-                  savannah.current.requestFullscreen();
-                }
-              }
-              }>
-                <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg" >
-                  <path d="M5.57143 5.57143H0V7.42859H6.50001C7.01328 7.42859 7.42859 7.01328 7.42859 6.50001V0H5.57143V5.57143Z" fill="white" />
-                  <path d="M19.8572 0H18V6.50001C18 7.01328 18.4153 7.42859 18.9286 7.42859H25.4286V5.57143H19.8572V0Z" fill="white" />
-                  <path d="M19.8572 25.4286H18V18.9286C18 18.4153 18.4153 18 18.9286 18H25.4286V19.8572H19.8572V25.4286Z" fill="white" />
-                  <path d="M6.50001 18H0V19.8572H5.57143V25.4286H7.42859V18.9286C7.42859 18.4153 7.01328 18 6.50001 18V18Z" fill="white" />
-                </svg>
-              </button>
+              <div className="minigames__left-panel">
+                <div onClick={() => isMute = !isMute}>
+                  <Sound />
+                </div>
+                <button className="minigames__fullscreen" ref={fullscreen} onClick={() => {
+                  if (savannah.current && fullscreen.current) {
+                    onFullScreenClick(savannah.current);
+                  }
+                }}>
+                  <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g clipPath="url(#clip0)">
+                      <path d="M0 0.928581V7.42859H1.85716V1.85716H7.42859V0H0.928581C0.415309 0 0 0.415309 0 0.928581H0Z" fill="white" />
+                      <path d="M25.0713 0H18.5713V1.85716H24.1427V7.42859H25.9999V0.928581C25.9999 0.415309 25.5846 0 25.0713 0V0Z" fill="white" />
+                      <path d="M24.1427 24.1428H18.5713V26H25.0713C25.5846 26 25.9999 25.5847 25.9999 25.0714V18.5714H24.1427V24.1428Z" fill="white" />
+                      <path d="M1.85716 18.5714H0V25.0714C0 25.5847 0.415309 26 0.928581 26H7.42859V24.1428H1.85716V18.5714Z" fill="white" />
+                    </g>
+                    <defs>
+                      <clipPath id="clip0">
+                        <rect width="26" height="26" fill="white" />
+                      </clipPath>
+                    </defs>
+                  </svg>
+                </button>
+              </div>
               <div className="minigames__right-panel">
                 <Lives lives={lives} />
-                <NavLink to='/games'>
+                <NavLink to='/games' onClick={() => 
+                  statisticBack = updateStatistics('savannah', statisticBack, wrongAnswers, correctAnswers, seriesMax)}>
                   <button className="minigames__close" >
                     <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M11.4347 14.022L0.532091 3.11904C-0.177435 2.40985 -0.177435 1.26318 0.532091 0.55399C1.24129 -0.155204 2.38795 -0.155204 3.09715 0.55399L14.0001 11.457L24.9028 0.55399C25.6123 -0.155204 26.7587 -0.155204 27.4679 0.55399C28.1774 1.26318 28.1774 2.40985 27.4679 3.11904L16.5652 14.022L27.4679 24.925C28.1774 25.6342 28.1774 26.7808 27.4679 27.49C27.1144 27.8438 26.6497 28.0215 26.1853 28.0215C25.7209 28.0215 25.2566 27.8438 24.9028 27.49L14.0001 16.5871L3.09715 27.49C2.74338 27.8438 2.279 28.0215 1.81462 28.0215C1.35024 28.0215 0.885857 27.8438 0.532091 27.49C-0.177435 26.7808 -0.177435 25.6342 0.532091 24.925L11.4347 14.022Z" fill="#CDCDCD" />
@@ -201,9 +297,7 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
               </div>
             </div>
             <div className="savannah__word flow-animation" ref={word} onAnimationEnd={() => { onAnswer(translationWord) }}>
-              {
-                translationWord.word
-              }
+              {language === "en" ? translationWord.word : translationWord.wordTranslate}
             </div>
             <ul className="minigames__translation-list">
               {
@@ -212,9 +306,9 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
                     <li
                       key={word.wordTranslate + i}
                       className="minigames__translation-item"
-                      onClick={evt => onAnswer(translationWord, evt)}
+                      onClick={() => onAnswer(translationWord, word.wordTranslate)}
                     >
-                      <span tabIndex={0}>{i + 1}. {word.wordTranslate}</span>
+                      <span>{i + 1}. {language === "en" ? word.wordTranslate : word.word}</span>
                     </li>
                   )
                 })
@@ -226,7 +320,7 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
           </>
           :
           <div className='minigames__result'>
-            <ResultsGame errorList={wrongAnswers} correctList={correctAnswers} onClickHandlerNewGame={restartGame} />
+            <ResultsGame errorList={wrongAnswers} correctList={correctAnswers} onClickHandlerNewGame={restartGame} seriesLength={seriesMax}/>
           </div>
         }
       </div>
@@ -235,7 +329,8 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
 };
 
 const mapStateToProps = (state: any) => ({
-  words: state.data.words
+  words: state.data.words,
+  user: state.login.user
 });
 
 const Savannah = connect(mapStateToProps)(SavannahRedux);
