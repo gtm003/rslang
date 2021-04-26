@@ -66,6 +66,10 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
     if (lives === 0 || gameWords.length === 0) {
       setGameStatistic();
     }
+    return () => {
+      if (statisticBack) statisticBack = updateStatistics('audioCall', statisticBack, wrongAnswers, correctAnswers, seriesMax)
+      if (lives > 0 || gameWords.length === 0) setGameStatistic();
+    }
   }, [lives, gameWords]);
 
   useEffect(() => {

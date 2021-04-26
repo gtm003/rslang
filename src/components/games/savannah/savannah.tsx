@@ -65,6 +65,10 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
     if (lives > 0 || gameWords.length === 0) {
       setGameStatistic();
     }
+    return () => {
+      if (statisticBack) statisticBack = updateStatistics('savannah', statisticBack, wrongAnswers, correctAnswers, seriesMax)
+      if (lives > 0 || gameWords.length === 0) setGameStatistic();
+    }
   }, [lives, gameWords]);
 
   useEffect(() => {

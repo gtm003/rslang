@@ -161,6 +161,9 @@ const ConstructorRedux: React.FC<GameConstructorProps> = ({user, words, hardWord
       statistics: statisticBack
     }
     setStatistics(user, statisticSend);
+    return () => {
+      setStatistics(user, statisticSend);
+    }
   }
 
   const onClickHandlerNewGame = () => {

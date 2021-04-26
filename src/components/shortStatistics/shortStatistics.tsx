@@ -10,6 +10,7 @@ interface ShortStatisticsProps {
   correct?: number;
   error?: number;
   seriesLength?: number;
+  isAuth: boolean;
 }
 
 const emptyStatistic: GameStatisticDailyProps = {
@@ -22,8 +23,8 @@ const emptyStatistic: GameStatisticDailyProps = {
 
 let statisticBack: StatisticsProps;
 
-const ShortStatisticsRedux: React.FC<ShortStatisticsProps> = ({user}) => {
-  const [gameNumber, setGameNumber] = useState<number>(4);
+const ShortStatisticsRedux: React.FC<ShortStatisticsProps> = ({user, isAuth}) => {
+const [gameNumber, setGameNumber] = useState<number>(4);
   const [countLearningWords, setCountLearningWords] = useState<number>(0);
   const [error, setError] = useState<number>(0);
   const [correct, setCorrect] = useState<number>(0);
@@ -46,7 +47,7 @@ const ShortStatisticsRedux: React.FC<ShortStatisticsProps> = ({user}) => {
       getSummaryStatistic();
       setLoading(false);
     });
-  }, []);
+  }, [isAuth]);
 
   const getLastDay = (arr: GameStatisticDailyProps[]) => {
     return arr.length ? arr[arr.length - 1] : emptyStatistic;
@@ -148,6 +149,7 @@ const ShortStatisticsRedux: React.FC<ShortStatisticsProps> = ({user}) => {
 
 const mapStateToProps = (state: any) => ({
   user: state.login.user,
+  isAuth: state.login.isAuth,
 });
 
 const ShortStatistics = connect(mapStateToProps)(ShortStatisticsRedux);
