@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/rslang/static/css/main.746de247.chunk.css",
+    "main.js": "/rslang/static/js/main.b8a462df.chunk.js",
+    "main.js.map": "/rslang/static/js/main.b8a462df.chunk.js.map",
+    "runtime-main.js": "/rslang/static/js/runtime-main.aaa65626.js",
+    "runtime-main.js.map": "/rslang/static/js/runtime-main.aaa65626.js.map",
+    "static/css/2.6b560088.chunk.css": "/rslang/static/css/2.6b560088.chunk.css",
+    "static/js/2.8de0267d.chunk.js": "/rslang/static/js/2.8de0267d.chunk.js",
+    "static/js/2.8de0267d.chunk.js.map": "/rslang/static/js/2.8de0267d.chunk.js.map",
+    "index.html": "/rslang/index.html",
+    "static/css/2.6b560088.chunk.css.map": "/rslang/static/css/2.6b560088.chunk.css.map",
+    "static/css/main.746de247.chunk.css.map": "/rslang/static/css/main.746de247.chunk.css.map",
+    "static/js/2.8de0267d.chunk.js.LICENSE.txt": "/rslang/static/js/2.8de0267d.chunk.js.LICENSE.txt",
+    "static/media/index.scss": "/rslang/static/media/savannah-bg.b9290f05.jpg",
+    "static/media/github.cde40525.svg": "/rslang/static/media/github.cde40525.svg",
+    "static/media/rs.8fb17b07.svg": "/rslang/static/media/rs.8fb17b07.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.aaa65626.js",
+    "static/css/2.6b560088.chunk.css",
+    "static/js/2.8de0267d.chunk.js",
+    "static/css/main.746de247.chunk.css",
+    "static/js/main.b8a462df.chunk.js"
+  ]
+}
