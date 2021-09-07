@@ -14,7 +14,7 @@ const Crumbs: React.FC<CrumbsProps> = ({path}) => {
     <div className='crumbs'>
       <NavLink to={currentPath} key='main'>
         <span>Главная</span>
-        <img src='/images/navIconMain.png' alt='Icon main page'/>
+        <img src='rslang/images/navIconMain.png' alt='Icon main page'/>
       </NavLink>
 
       {pathComponent && pathComponent.map((path, index) => {
@@ -51,7 +51,7 @@ const Crumbs: React.FC<CrumbsProps> = ({path}) => {
           <NavLink to={currentPath} key={path}>
             {lastPath ? <span className={`actual-menu ${classGroup}`}> {namePath}</span> :
               <span className={classGroup}> {namePath}</span>}
-            {!lastPath && <img src='/images/navIconPage.png' alt='Icon secondary page'/>}
+            {!lastPath && <img src='/rslang/images/navIconPage.png' alt='Icon secondary page'/>}
           </NavLink>
         )
       })}

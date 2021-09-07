@@ -63,7 +63,7 @@ const SignUpFormRedux: React.FC<SignUpProps> = ({ isSignUpOpen, handleSubmit, re
         <div className="signup-form-wrapper">
             <form className="signup-form" onSubmit={handleSubmit(submit)}>
                 <div className="signup-form__close-btn" onClick={ (e) => { e.stopPropagation(); toggleSignUpOpen(false); }}>
-                    <img src="/images/close.svg" alt="close"></img>
+                    <img src="/rslang/images/close.svg" alt="close"></img>
                 </div>
                 <div className="signup-form-title">
                     <h2>Изучать слова удобнее, если у вас есть профиль</h2>

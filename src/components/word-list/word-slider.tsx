@@ -71,7 +71,7 @@ const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isDictionary =
     }
   };
 
-  const pathImg: string = `/images/group/${group - 1}.png`;
+  const pathImg: string = `/rslang/images/group/${group - 1}.png`;
 
   return (
     <div className="word-slider">
@@ -88,7 +88,7 @@ const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isDictionary =
                   <img src={urlBackend + item.image} alt='figure of word'/>
                   <div className="carousel__content">
                     <div className="word">
-                      {isHard && <img className="hard-icon" src='/images/lamp.png' alt='hard word'/>}
+                      {isHard && <img className="hard-icon" src='/rslang/images/lamp.png' alt='hard word'/>}
                       <p className="word__value">{item.word} {item.transcription}</p>
                       {isTranslate && <p className="word__translate">({item.wordTranslate})</p>}
                     </div>
@@ -103,7 +103,7 @@ const WordSliderRedux: React.FC<WordSliderProps> = ({group, page, isDictionary =
                     <div className="carousel__content__btns">
                       <div className="audio"
                            onClick={() => playWord(item.audio, item.audioMeaning, item.audioExample)}>
-                        <img src="/images/audio.png" alt='audio'/>
+                        <img src="/rslang/images/audio.png" alt='audio'/>
                       </div>
                       {areButtons &&
                       <div className='btn-difficult' onClick={() => {

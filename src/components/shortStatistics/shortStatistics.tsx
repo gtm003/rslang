@@ -35,7 +35,7 @@ const [gameNumber, setGameNumber] = useState<number>(4);
     {
       id: 'summary',
       name: 'Общая статистика',
-      iconUrl: '/images/games/stat.png',
+      iconUrl: '/rslang/images/games/stat.png',
       imgUrl: '',
       description: '',
     }

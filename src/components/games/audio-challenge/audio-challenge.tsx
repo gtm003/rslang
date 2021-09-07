@@ -194,7 +194,7 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
 
       if (button.current) {
         button.current.classList.add("blue-btn");
-        button.current.innerHTML = `<img src="/images/games/right-arrow.png" alt="" />`
+        button.current.innerHTML = `<img src="/rslang/images/games/right-arrow.png" alt="" />`
       }
 
       const wordTranslations = document.querySelectorAll<HTMLLIElement>(".minigames__translation-item");
@@ -207,7 +207,7 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
     answers = 0;
 
     if (soundWaves.current) {
-      soundWaves.current.src = "/images/games/sound-waves.png";
+      soundWaves.current.src = "/rslang/images/games/sound-waves.png";
       soundWaves.current.style.height = "auto";
     }
 
@@ -340,7 +340,7 @@ const AudioChallengeRedux: React.FC<GameProps & SavannahProps> = ({ group, page 
                   className="audio-challenge__word no-opacity"
                   onClick={() => playAudio(gameType === "word" ? translationWord.audio : translationWord.audioExample)}
                   ref={wordContainer}>
-                  <img className="audio-challenge__sound-waves vawes-resizing" src="/images/games/sound-waves.png" alt="sound or word illustrarion" ref={soundWaves} />
+                  <img className="audio-challenge__sound-waves vawes-resizing" src="/rslang/images/games/sound-waves.png" alt="sound or word illustrarion" ref={soundWaves} />
                 </div>
                 <span
                   className="audio-challenge__word-answer"

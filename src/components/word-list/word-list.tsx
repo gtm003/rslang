@@ -71,7 +71,7 @@ const WordListRedux: React.FC<WordListProps> = ({
         </p>
         <div className="word-list__select">
           <NavLink to={`/games`}>
-            <img src="/images/games.png" alt="open games" title="Open games" />
+            <img src="/rslang/images/games.png" alt="open games" title="Open games" />
           </NavLink>
           {isDictionary ? (
             <Select
@@ -84,7 +84,7 @@ const WordListRedux: React.FC<WordListProps> = ({
             <Select changeSelectItem={changeSelectItem} page={page} />
           )}
           <img
-            src="/images/settingsIcon.png"
+            src="/rslang/images/settingsIcon.png"
             alt="settings"
             title="Настройки"
             onClick={() => toggleOpen("true")}

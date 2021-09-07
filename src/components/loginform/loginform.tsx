@@ -44,7 +44,7 @@ const LoginFormRedux: React.FC<LoginProps> = ({ isLoginOpen, handleSubmit, error
         <div className="login-form-wrapper">
             <form className="login-form" onSubmit={handleSubmit(submit)}>
                 <div className="login-form__close-btn" onClick={ () => toggleLoginOpen(false) } >
-                    <img src="/images/close.svg" alt="close"></img>
+                    <img src="/rslang/images/close.svg" alt="close"></img>
                 </div>
                 <div className="login-form-title">
                     <h2>Изучать слова удобнее, если у вас есть профиль</h2>

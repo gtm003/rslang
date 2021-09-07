@@ -319,7 +319,7 @@ const SavannahRedux: React.FC<GameProps & SavannahProps> = ({ group, page = -1, 
               }
             </ul>
             <div className="savannah__sun-wrapper">
-              <img className="savannah__sun" src="/images/games/sun.png" alt="sun" width="100px" ref={sun} />
+              <img className="savannah__sun" src="/rslang/images/games/sun.png" alt="sun" width="100px" ref={sun} />
             </div>
           </>
           :

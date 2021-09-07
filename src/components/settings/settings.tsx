@@ -17,7 +17,7 @@ const SettingsRedux: React.FC<SettingsProps> = ({ isOpen, areButtons, isTranslat
       toggleOpen(false)
     }}>
       <div className="settings" onClick={(e) => e.stopPropagation()}>
-        <img src='/images/close.svg' alt="close" onClick={() => toggleOpen(false)} />
+        <img src='/rslang/images/close.svg' alt="close" onClick={() => toggleOpen(false)} />
         <p>Настройки:</p>
         <form>
           <label>

@@ -10,7 +10,7 @@ const Tutorial: React.FC = () => {
     setIdGroup(id);
   };
   const location = useLocation();
-  const pathImg: string = `/images/group/${idGroup}.png`;
+  const pathImg: string = `/rslang/images/group/${idGroup}.png`;
   const titleDescription: string = titleGroup[idGroup];
   const dataDescription: string = descriptionGroup[idGroup];
 
