@@ -17,7 +17,7 @@ const Team: React.FC = () => {
             TEAM.map((member) => {
               return (
                 <div className='team-member' key={member.id}>
-                  <img src={`images/team/${githubMembers[member.id]}.jpg`} alt={member.name}/>
+                  <img src={`/rslang/images/team/${githubMembers[member.id]}.jpg`} alt={member.name}/>
                   <p className='team-member__name'>{member.name}</p>
                   <p className='team-member__role'>{member.role}</p>
                   <p className='team-member__description'>{member.description}</p>
