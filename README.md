@@ -1,4 +1,4 @@
-# [RSLang](https://gtm003.github.io/rslang/).
+# [RSLang](https://gtm003.github.io/rslang/)
 
 This is the final team project, in which I learned to write in TypeScript, got experience with Redux, React Route. My part in this project is the Sprint and Word Constructor games, statistics page. The terms of reference can be viewed [here](https://github.com/rolling-scopes-school/tasks/blob/master/tasks/react/react-game.md).
 
