@@ -1,37 +1,11 @@
-# [RSLang](https://gtm003.github.io/rslang/)
+# [RSLang](https://rslang-team23-alexk08.netlify.app/)
 
-This is the final team project, in which I learned to write in TypeScript, got experience with Redux, React Route. My part in this project is the Sprint and Word Constructor games, statistics page. The terms of reference can be viewed [here](https://github.com/rolling-scopes-school/tasks/blob/master/tasks/react/react-game.md).
+Это командная работа, финальное задание курса обучения по библиотеке React RS School. Ссылка на техническое задание [здесь](https://github.com/rolling-scopes-school/tasks/blob/master/tasks/react/react-rslang.md).
 
 ![react-game](public/images/rslang.gif)
 
-
-## Getting Started with Create React App
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-### Available Scripts
-
-In the project directory, you can run:
-
-#### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-#### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-#### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Технологии используемые в разработке:
+### Код клиентской части написан на TypeScript, а также
+* использованы библиотеки React / Redux / React-Router
+* для построения графиков в статистике использована библитека [React Google Charts](https://react-google-charts.com/)
+* для стилизации использован препроцессор SASS
